@@ -1,6 +1,6 @@
 ## 관련 Issue
 
-close #
+Closes #
 
 ## 작업 내용
 
