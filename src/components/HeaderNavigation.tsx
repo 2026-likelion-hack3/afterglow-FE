@@ -4,6 +4,7 @@ import PreviousButton from "./PreviousButton";
 
 const Styles = StyleSheet.create({
     header: {
+        flex: 1,
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'flex-start'
