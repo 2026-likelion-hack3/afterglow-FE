@@ -8,7 +8,9 @@ const Styles = StyleSheet.create({
         borderWidth: 1,
         borderStyle: 'solid',
         borderColor: Colors.alert.text,
-        borderRadius: 999
+        borderRadius: 999,
+        paddingVertical: 4,
+        paddingHorizontal: 8
     }
 })
 
