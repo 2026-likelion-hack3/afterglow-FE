@@ -32,7 +32,7 @@ export default function OptionButton({ text, onPress, isSelected }: OptionButton
             onPress={ onPress }
             style={ [Styles.button, isSelected && Styles.selected] }
         >
-            <Text style={ Typography.text.default }>{ text }</Text>
+            <Text style={ Typography.button.big }>{ text }</Text>
         </Pressable>
     )
 }
