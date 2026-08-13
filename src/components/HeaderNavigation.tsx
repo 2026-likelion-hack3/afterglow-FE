@@ -1,5 +1,6 @@
 import { StyleSheet, View } from "react-native";
 import { Typography } from "../constants/typography";
+import PreviousButton from "./PreviousButton";
 
 const Styles = StyleSheet.create({
     header: {
@@ -22,13 +23,16 @@ const Styles = StyleSheet.create({
 })
 
 type HeaderNavigationProps = {
-    title: string
+    title: string,
+    route: string
 }
 
-export default function HeaderNavigation({ title }: HeaderNavigationProps) {
+export default function HeaderNavigation({ title, route }: HeaderNavigationProps) {
     return (
     <View style={ Styles.header }>
-        <View style={ Styles.svgBtn }></View>
+        <View style={ Styles.svgBtn }>
+            <PreviousButton route={ route }/>
+        </View>
         <View style={ Styles.header }>{ title }</View>
         <View style={ Styles.emptyArea }></View>
     </View>
