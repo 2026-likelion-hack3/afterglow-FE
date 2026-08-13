@@ -14,7 +14,7 @@ const Styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 16,
-        paddingHorizontal: 20,
+        padding: 20,
         backgroundColor: Colors.action.default,
     }
 })
