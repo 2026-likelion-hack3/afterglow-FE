@@ -1,10 +1,21 @@
-import { Colors } from "@/src/constants/colors";
-import { Typography } from "@/src/constants/typography";
-import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
-
 /**
  * 홈 화면
  */
+
+import { Colors } from "@/src/constants/colors";
+import { Typography } from "@/src/constants/typography";
+import { Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import NightIcon from '@/assets/icons/night.svg';
+import PathIcon from '@/assets/icons/path.svg';
+
+const user = {
+    profileImage: false
+}
+
+const profileImage = user.profileImage
+  ? { uri: user.profileImage }
+  : require("../../assets/images/profile.png");
+
 const Styles = StyleSheet.create({
     container: {
         paddingTop: 20,
@@ -92,18 +103,24 @@ export default function HomeScreen() {
             <View style={ Styles.container }>
                 <View style={ Styles.header }>
                     <Text style={ Typography.title.small }>애프터글로우</Text>
-                    <Text>이미지</Text>
+                    <Image
+                        source={profileImage}
+                        width={30}
+                        height={30}
+                    />
                 </View>
                 <ScrollView>
                 <View style={ Styles.content }>
                     {/** 수면 시간 */}
                     <View style={ [Styles.card, SleepStyles.container, { backgroundColor: Colors.sand[200] }] }>
                         <View style={ SleepStyles.header }>
-                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <Text>icon</Text>
+                            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+                                <View style={{ width: 20, height: 20, justifyContent: 'center', alignItems: 'center'}}>
+                                    <NightIcon width={15.83} height={15} />
+                                </View>
                                 <Text style={ Typography.text.accent }>어젯밤 수면</Text>
                             </View>
-                            <View style={{ borderRadius: 200, paddingVertical: 2, paddingHorizontal: 8, backgroundColor: Colors.background.card }}>
+                            <View style={{ borderRadius: 200, paddingVertical: 2, paddingHorizontal: 8, backgroundColor: Colors.background.card, justifyContent: 'center', alignItems: 'center' }}>
                                 <Text style={ Typography.secondary.small }>워치 연동</Text>
                             </View>
                         </View>
@@ -118,19 +135,22 @@ export default function HomeScreen() {
                     </View>
                     {/** 피부 원인 확인하기 */}
                     <Pressable>
-                    <View style={ [Styles.card, {backgroundColor: Colors.accent.default}] }>
+                    <View style={ [Styles.card, {backgroundColor: Colors.accent.default, position: 'relative'}] }>
                         <Text style={ [Typography.figure.big, { color: '#42362F' }] }>피부가{'\n'}불편해요</Text>
-                        <View style={{ flexDirection: 'row', gap: 8 }}>
+                        <View style={{ flexDirection: 'row', gap: 8, alignItems: 'center' }}>
                             <Text style={ [Typography.text.accent, { color: Colors.text.accent }] }>ai로 원인 알아보기</Text>
-                            <Text style={ [Typography.text.accent, { color: Colors.text.accent }] }>화살표</Text>
+                            <Text style={ [Typography.title.small, { color: Colors.text.accent }] }>→</Text>
                         </View>
+                        <Image source={require('../../assets/images/button-bg.png')} style={{ position: 'absolute', top: 0, bottom: 0, right: 0}}/>
                     </View>
                     </Pressable>
                     {/** 루틴 */}
                     <View style={ [Styles.card, RoutineStyles.container, { backgroundColor: Colors.background.card }] }>
                         <View style={ RoutineStyles.header }>
                             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
-                                <Text>icon</Text>
+                                <View style={{ width: 24, height: 24, justifyContent: 'center', alignItems: 'center'}}>
+                                    <PathIcon width={18} height={20} />
+                                </View>
                                 <Text style={ Typography.button.default }>오늘의 루틴</Text>
                             </View>
                             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
