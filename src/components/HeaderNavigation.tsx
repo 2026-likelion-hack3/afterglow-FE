@@ -21,7 +21,11 @@ const Styles = StyleSheet.create({
     }
 })
 
-export default function HeaderNavigation(title: string) {
+type HeaderNavigationProps = {
+    title: string
+}
+
+export default function HeaderNavigation({ title }: HeaderNavigationProps) {
     return (
     <View style={ Styles.header }>
         <View style={ Styles.svgBtn }></View>
