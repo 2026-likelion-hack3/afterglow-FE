@@ -13,8 +13,7 @@ const Styles = StyleSheet.create({
         height: 20
     },
     title: {
-        height: 27,
-        ...Typography.text.accent
+        height: 27
     },
     emptyArea: {
         width: 24,
@@ -34,7 +33,7 @@ export default function HeaderNavigation({ title, route }: HeaderNavigationProps
                 <PreviousButton route={ route }/>
             </View>
             <View style={ Styles.header }>
-                <Text>{ title }</Text>
+                <Text style={ Typography.text.accent }>{ title }</Text>
             </View>
             <View style={ Styles.emptyArea }></View>
         </View>
