@@ -1,6 +1,7 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { Colors } from "../constants/colors";
 import { Typography } from "../constants/typography";
+import { Presets } from "../constants/presets";
 
 type BigOptionButtonProps = {
     text: string,
@@ -12,13 +13,11 @@ type BigOptionButtonProps = {
 
 const Styles = StyleSheet.create({
     button: {
-        flex: 1,
-        justifyContent: 'center',
         alignItems: 'flex-start',
         borderWidth: 1,
         borderStyle: 'solid',
         borderColor: Colors.border.default,
-        borderRadius: 10,
+        borderRadius: 18,
         paddingVertical: 17.5,
         paddingHorizontal: 24,
         backgroundColor: Colors.background.card,
@@ -37,7 +36,7 @@ export default function BigOptionButton({ text, extent, description, onPress, is
     return (
         <Pressable
             onPress={ onPress }
-            style={ [Styles.button, isSelected && Styles.selected] }
+            style={ [Presets.button, Styles.button, isSelected && Styles.selected] }
         >
             <Text style={ isSelected ? Typography.button.big : Typography.button.accent }>{ text }</Text>
             <View>
