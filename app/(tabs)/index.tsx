@@ -1,18 +1,13 @@
 import { Colors } from "@/src/constants/colors";
 import { Typography } from "@/src/constants/typography";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 
 /**
  * 홈 화면
  */
 const Styles = StyleSheet.create({
-    screen: {
-        flex: 1,
-        backgroundColor: Colors.background.page,
-    },
     container: {
-        paddingVertical: 20,
+        paddingTop: 20,
         paddingHorizontal: 16,
         flex: 1,
         gap: 12
@@ -94,7 +89,6 @@ function RoutineList({ num, text }: {
 
 export default function HomeScreen() {
     return (
-        <SafeAreaView style={ Styles.screen }>
             <View style={ Styles.container }>
                 <View style={ Styles.header }>
                     <Text style={ Typography.title.small }>애프터글로우</Text>
@@ -169,6 +163,5 @@ export default function HomeScreen() {
                 </View>
                 </ScrollView>
             </View>
-        </SafeAreaView>
     )
 };
