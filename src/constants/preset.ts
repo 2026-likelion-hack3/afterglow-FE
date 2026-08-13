@@ -6,9 +6,9 @@ export const Presets = {
         borderRadius: 999,
         paddingVertical: 4,
         paddingHorizontal: 8
-    },
+    } as const,
     button: {
         flex: 1,
         justifyContent: 'center'
-    }
+    } as const
 }
