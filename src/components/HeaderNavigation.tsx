@@ -8,7 +8,7 @@ const Styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'flex-start'
     },
-    svgBtn: {
+    button: {
         width: 16,
         height: 20
     },
@@ -29,12 +29,12 @@ type HeaderNavigationProps = {
 
 export default function HeaderNavigation({ title, route }: HeaderNavigationProps) {
     return (
-    <View style={ Styles.header }>
-        <View style={ Styles.svgBtn }>
-            <PreviousButton route={ route }/>
+        <View style={ Styles.header }>
+            <View style={ Styles.button }>
+                <PreviousButton route={ route }/>
+            </View>
+            <View style={ Styles.header }>{ title }</View>
+            <View style={ Styles.emptyArea }></View>
         </View>
-        <View style={ Styles.header }>{ title }</View>
-        <View style={ Styles.emptyArea }></View>
-    </View>
     )
 }
