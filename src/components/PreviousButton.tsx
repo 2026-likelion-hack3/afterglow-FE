@@ -9,8 +9,8 @@ type PreviousButtonProps = {
 const Styles = StyleSheet.create({
     button: {
         flex: 1,
+        justifyContent: 'center',
         alignItems: 'center',
-        justifyContent: 'center'
     }
 })
 

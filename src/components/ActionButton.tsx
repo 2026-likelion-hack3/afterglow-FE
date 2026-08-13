@@ -11,11 +11,11 @@ type ActionButtonProps = {
 const Styles = StyleSheet.create({
     button: {
         flex: 1,
-        borderRadius: 16,
-        backgroundColor: Colors.action.default,
         justifyContent: 'center',
         alignItems: 'center',
-        paddingHorizontal: 20
+        borderRadius: 16,
+        paddingHorizontal: 20,
+        backgroundColor: Colors.action.default,
     }
 })
 
