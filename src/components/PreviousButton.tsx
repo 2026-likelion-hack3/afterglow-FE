@@ -1,9 +1,9 @@
-import { router } from 'expo-router';
+import { Href, router } from 'expo-router';
 import PreviousIcon from '@/assets/icons/previous.svg';
 import { Pressable, StyleSheet } from 'react-native';
 
 type PreviousButtonProps = {
-    route: string
+    route: Href
 }
 
 const Styles = StyleSheet.create({

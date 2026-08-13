@@ -1,4 +1,4 @@
-import { router } from "expo-router";
+import { Href, router } from "expo-router";
 import { Pressable, StyleSheet, Text } from "react-native";
 import { Colors } from "../constants/colors";
 import { Typography } from "../constants/typography";
@@ -6,7 +6,7 @@ import { Presets } from "../constants/presets";
 
 type ActionButtonProps = {
     text: string,
-    route: string
+    route: Href
 }
 
 const Styles = StyleSheet.create({

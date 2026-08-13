@@ -1,6 +1,7 @@
 import { StyleSheet, Text, View } from "react-native";
 import { Typography } from "../constants/typography";
 import PreviousButton from "./PreviousButton";
+import { Href } from "expo-router";
 
 const Styles = StyleSheet.create({
     header: {
@@ -24,7 +25,7 @@ const Styles = StyleSheet.create({
 
 type HeaderNavigationProps = {
     title: string,
-    route: string
+    route: Href
 }
 
 export default function HeaderNavigation({ title, route }: HeaderNavigationProps) {
