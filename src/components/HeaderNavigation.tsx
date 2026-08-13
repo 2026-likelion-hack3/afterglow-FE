@@ -1,4 +1,4 @@
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { Typography } from "../constants/typography";
 import PreviousButton from "./PreviousButton";
 
@@ -33,7 +33,9 @@ export default function HeaderNavigation({ title, route }: HeaderNavigationProps
             <View style={ Styles.button }>
                 <PreviousButton route={ route }/>
             </View>
-            <View style={ Styles.header }>{ title }</View>
+            <View style={ Styles.header }>
+                <Text>{ title }</Text>
+            </View>
             <View style={ Styles.emptyArea }></View>
         </View>
     )
