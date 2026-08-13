@@ -18,7 +18,7 @@ const Styles = StyleSheet.create({
 })
 
 type IconTagProps = {
-    color: string,
+    color?: string,
     Icon: React.FC<SvgProps>,
     text: string
 }
