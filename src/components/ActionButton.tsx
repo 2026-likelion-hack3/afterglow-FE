@@ -25,7 +25,7 @@ export default function ActionButton({ text, route }: ActionButtonProps) {
             onPress={() => router.push(route)}
             style={ Styles.button }
         >
-            <Text style={ Typography.button.big }>{ text }</Text>
+            <Text style={ [Typography.button.big, { color: Colors.text.inverted }] }>{ text }</Text>
         </Pressable>
     )
 }
