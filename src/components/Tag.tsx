@@ -7,7 +7,8 @@ const Styles = StyleSheet.create({
         alignSelf: 'flex-start',
         borderWidth: 1,
         borderStyle: 'solid',
-        borderColor: Colors.alert.text
+        borderColor: Colors.alert.text,
+        borderRadius: 999
     }
 })
 
