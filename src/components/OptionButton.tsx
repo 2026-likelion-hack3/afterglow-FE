@@ -17,7 +17,7 @@ const Styles = StyleSheet.create({
         borderStyle: 'solid',
         borderColor: Colors.border.default,
         borderRadius: 16,
-        paddingHorizontal: 23,
+        padding: 23,
         backgroundColor: Colors.background.card,
     },
     selected: {
