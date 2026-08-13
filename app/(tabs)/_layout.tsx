@@ -1,0 +1,95 @@
+import { Colors } from "@/src/constants/colors";
+import { Typography } from "@/src/constants/typography";
+import { Stack } from "expo-router";
+import { Pressable, StyleSheet, Text, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { SvgProps } from "react-native-svg";
+import { useState } from "react";
+
+import HomeIcon from '@/assets/icons/home.svg';
+import CosmeticsIcon from '@/assets/icons/cosmetics.svg';
+import LogsIcon from '@/assets/icons/logs.svg';
+import CommunityIcon from '@/assets/icons/community.svg';
+
+const Styles = StyleSheet.create({
+    screen: {
+        flex: 1,
+        backgroundColor: Colors.background.page,
+    },
+    tabBar: {
+        flexDirection: 'row',
+        backgroundColor: Colors.background.card,
+        borderTopLeftRadius: 18,
+        borderTopRightRadius: 18,
+        paddingTop: 12,
+        paddingHorizontal: 25
+    },
+    tab: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    tabIcon: {
+        width: 32,
+        height: 32,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    tabText: {
+        ...Typography.secondary.small,
+        color: Colors.border.default
+    },
+    selectedTabText: {
+        ...Typography.label.default,
+        color: Colors.text.accent
+    }
+})
+
+function Tabs({ Icon, text, width, height, onPress, current }: {
+    Icon: React.FC<SvgProps>,
+    text: string,
+    width: number,
+    height: number,
+    onPress: () => void,
+    current: string
+}) : React.JSX.Element {
+    return (
+        <Pressable style={ Styles.tab } onPress={ onPress }>
+            <View style={ Styles.tabIcon }>
+                <Icon
+                    width={ width }
+                    height={ height }
+                    color={ text == current ? Colors.text.accent : Colors.border.default}
+                />
+            </View>
+            <View>
+                <Text
+                    style={ [Styles.tabText, text == current && Styles.selectedTabText] }
+                >{ text }</Text>
+            </View>
+        </Pressable>
+    )
+}
+
+export default function TabLayout() {
+    const tabArr = [
+        {text: '홈', width: 24, height: 25.33, Icon: HomeIcon, onPress: () => setselectedTab('홈')},
+        {text: '화장대', width: 30, height: 30, Icon: CosmeticsIcon, onPress: () => setselectedTab('화장대')},
+        {text: '기록', width: 30, height: 30, Icon: LogsIcon, onPress: () => setselectedTab('기록')},
+        {text: '이야기', width: 30, height: 30, Icon: CommunityIcon, onPress: () => setselectedTab('이야기')}
+    ];
+
+    const [selectedTab, setselectedTab] = useState('홈');
+
+    const insets = useSafeAreaInsets();
+    return (
+        <View style={ [Styles.screen, { paddingTop: insets.top }] }>
+            <Stack screenOptions={{ headerShown: false }} />
+            <View style={ [Styles.tabBar, { paddingBottom: insets.bottom }] }>
+                {tabArr.map((item, index)=>(
+                    <Tabs Icon={item.Icon} text={item.text} width={item.width} height={item.height} onPress={item.onPress} current={selectedTab} key={index}></Tabs>
+                ))}
+            </View>
+        </View>
+    );
+}
