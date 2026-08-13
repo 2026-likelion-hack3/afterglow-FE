@@ -1,10 +1,18 @@
 import { router } from 'expo-router';
 import PreviousIcon from '@/assets/icons/previous.svg';
-import { Pressable } from 'react-native';
+import { Pressable, StyleSheet } from 'react-native';
 
 type PreviousButtonProps = {
     route: string
 }
+
+const Styles = StyleSheet.create({
+    button: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center'
+    }
+})
 
 /**
  * 이전 버튼 컴포넌트
@@ -14,11 +22,7 @@ export default function PreviousButton({ route }: PreviousButtonProps) {
     return (
         <Pressable
             onPress={() => router.push(route)}
-            style={{
-                flex: 1,
-                alignItems: 'center',
-                justifyContent: 'center'
-            }}
+            style={ Styles.button }
         >
             <PreviousIcon width={9} height={18}></PreviousIcon>
         </Pressable>
