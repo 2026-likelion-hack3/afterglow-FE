@@ -15,7 +15,7 @@ const Styles = StyleSheet.create({
 })
 
 type TagProps = {
-    color: string,
+    color?: string,
     text: string
 }
 
