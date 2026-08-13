@@ -7,7 +7,6 @@ const Styles = StyleSheet.create({
         alignSelf: 'flex-start',
         borderWidth: 1,
         borderStyle: 'solid',
-        borderColor: Colors.alert.text,
         borderRadius: 999,
         paddingVertical: 4,
         paddingHorizontal: 8
@@ -15,13 +14,14 @@ const Styles = StyleSheet.create({
 })
 
 type TagProps = {
+    color: string,
     text: string
 }
 
-export default function Tag({ text }: TagProps) {
+export default function Tag({ color=Colors.alert.text, text }: TagProps) {
     return (
-        <View style={ Styles.tag }>
-            <Text style={ [Typography.label.default, { color: Colors.alert.text }] }>{ text }</Text>
+        <View style={ [Styles.tag, { borderColor: color }] }>
+            <Text style={ [Typography.label.default, { color }] }>{ text }</Text>
         </View>
     )
 }
