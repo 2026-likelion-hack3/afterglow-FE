@@ -1,6 +1,7 @@
 import { Pressable, StyleSheet, Text } from "react-native";
 import { Colors } from "../constants/colors";
 import { Typography } from "../constants/typography";
+import { Presets } from "../constants/presets";
 
 type SmallOptionButtonProps = {
     text: string,
@@ -10,8 +11,6 @@ type SmallOptionButtonProps = {
 
 const Styles = StyleSheet.create({
     button: {
-        flex: 1,
-        justifyContent: 'center',
         alignItems: 'flex-start',
         borderWidth: 1,
         borderStyle: 'solid',
@@ -30,7 +29,7 @@ export default function SmallOptionButton({ text, onPress, isSelected }: SmallOp
     return (
         <Pressable
             onPress={ onPress }
-            style={ [Styles.button, isSelected && Styles.selected] }
+            style={ [Presets.button, Styles.button, isSelected && Styles.selected] }
         >
             <Text style={ isSelected ? Typography.text.default : Typography.text.accent }>{ text }</Text>
         </Pressable>

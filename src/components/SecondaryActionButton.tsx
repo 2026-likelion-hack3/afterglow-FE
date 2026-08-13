@@ -1,6 +1,7 @@
 import { Pressable, StyleSheet, Text } from "react-native";
 import { Colors } from "../constants/colors";
 import { Typography } from "../constants/typography";
+import { Presets } from "../constants/presets";
 
 type SecondaryActionButtonProps = {
     text: string,
@@ -9,8 +10,6 @@ type SecondaryActionButtonProps = {
 
 const Styles = StyleSheet.create({
     button: {
-        flex: 1,
-        justifyContent: 'center',
         alignItems: 'center',
         borderWidth: 1,
         borderStyle: 'solid',
@@ -25,7 +24,7 @@ export default function SecondaryActionButton({ text, onPress }: SecondaryAction
     return (
         <Pressable
             onPress={ onPress }
-            style={ Styles.button }
+            style={ [Presets.button, Styles.button] }
         >
             <Text style={ Typography.text.default }>{ text }</Text>
         </Pressable>
