@@ -4,7 +4,9 @@ import { useFonts } from "expo-font"
 
 export default function RootLayout() {
   const [loaded] = useFonts({
-    "Noto Sans KR": require("../assets/fonts/NotoSansKR.ttf"),
+    "Noto Sans KR Black": require("../assets/fonts/NotoSansKR-Black.ttf"),
+    "Noto Sans KR Bold": require("../assets/fonts/NotoSansKR-Bold.ttf"),
+    "Noto Sans KR Regular": require("../assets/fonts/NotoSansKR-Regular.ttf"),
   });
   return (
     <SafeAreaProvider>
