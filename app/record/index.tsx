@@ -10,12 +10,13 @@ import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
 
 const Styles = StyleSheet.create({
     container: {
+        flex: 1,
         gap: 24,
         marginBottom: 16
     }
 })
 
-export default function CommunityScreen() {
+export default function RecordScreen() {
     const options = [
         '가려움', '따가움', '예민함', '붉어짐', '트러블'
     ]
@@ -25,11 +26,12 @@ export default function CommunityScreen() {
             <ScrollView>
             <View style={ Styles.container }>
                 <Text style={ Typography.title.big }>지금 어떤{'\n'}상태에 가깝나요?</Text>
+                {/** 개발 필요 */}
                 <View style={{ borderStyle: 'solid', borderWidth: 1, borderColor: '#492', height: 288}}>
-                    <Text>선택화면</Text>
+                    <Text>선택화면미개발</Text>
                 </View>
                 
-                <View style={{ flex: 1, gap: 8 }}>
+                <View style={{ gap: 8 }}>
                     {options.map((option, index) => (
                         <BigOptionButton text={option} onPress={()=>setselected(option)} isSelected={selected == option} key={index} />
                     ))}
@@ -37,8 +39,8 @@ export default function CommunityScreen() {
             </View>
                 
             </ScrollView>
-            <View style={{ marginBottom: 16, marginTop: 8 }}>
-                <ActionButton text="선택 완료" route={'/(tabs)'}/>
+            <View style={{ marginBottom: 14, marginTop: 8 }}>
+                <ActionButton text="선택 완료" route={'/record/duration'}/>
             </View>
         </>
     )
