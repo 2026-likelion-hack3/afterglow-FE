@@ -4,7 +4,7 @@ import { Colors } from "../constants/colors";
 import { Typography } from "../constants/typography";
 import { Presets } from "../constants/presets";
 
-type ActionButtonProps = {
+type SkipButtonProps = {
     text: string,
     route: Href
 }
@@ -20,7 +20,7 @@ const Styles = StyleSheet.create({
     }
 })
 
-export default function ActionButton({ text, route }: ActionButtonProps) {
+export default function SkipButton({ text, route }: SkipButtonProps) {
     return (
         <Pressable
             onPress={() => router.push(route)}
