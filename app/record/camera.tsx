@@ -1,5 +1,5 @@
 /**
- * 추천 루틴 화면
+ * 카메라 촬영 화면
  */
 
 export default function tmp() {

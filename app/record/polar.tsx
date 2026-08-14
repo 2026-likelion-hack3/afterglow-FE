@@ -1,5 +1,5 @@
 /**
- * 추천 루틴 화면
+ * 극좌표계 문항 화면
  */
 
 export default function tmp() {

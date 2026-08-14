@@ -1,6 +1,6 @@
 import { Colors } from "@/src/constants/colors";
 import { Typography } from "@/src/constants/typography";
-import { Stack } from "expo-router";
+import { router, Stack } from "expo-router";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { SvgProps } from "react-native-svg";
@@ -73,10 +73,46 @@ function Tabs({ Icon, text, width, height, onPress, current }: {
 
 export default function TabLayout() {
     const tabArr = [
-        {text: '홈', width: 24, height: 25.33, Icon: HomeIcon, onPress: () => setselectedTab('홈')},
-        {text: '화장대', width: 30, height: 30, Icon: CosmeticsIcon, onPress: () => setselectedTab('화장대')},
-        {text: '기록', width: 30, height: 30, Icon: LogsIcon, onPress: () => setselectedTab('기록')},
-        {text: '이야기', width: 30, height: 30, Icon: CommunityIcon, onPress: () => setselectedTab('이야기')}
+        {
+            text: '홈',
+            width: 24,
+            height: 25.33,
+            Icon: HomeIcon,
+            onPress: () => {
+                setselectedTab('홈');
+                router.replace('/(tabs)');
+            }
+        },
+        {
+            text: '화장대',
+            width: 30,
+            height: 30,
+            Icon: CosmeticsIcon,
+            onPress: () => {
+                setselectedTab('화장대');
+                router.replace('/(tabs)/cosmetics');
+            }
+        },
+        {
+            text: '기록',
+            width: 30,
+            height: 30,
+            Icon: LogsIcon,
+            onPress: () => {
+                setselectedTab('기록');
+                router.replace('/(tabs)/log');
+            }
+        },
+        {
+            text: '이야기',
+            width: 30,
+            height: 30,
+            Icon: CommunityIcon,
+            onPress: () => {
+                setselectedTab('이야기');
+                router.replace('/(tabs)/community');
+            }
+        }
     ];
 
     const [selectedTab, setselectedTab] = useState('홈');
@@ -84,10 +120,18 @@ export default function TabLayout() {
     const insets = useSafeAreaInsets();
     return (
         <View style={ [Styles.screen, { paddingTop: insets.top }] }>
-            <Stack screenOptions={{ headerShown: false }} />
+            <Stack screenOptions={{ headerShown: false, animation: 'fade' }} />
             <View style={ [Styles.tabBar, { paddingBottom: insets.bottom }] }>
                 {tabArr.map((item, index)=>(
-                    <Tabs Icon={item.Icon} text={item.text} width={item.width} height={item.height} onPress={item.onPress} current={selectedTab} key={index}></Tabs>
+                    <Tabs
+                        Icon={item.Icon}
+                        text={item.text}
+                        width={item.width}
+                        height={item.height}
+                        onPress={item.onPress}
+                        current={selectedTab}
+                        key={index}
+                    />
                 ))}
             </View>
         </View>
