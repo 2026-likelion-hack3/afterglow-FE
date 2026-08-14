@@ -1,9 +1,0 @@
-/**
- * 그 외 기타 정보 문항 화면
- */
-
-export default function tmp() {
-    return (
-        <></>
-    )
-}
