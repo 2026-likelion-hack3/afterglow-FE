@@ -38,7 +38,7 @@ export default function BigOptionButton({ text, extent, description, onPress, is
             onPress={ onPress }
             style={ [Styles.button, isSelected && Styles.selected] }
         >
-            <Text style={ isSelected ? Typography.button.big : Typography.button.accent }>{ text }</Text>
+            <Text style={ isSelected ? Typography.button.accent : Typography.button.big }>{ text }</Text>
             <View>
                 <Text style={ Typography.text.accent }>{ extent }</Text>
                 <Text style={ Typography.secondary.default }>{ description }</Text>
