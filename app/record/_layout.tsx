@@ -16,7 +16,7 @@ export default function OnboardingLayout() {
 
     return (
         <SafeAreaView style={ Styles.screen }>
-            <HeaderNavigation route={'/(tabs)'} title="증상 기록" key={0} />
+            <HeaderNavigation title="증상 기록" key={0} />
             <Stack screenOptions={{ headerShown: false, animation: 'none' }} />
         </SafeAreaView>
     );
