@@ -4,8 +4,8 @@ import { Typography } from "../constants/typography";
 
 type BigOptionButtonProps = {
     text: string,
-    extent: string,
-    description: string,
+    extent?: string,
+    description?: string,
     onPress: () => void,
     isSelected: boolean
 }
@@ -32,7 +32,7 @@ const Styles = StyleSheet.create({
     }
 })
 
-export default function BigOptionButton({ text, extent, description, onPress, isSelected }: BigOptionButtonProps) {
+export default function BigOptionButton({ text, extent='', description='', onPress, isSelected }: BigOptionButtonProps) {
     return (
         <Pressable
             onPress={ onPress }
@@ -40,8 +40,8 @@ export default function BigOptionButton({ text, extent, description, onPress, is
         >
             <Text style={ isSelected ? Typography.button.accent : Typography.button.big }>{ text }</Text>
             <View>
-                <Text style={ Typography.text.accent }>{ extent }</Text>
-                <Text style={ Typography.secondary.default }>{ description }</Text>
+                {extent && (<Text style={ Typography.text.accent }>{ extent }</Text>)}
+                {description && (<Text style={ Typography.secondary.default }>{ description }</Text>)}
             </View>
         </Pressable>
     )

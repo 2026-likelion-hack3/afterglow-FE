@@ -5,10 +5,10 @@ import { Href } from "expo-router";
 
 const Styles = StyleSheet.create({
     header: {
-        flex: 1,
         flexDirection: 'row',
         justifyContent: 'space-between',
-        alignItems: 'flex-start'
+        alignItems: 'flex-start',
+        marginVertical: 20
     },
     button: {
         width: 16,
@@ -34,7 +34,7 @@ export default function HeaderNavigation({ title, route }: HeaderNavigationProps
             <View style={ Styles.button }>
                 <PreviousButton route={ route }/>
             </View>
-            <View style={ Styles.header }>
+            <View>
                 <Text style={ Typography.text.accent }>{ title }</Text>
             </View>
             <View style={ Styles.emptyArea }></View>
