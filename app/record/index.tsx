@@ -16,7 +16,7 @@ const Styles = StyleSheet.create({
     }
 })
 
-export default function CommunityScreen() {
+export default function RecordScreen() {
     const options = [
         '가려움', '따가움', '예민함', '붉어짐', '트러블'
     ]
@@ -39,8 +39,8 @@ export default function CommunityScreen() {
             </View>
                 
             </ScrollView>
-            <View style={{ marginBottom: 16, marginTop: 8 }}>
-                <ActionButton text="선택 완료" route={'/record/camera'}/>
+            <View style={{ marginBottom: 14, marginTop: 8 }}>
+                <ActionButton text="선택 완료" route={'/record/duration'}/>
             </View>
         </>
     )
