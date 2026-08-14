@@ -6,6 +6,7 @@ import ActionButton from "@/src/components/ActionButton";
 import SkipButton from "@/src/components/SkipButton";
 import SmallOptionButton from "@/src/components/SmallOptionButton";
 import { Typography } from "@/src/constants/typography";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useState } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 
@@ -23,6 +24,8 @@ const Styles = StyleSheet.create({
         marginBottom: 24
     }
 })
+
+const completeOnboarding = async () => await AsyncStorage.setItem("onboardingCompleted", "true");
 
 export default function Onboarding() {
     const [age, setAge] = useState('');
@@ -46,7 +49,7 @@ export default function Onboarding() {
                         <ActionButton text="다음으로" route={'/onboarding/period'}/>
                     </View>
                     <View style={{ alignItems: 'center', paddingTop: 8, paddingBottom: 12}}>
-                        <SkipButton text="건너뛰기" route={'/(tabs)'} />
+                        <SkipButton text="건너뛰기" route={'/(tabs)'} onPress={ completeOnboarding } />
                     </View>
                 </View>
             </View>

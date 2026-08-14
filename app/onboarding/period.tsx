@@ -49,7 +49,7 @@ export default function Onboarding() {
                         <ActionButton text="다음으로" route={'/(tabs)'} onPress={() => {completeOnboarding(); router.replace('/(tabs)')}} />
                     </View>
                     <View style={{ alignItems: 'center', paddingTop: 8, paddingBottom: 12}}>
-                        <SkipButton text="건너뛰기" route={'/(tabs)'} />
+                        <SkipButton text="건너뛰기" route={'/(tabs)'} onPress={ completeOnboarding } />
                     </View>
                 </View>
             </View>
