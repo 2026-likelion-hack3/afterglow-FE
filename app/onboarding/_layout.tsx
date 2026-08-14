@@ -14,7 +14,7 @@ const Styles = StyleSheet.create({
         marginTop: 20,
         height: 4.08,
         borderRadius: 200,
-        backgroundColor: '#333'
+        backgroundColor: Colors.border.dark
     }
 })
 
