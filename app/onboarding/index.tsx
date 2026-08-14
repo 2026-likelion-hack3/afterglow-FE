@@ -7,15 +7,9 @@ import SkipButton from "@/src/components/SkipButton";
 import { Colors } from "@/src/constants/colors";
 import { Typography } from "@/src/constants/typography";
 import { StyleSheet, Text, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 
 const Styles = StyleSheet.create({
-    screen: {
-        flex: 1,
-        backgroundColor: Colors.background.page
-    },
     body: {
-        paddingHorizontal: 16,
         flex: 1
     },
     content: {
@@ -27,7 +21,7 @@ const Styles = StyleSheet.create({
 
 export default function Onboarding() {
     return (
-        <SafeAreaView style={ Styles.screen }>
+        <>
             <View style={ Styles.body }>
                 <View style={ Styles.content }>
                     <Text style={[Typography.title.big, { color: Colors.border.dark }]}>피부가 불편한 날,{'\n'}지금 가진 제품으로{'\n'}3일 안에 답을 드려요</Text>
@@ -42,6 +36,6 @@ export default function Onboarding() {
                     </View>
                 </View>
             </View>
-        </SafeAreaView>
+        </>
     )
 }
