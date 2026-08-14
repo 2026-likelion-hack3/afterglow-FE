@@ -12,17 +12,16 @@ const Styles = StyleSheet.create({
     button: {
         justifyContent: 'center',
         alignItems: 'center',
-        alignSelf: 'flex-start',
         borderBottomWidth: 1,
         borderStyle: 'solid',
         borderBottomColor: Colors.text.secondary
     }
 })
-
+    
 export default function SkipButton({ text, route }: SkipButtonProps) {
     return (
         <Pressable
-            onPress={() => router.push(route)}
+            onPress={() => router.replace(route)}
             style={ [Styles.button] }
         >
             <Text style={ [Typography.text.default, { color: Colors.text.secondary }] }>{ text }</Text>
