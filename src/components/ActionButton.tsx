@@ -5,6 +5,7 @@ import { Typography } from "../constants/typography";
 
 type ActionButtonProps = {
     text: string,
+    onPress?: ()=>void,
     route: Href
 }
 
@@ -18,10 +19,13 @@ const Styles = StyleSheet.create({
     }
 })
 
-export default function ActionButton({ text, route }: ActionButtonProps) {
+export default function ActionButton({ text, onPress=()=>{}, route }: ActionButtonProps) {
     return (
         <Pressable
-            onPress={() => router.push(route)}
+            onPress={async () => {
+                onPress();
+                router.push(route);
+            }}
             style={ Styles.button }
         >
             <Text style={ [Typography.button.big, { color: Colors.text.inverted }] }>{ text }</Text>

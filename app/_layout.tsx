@@ -1,6 +1,8 @@
-import { Stack } from "expo-router";
+import { router, Stack } from "expo-router";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { useFonts } from "expo-font"
+import { useEffect, useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function RootLayout() {
   const [loaded] = useFonts({
@@ -8,9 +10,29 @@ export default function RootLayout() {
     "Noto Sans KR Bold": require("../assets/fonts/NotoSansKR-Bold.ttf"),
     "Noto Sans KR Regular": require("../assets/fonts/NotoSansKR-Regular.ttf"),
   });
+
+  useEffect(() => {
+    if (!loaded) return;
+
+    const checkOnboarding = async () => {
+      const completed = await AsyncStorage.getItem("onboardingCompleted");
+
+      if (completed === "true") {
+        router.replace("/(tabs)");
+      } else {
+        router.replace("/onboarding");
+      }
+    };
+
+    checkOnboarding();
+  }, [loaded]);
+
   return (
     <SafeAreaProvider>
-      <Stack screenOptions={{ headerShown: false }} />
+      <Stack screenOptions={{ headerShown: false, animation: 'none' }}>
+        <Stack.Screen name="onboarding" />
+        <Stack.Screen name="(tabs)" />
+      </Stack>
     </SafeAreaProvider>
   );
 }

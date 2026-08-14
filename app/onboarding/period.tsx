@@ -8,6 +8,8 @@ import SmallOptionButton from "@/src/components/SmallOptionButton";
 import { Typography } from "@/src/constants/typography";
 import { useState } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { router } from "expo-router";
 
 const Styles = StyleSheet.create({
     header: {
@@ -22,6 +24,8 @@ const Styles = StyleSheet.create({
         gap: 10.72
     }
 })
+
+const completeOnboarding = async () => await AsyncStorage.setItem("onboardingCompleted", "true");
 
 export default function Onboarding() {
     const [preiod, setPriod] = useState('');
@@ -42,7 +46,7 @@ export default function Onboarding() {
                 </ScrollView>
                 <View style={{ paddingTop: 8 }}>
                     <View>
-                        <ActionButton text="다음으로" route={'/(tabs)'}/>
+                        <ActionButton text="다음으로" route={'/(tabs)'} onPress={() => {completeOnboarding(); router.replace('/(tabs)')}} />
                     </View>
                     <View style={{ alignItems: 'center', paddingTop: 8, paddingBottom: 12}}>
                         <SkipButton text="건너뛰기" route={'/(tabs)'} />
