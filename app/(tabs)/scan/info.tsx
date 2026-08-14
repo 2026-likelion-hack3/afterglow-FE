@@ -1,3 +1,9 @@
 /**
  * 정보 (개봉일자, 사용시각) 입력 화면
  */
+
+export default function tmp() {
+    return (
+        <></>
+    )
+}
