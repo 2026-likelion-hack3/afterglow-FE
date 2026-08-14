@@ -13,12 +13,12 @@ import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
 const Styles = StyleSheet.create({
     container: {
         flex: 1,
-        gap: 24,
+        gap: 20,
         marginBottom: 16
     }
 })
 
-export default function CommunityScreen() {
+export default function RecordScreen() {
     return (
         <>
             <ScrollView>
