@@ -31,7 +31,7 @@ export default function SmallOptionButton({ text, onPress, isSelected }: SmallOp
             onPress={ onPress }
             style={ [Styles.button, isSelected && Styles.selected] }
         >
-            <Text style={ isSelected ? Typography.text.default : Typography.text.accent }>{ text }</Text>
+            <Text style={ isSelected ? Typography.text.accent : Typography.text.default }>{ text }</Text>
         </Pressable>
     )
 }
