@@ -35,10 +35,10 @@ export default function Onboarding() {
                 </View>
                 <View>
                     <View>
-                        <ActionButton text="시작하기" route={'/(tabs)'}/>
+                        <ActionButton text="시작하기" route={'/onboarding/age'}/>
                     </View>
                     <View style={{ alignItems: 'center', paddingTop: 8, paddingBottom: 12}}>
-                        <SkipButton text="건너뛰기" route={'/onboarding/age'} />
+                        <SkipButton text="건너뛰기" route={'/(tabs)'} />
                     </View>
                 </View>
             </View>
