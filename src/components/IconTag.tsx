@@ -36,7 +36,7 @@ export default function IconTag({ color=Colors.text.inverted, Icon, iconWidth, i
     return (
         <View style={ [Styles.tag, { borderColor: color }] }>
             <View style={ Styles.icon }>
-                <Icon width={ iconWidth } height={ iconHeight } fill={ color } />
+                <Icon width={ iconWidth } height={ iconHeight } stroke={ color } />
             </View>
             <Text style={ [Typography.label.default, { color }] }>{ text }</Text>
         </View>
