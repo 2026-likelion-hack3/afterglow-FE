@@ -3,6 +3,7 @@
  */
 
 import ActionButton from "@/src/components/ActionButton";
+import HeaderNavigation from "@/src/components/HeaderNavigation";
 import SmallOptionButton from "@/src/components/SmallOptionButton";
 import { Colors } from "@/src/constants/colors";
 import { Typography } from "@/src/constants/typography";
@@ -27,6 +28,7 @@ export default function RecordScreen() {
 
     return (
         <>
+            <HeaderNavigation title="증상 기록" key={0} />
             <ScrollView>
             <View style={ Styles.container }>
                 <View style={{ gap: 8 }}>
