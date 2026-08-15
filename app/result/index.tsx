@@ -11,7 +11,7 @@ import { useState } from "react";
 import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SvgProps } from "react-native-svg";
 import PauseIcon from '@/assets/icons/pause.svg';
-import StopIcon from '@/assets/icons/stop.svg';
+import HandIcon from '@/assets/icons/hand.svg';
 import AlertIcon from '@/assets/icons/alert.svg';
 import { Colors } from "@/src/constants/colors";
 
@@ -79,7 +79,7 @@ export default function ResultScreen() {
         },
         {
             icon: {
-                tagIcon: StopIcon,
+                tagIcon: HandIcon,
                 iconWidth: 16.75,
                 iconHeight: 16.67
             },
