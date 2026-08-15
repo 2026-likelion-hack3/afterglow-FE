@@ -18,21 +18,25 @@ const Styles = StyleSheet.create({
     },
     icon: {
         width: 20,
-        height: 20
+        height: 20,
+        justifyContent: 'center',
+        alignItems: 'center'
     }
 })
 
 type IconTagProps = {
     color?: string,
     Icon: React.FC<SvgProps>,
+    iconWidth: number,
+    iconHeight: number,
     text: string
 }
 
-export default function IconTag({ color=Colors.text.inverted, Icon, text }: IconTagProps) {
+export default function IconTag({ color=Colors.text.inverted, Icon, iconWidth, iconHeight, text }: IconTagProps) {
     return (
         <View style={ [Styles.tag, { borderColor: color }] }>
             <View style={ Styles.icon }>
-                <Icon width={16.67} height={16.67} fill={ color } />
+                <Icon width={ iconWidth } height={ iconHeight } fill={ color } />
             </View>
             <Text style={ [Typography.label.default, { color }] }>{ text }</Text>
         </View>
