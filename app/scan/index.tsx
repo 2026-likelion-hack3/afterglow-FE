@@ -18,7 +18,7 @@ const Styles = StyleSheet.create({
     }
 })
 
-export default function AddScreen() {
+export default function ScanScreen() {
     return (
         <>
             <HeaderNavigation title="제품 등록" />
@@ -41,7 +41,7 @@ export default function AddScreen() {
             </ScrollView>
 
             <View style={{ marginBottom: 14, marginTop: 8, gap: 20 }}>
-                <ActionButton text="촬영" route={'/add/confirm'}/>
+                <ActionButton text="촬영" route={'/scan/recognision'}/>
                 <SecondaryActionButton text="직접 입력하기" onPress={()=>{}} />
             </View>
         </>

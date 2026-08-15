@@ -58,7 +58,7 @@ export default function AddScreen() {
             </ScrollView>
 
             <View style={{ marginBottom: 14, marginTop: 8, gap: 20 }}>
-                <ActionButton text="맞아요, 다음" route={'/add/confirm'}/>
+                <ActionButton text="맞아요, 다음" route={'/scan/ingredients'}/>
                 <SecondaryActionButton text="다시 찍기" onPress={()=>{router.back()}} />
             </View>
         </>
