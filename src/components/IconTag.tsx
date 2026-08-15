@@ -5,7 +5,6 @@ import type { SvgProps } from "react-native-svg";
 
 const Styles = StyleSheet.create({
     tag: {
-        alignSelf: 'flex-start',
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',

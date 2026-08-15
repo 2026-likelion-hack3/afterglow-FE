@@ -101,8 +101,8 @@ export default function ResultScreen() {
         {
             icon: {
                 tagIcon: NightIcon,
-                iconWidth: 16.75,
-                iconHeight: 16.67
+                iconWidth: 15.83,
+                iconHeight: 15
             },
             tagColor: Colors.text.default,
             tagText: '저녁 루틴',
@@ -135,7 +135,7 @@ export default function ResultScreen() {
             </ScrollView>
 
             <View style={{ marginBottom: 14, marginTop: 8, gap: 20 }}>
-                <ActionButton text="확인" route={'/result/routine'}/>
+                <ActionButton text="확인" route={'/result/daily'}/>
             </View>
         </>
     )

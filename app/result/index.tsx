@@ -43,6 +43,7 @@ function Card({ props } : CardProp
 ) : React.JSX.Element {
     return (
         <View style={{
+            alignItems: 'flex-start',
             borderWidth: 1,
             borderStyle: 'solid',
             borderColor: Colors.border.default,
