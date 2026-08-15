@@ -6,6 +6,29 @@ import { useContext, useEffect } from "react";
 import { Text, View } from "react-native";
 import LoadingIcon from '@/assets/icons/loading.svg';
 
+function Log({ text }: {
+    text: string,
+}) : React.JSX.Element {
+    return (
+        <View
+            style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between', alignItems: 'center',
+                borderWidth: 1, borderStyle: 'solid', borderColor: Colors.border.default,
+                borderRadius: 16,
+                paddingVertical: 18, paddingHorizontal: 20,
+                backgroundColor: Colors.background.card
+            }}
+        >
+            <View style={{ flexDirection: 'row', gap: 8, alignItems: 'center' }}>
+                <View style={{ width: 10, height: 10, borderRadius: 5, backgroundColor: Colors.accent.default }}></View>
+                <Text style={ Typography.text.default }>{ text }</Text>
+            </View>
+            <Text style={ [Typography.secondary.small, { color: Colors.text.muted }] }>읽는 중...</Text>
+        </View>
+    )
+}
+
 export default function loadingScreen() {
     const user = useContext(UserContext);
 
@@ -30,23 +53,7 @@ export default function loadingScreen() {
             </View>
             <View style={{ gap: 12 }}>
                 {['지난 7일 수면 기록', '화장대 제품 12개', '오늘 답해주신 내용'].map((item, index) => (
-                    <View
-                        style={{
-                            flexDirection: 'row',
-                            justifyContent: 'space-between', alignItems: 'center',
-                            borderWidth: 1, borderStyle: 'solid', borderColor: Colors.border.default,
-                            borderRadius: 16,
-                            paddingVertical: 18, paddingHorizontal: 20,
-                            backgroundColor: Colors.background.card
-                        }}
-                        key={index}
-                    >
-                        <View style={{ flexDirection: 'row', gap: 8, alignItems: 'center' }}>
-                            <View style={{ width: 10, height: 10, borderRadius: 5, backgroundColor: Colors.accent.default }}></View>
-                            <Text style={ Typography.text.default }>{ item }</Text>
-                        </View>
-                        <Text style={ [Typography.secondary.small, { color: Colors.text.muted }] }>읽는 중...</Text>
-                    </View>
+                    <Log text={ item } key={ index } />
                 ))}
             </View>
             <View style={{ alignItems: 'center',  marginTop: 20 }}>
