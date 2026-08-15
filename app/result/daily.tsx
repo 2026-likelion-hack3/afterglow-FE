@@ -18,13 +18,12 @@ import { Colors } from "@/src/constants/colors";
 import { FlatList, Dimensions } from "react-native";
 import Tag from "@/src/components/Tag";
 
-const { width } = Dimensions.get("window");
-
 type CarouselProp = {
     cards: Array<CardInfo>
 }
 
 function Carousel({ cards }: CarouselProp) {
+    const { width } = Dimensions.get("window");
     const CARD_WIDTH = width - 32 - 30;
     const GAP = 12;
     return (
@@ -53,10 +52,11 @@ function Carousel({ cards }: CarouselProp) {
 const Styles = StyleSheet.create({
     container: {
         flex: 1,
-        gap: 20
+        gap: 20,
+        marginBottom: 12
     },
     img: {
-        width: "100%"
+        width: "100%",
     }
 })
 
@@ -89,6 +89,17 @@ type CardProp = {
 
 function Card({ props } : CardProp
 ) : React.JSX.Element {
+    const { width } = Dimensions.get("window");
+    let windowWidth = width - 32 - 66;
+    let imgWidth: number = 0;
+    let imgHeight: number = 0;
+    if (props.description?.imgsource) {
+        let ratio: number;
+        const { width, height } = Image.resolveAssetSource(props.description.imgsource);
+        ratio = windowWidth / width;
+        imgWidth = width * ratio;
+        imgHeight = height * ratio;
+    }
     return (
         <View style={{
             flex: 1,
@@ -117,9 +128,9 @@ function Card({ props } : CardProp
                 </View>
                 <Text style={[Typography.title.small, {textAlign: 'center'}]}>{ props.text }</Text>
                 {
-                    props.description?.imgsource &&
-                    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                        <Image style={Styles.img} source={props.description.imgsource} />
+                    props.description?.imgsource && imgWidth && imgHeight &&
+                    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', alignSelf: 'stretch' }}>
+                        <Image style={{width: imgWidth, height: imgHeight}} source={props.description.imgsource} />
                     </View>
                 }
                 {
@@ -206,8 +217,9 @@ export default function ResultScreen() {
             description: {
                 title: '최근 새로 쓴 제품',
                 name: '윤작 카밍&컴포팅 앰플',
-                tags: [{text: '고농도'}, {text: '보습'}]
-            }
+                tags: [{text: '고농도'}, {text: '보습'}],
+                imgsource: require('@/assets/images/pause_example.png')
+            },
         },
         {
             icon: {
@@ -229,7 +241,8 @@ export default function ResultScreen() {
             description: {
                 title: '현재 사용하면 좋은 제품',
                 name: '멀티 세라마이드 크림',
-                tags: [{text: '보습'}, {text: '세라마이드'}]
+                tags: [{text: '보습'}, {text: '세라마이드'}],
+                imgsource: require('@/assets/images/hand_example.png')
             }
         },
         {
@@ -254,20 +267,21 @@ export default function ResultScreen() {
     return (
         <>
             <HeaderNavigation title="결과 확인" key={0} />
-
+            <ScrollView>
             <View style={ Styles.container }>
                 <Text style={ Typography.title.big }>오늘부터는{'\n'}이렇게 해 보세요!</Text>
                 
                 {/* 캐러셀 */}
                 <Carousel cards={cards} />
             </View>
+            </ScrollView>
 
-            <View style={{ marginBottom: 14, marginTop: 20, gap: 20 }}>
+            <View style={{ marginBottom: 14, marginTop: 8, gap: 20 }}>
                 <Text style={{ textAlign: 'center' }}>진단이 아닙니다. 최근 7일 기록을 근거로 했습니다.</Text>
                 <View style={{
                     gap: 10
                 }}>
-                    <ActionButton text="좋아졌다" route={'/result/routine'}/>
+                    <ActionButton text="좋아졌다" route={'/(tabs)'}/>
                     <Pressable style={{
                         borderRadius: 16,
                         padding: 16,
