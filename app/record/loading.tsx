@@ -4,6 +4,7 @@ import { UserContext } from "@/src/contexts/UserContext";
 import { router } from "expo-router";
 import { useContext, useEffect } from "react";
 import { Text, View } from "react-native";
+import LoadingIcon from '@/assets/icons/loading.svg';
 
 export default function loadingScreen() {
     const user = useContext(UserContext);
@@ -24,10 +25,8 @@ export default function loadingScreen() {
                 <Text style={ Typography.title.default }>기록을 살펴보고 있어요</Text>
                 <Text style={ Typography.secondary.default }>5초 안에 끝납니다.</Text>
             </View>
-            <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-                <View style={{ width: 96, height: 98.42, borderStyle: 'dashed', marginVertical: 100, borderWidth: 1, borderColor: Colors.border.default }}>
-                    <Text>사진파일</Text>
-                </View>
+            <View style={{ justifyContent: 'center', alignItems: 'center', paddingVertical: 100 }}>
+                <LoadingIcon width={96} height={98.42}/>
             </View>
             <View style={{ gap: 12 }}>
                 {['지난 7일 수면 기록', '화장대 제품 12개', '오늘 답해주신 내용'].map((item, index) => (
