@@ -121,7 +121,7 @@ export default function TabLayout() {
     return (
         <View style={ [Styles.screen, { paddingTop: insets.top }] }>
             <Stack screenOptions={{ headerShown: false, animation: 'fade' }} />
-            <View style={ [Styles.tabBar, { paddingBottom: insets.bottom }] }>
+            <View style={ [Styles.tabBar, { paddingBottom: 16 }] }>
                 {tabArr.map((item, index)=>(
                     <Tabs
                         Icon={item.Icon}
