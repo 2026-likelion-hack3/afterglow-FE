@@ -1,5 +1,5 @@
 /**
- * 증상 기록 화면
+ * 증상 기록 화면 (C1)
  */
 
 import ActionButton from "@/src/components/ActionButton";
