@@ -1,8 +1,23 @@
 import { Colors } from "@/src/constants/colors";
 import { Typography } from "@/src/constants/typography";
+import { UserContext } from "@/src/contexts/UserContext";
+import { router } from "expo-router";
+import { useContext, useEffect } from "react";
 import { Text, View } from "react-native";
 
 export default function loadingScreen() {
+    const user = useContext(UserContext);
+
+    useEffect(() => {
+        if (!user?.recordSymptom.isCompleted) return;
+
+        const timer = setTimeout(() => {
+            router.replace("/result");
+        }, 5000);
+
+        return () => clearTimeout(timer);
+    }, [user?.recordSymptom.isCompleted]);
+    
     return (
         <View style={{ flex: 1, justifyContent: 'center' }}>
             <View style={{ gap: 8 }}>
