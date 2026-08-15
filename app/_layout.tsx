@@ -4,6 +4,7 @@ import { useFonts } from "expo-font"
 import { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { UserProvider } from "@/src/contexts/UserContext";
+import * as NavigationBar from "expo-navigation-bar";
 
 export default function RootLayout() {
   const [loaded] = useFonts({
@@ -11,6 +12,10 @@ export default function RootLayout() {
     "Noto Sans KR Bold": require("../assets/fonts/NotoSansKR-Bold.ttf"),
     "Noto Sans KR Regular": require("../assets/fonts/NotoSansKR-Regular.ttf"),
   });
+  
+  useEffect(() => {
+    NavigationBar.setVisibilityAsync("hidden");
+  }, []);
 
   useEffect(() => {
     if (!loaded) return;
