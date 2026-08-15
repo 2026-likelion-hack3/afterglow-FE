@@ -3,6 +3,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { useFonts } from "expo-font"
 import { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { UserProvider } from "@/src/contexts/UserContext";
 
 export default function RootLayout() {
   const [loaded] = useFonts({
@@ -29,10 +30,9 @@ export default function RootLayout() {
 
   return (
     <SafeAreaProvider>
-      <Stack screenOptions={{ headerShown: false, animation: 'none' }}>
-        <Stack.Screen name="onboarding" />
-        <Stack.Screen name="(tabs)" />
-      </Stack>
+      <UserProvider>
+        <Stack screenOptions={{ headerShown: false, animation: 'none' }} />
+      </UserProvider>
     </SafeAreaProvider>
   );
 }

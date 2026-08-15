@@ -1,12 +1,14 @@
 /**
- * 언제부터 문항 화면
+ * 언제부터 문항 화면 (C2-1)
  */
 
 import ActionButton from "@/src/components/ActionButton";
+import HeaderNavigation from "@/src/components/HeaderNavigation";
 import SmallOptionButton from "@/src/components/SmallOptionButton";
 import { Colors } from "@/src/constants/colors";
 import { Typography } from "@/src/constants/typography";
-import { useState } from "react";
+import { UserContext } from "@/src/contexts/UserContext";
+import { useContext, useState } from "react";
 import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
 
 const Styles = StyleSheet.create({
@@ -22,8 +24,11 @@ export default function RecordScreen() {
         '오늘부터', '2~3일 전부터', '일주일쯤 전부터', '2주 이상 됐다'
     ]
     const [selected, setselected] = useState('');
+    const user = useContext(UserContext);
+
     return (
         <>
+            <HeaderNavigation title="증상 기록" key={0} />
             <ScrollView>
             <View style={ Styles.container }>
                 <View style={{ gap: 8 }}>
@@ -40,10 +45,10 @@ export default function RecordScreen() {
                     <Text style={[Typography.secondary.small, { color: Colors.text.secondary }]}>어느 부위인가요?{'\n'}최근 새로 쓴 제품이 있나요?</Text>
                 </View>
             </View>
-                
             </ScrollView>
+
             <View style={{ marginBottom: 14, marginTop: 8 }}>
-                <ActionButton text="선택 완료" route={'/record/part'}/>
+                <ActionButton text="선택 완료" route={'/record/part'} onPress={ () => user?.recordSymptom.setDuration(selected) }/>
             </View>
         </>
     )

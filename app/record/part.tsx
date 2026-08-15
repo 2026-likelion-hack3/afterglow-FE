@@ -1,12 +1,14 @@
 /**
- * 부위 문항 화면
+ * 부위 문항 화면 (C2-2)
  */
 
 import ActionButton from "@/src/components/ActionButton";
+import HeaderNavigation from "@/src/components/HeaderNavigation";
 import SmallOptionButton from "@/src/components/SmallOptionButton";
 import { Colors } from "@/src/constants/colors";
 import { Typography } from "@/src/constants/typography";
-import { useState } from "react";
+import { UserContext } from "@/src/contexts/UserContext";
+import { useContext, useState } from "react";
 import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
 
 const Styles = StyleSheet.create({
@@ -22,8 +24,11 @@ export default function RecordScreen() {
         '디자인 없음'
     ]
     const [selected, setselected] = useState('');
+    const user = useContext(UserContext);
+
     return (
         <>
+            <HeaderNavigation title="증상 기록" key={0} />
             <ScrollView>
             <View style={ Styles.container }>
                 <View style={{ gap: 8 }}>
@@ -43,7 +48,7 @@ export default function RecordScreen() {
                 
             </ScrollView>
             <View style={{ marginBottom: 14, marginTop: 8 }}>
-                <ActionButton text="선택 완료" route={'/record/recent'}/>
+                <ActionButton text="선택 완료" route={'/record/recent'} onPress={()=>user?.recordSymptom.setPart(selected)}/>
             </View>
         </>
     )

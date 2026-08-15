@@ -1,9 +1,10 @@
 /**
- * 증상 기록 화면
+ * 증상 기록 화면 (C1)
  */
 
 import ActionButton from "@/src/components/ActionButton";
 import BigOptionButton from "@/src/components/BigOptionButton";
+import HeaderNavigation from "@/src/components/HeaderNavigation";
 import { Typography } from "@/src/constants/typography";
 import { useState } from "react";
 import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
@@ -23,6 +24,7 @@ export default function RecordScreen() {
     const [selected, setselected] = useState('');
     return (
         <>
+            <HeaderNavigation title="증상 기록" key={0} />
             <ScrollView>
             <View style={ Styles.container }>
                 <Text style={ Typography.title.big }>지금 어떤{'\n'}상태에 가깝나요?</Text>

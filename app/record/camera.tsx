@@ -4,6 +4,7 @@
 
 import ActionButton from "@/src/components/ActionButton";
 import BigOptionButton from "@/src/components/BigOptionButton";
+import HeaderNavigation from "@/src/components/HeaderNavigation";
 import SkipButton from "@/src/components/SkipButton";
 import { Colors } from "@/src/constants/colors";
 import { Typography } from "@/src/constants/typography";
@@ -21,6 +22,7 @@ const Styles = StyleSheet.create({
 export default function RecordScreen() {
     return (
         <>
+            <HeaderNavigation title="증상 기록" key={0} />
             <ScrollView>
             <View style={ Styles.container }>
                 <Text style={ Typography.title.default }>3일 뒤에 비교해 보시라고{'\n'}지금 한 장 남겨둘게요.</Text>

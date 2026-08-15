@@ -6,6 +6,7 @@ import ActionButton from "@/src/components/ActionButton";
 import SkipButton from "@/src/components/SkipButton";
 import { Colors } from "@/src/constants/colors";
 import { Typography } from "@/src/constants/typography";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StyleSheet, Text, View } from "react-native";
 
 const Styles = StyleSheet.create({
@@ -18,6 +19,8 @@ const Styles = StyleSheet.create({
         gap: 10.72
     }
 })
+
+const completeOnboarding = async () => await AsyncStorage.setItem("onboardingCompleted", "true");
 
 export default function Onboarding() {
     return (
@@ -32,7 +35,7 @@ export default function Onboarding() {
                         <ActionButton text="시작하기" route={'/onboarding/age'}/>
                     </View>
                     <View style={{ alignItems: 'center', paddingTop: 8, paddingBottom: 12}}>
-                        <SkipButton text="건너뛰기" route={'/(tabs)'} />
+                        <SkipButton text="건너뛰기" onPress={ completeOnboarding } route={'/(tabs)'} />
                     </View>
                 </View>
             </View>
