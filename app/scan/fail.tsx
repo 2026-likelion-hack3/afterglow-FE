@@ -10,7 +10,7 @@ import { Typography } from "@/src/constants/typography";
 import { router } from "expo-router";
 import { ScrollView, StyleSheet, Text } from "react-native";
 import { View } from "react-native-reanimated/lib/typescript/Animated";
-import AlertButton from '@/assets/icons/alert.svg';
+import AlertIcon from '@/assets/icons/alert.svg';
 
 const Styles = StyleSheet.create({
     container: {
@@ -32,7 +32,7 @@ export default function ScanScreen() {
                 </View>
                 <View style={{flexDirection: 'row', gap: 12, backgroundColor: Colors.alert.background, borderRadius: 16, paddingVertical: 18, paddingHorizontal: 20}}>
                     <View style={{width: 20, height: 20, justifyContent: 'center', alignItems: 'center'}}>
-                        <AlertButton width={16.68} height={15.01} />
+                        <AlertIcon width={16.68} height={15.01} />
                     </View>
                     <View style={{gap:4}}>
                         <Text style={[Typography.text.accent, {color: Colors.alert.text}]}>사진이 조금 흐려요</Text>

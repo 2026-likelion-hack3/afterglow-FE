@@ -33,7 +33,7 @@ export default function ScanScreen() {
                 <View style={{height: 230, borderStyle: 'dashed', borderWidth: 1, borderColor: Colors.sand[400], backgroundColor: Colors.background.subtle}}>
                     <Text>카메라화면미개발</Text>
                 </View>
-                <View style={{ gap: 8, borderStyle: 'solid', borderWidth: 1, borderColor: Colors.border.default, borderRadius: 16, backgroundColor: Colors.background.card }}>
+                <View style={{ gap: 8, borderStyle: 'solid', borderWidth: 1, borderColor: Colors.border.default, borderRadius: 16, backgroundColor: Colors.background.card, padding: 20 }}>
                     <Text style={[Typography.text.accent]}>글씨가 안 읽히나요?</Text>
                     <Text style={[Typography.secondary.small, {color: Colors.text.secondary}]}>밝은 곳에서 다시 찍거나, 아래에서 이름을 직접 적으셔도 됩니다.</Text>
                 </View>
