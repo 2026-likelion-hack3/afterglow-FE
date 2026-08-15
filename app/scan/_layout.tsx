@@ -9,7 +9,7 @@ const Styles = StyleSheet.create({
     },
 })
 
-export default function ResultScreenLayout() {
+export default function AddScreenLayout() {
     return (
         <SafeAreaView style={ Styles.screen }>
             <Stack screenOptions={{ headerShown: false, animation: 'none' }} >

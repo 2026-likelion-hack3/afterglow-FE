@@ -15,7 +15,7 @@ const Styles = StyleSheet.create({
     },
 })
 
-export default function OnboardingLayout() {
+export default function RecordScreenLayout() {
     const pathname = usePathname();
     const user = useContext(UserContext);
 
