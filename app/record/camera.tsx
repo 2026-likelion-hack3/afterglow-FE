@@ -8,7 +8,8 @@ import HeaderNavigation from "@/src/components/HeaderNavigation";
 import SkipButton from "@/src/components/SkipButton";
 import { Colors } from "@/src/constants/colors";
 import { Typography } from "@/src/constants/typography";
-import { useState } from "react";
+import { UserContext } from "@/src/contexts/UserContext";
+import { useContext, useState } from "react";
 import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
 
 const Styles = StyleSheet.create({
@@ -20,6 +21,8 @@ const Styles = StyleSheet.create({
 })
 
 export default function RecordScreen() {
+    const [uri, setURI] = useState(''); // 이미지 다루는 작업 개발 미완료
+    const user = useContext(UserContext);
     return (
         <>
             <HeaderNavigation title="증상 기록" key={0} />
@@ -40,10 +43,10 @@ export default function RecordScreen() {
             </ScrollView>
             <View>
                 <View style={{ marginTop: 8 }}>
-                    <ActionButton text="촬영하기" route={'/(tabs)'}/>
+                    <ActionButton text="촬영하기" route={'/record/loading'} onPress={()=> {user?.recordSymptom.setImgURI(uri); user?.recordSymptom.setIsCompleted(true)}} />
                 </View>
                 <View style={{ alignItems: 'center', paddingTop: 8, paddingBottom: 12}}>
-                    <SkipButton text="건너뛰기" route={'/(tabs)'} />
+                    <SkipButton text="건너뛰기" route={'/record/loading'}  onPress={()=> user?.recordSymptom.setIsCompleted(true)} />
                 </View>
             </View>
         </>
