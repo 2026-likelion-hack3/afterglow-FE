@@ -40,7 +40,7 @@ export default function RecordScreen() {
                         <SmallOptionButton text={option} onPress={()=>setselected(option)} isSelected={selected == option} key={index} />
                     ))}
                 </View>
-                <View style={{ gap: 8, backgroundColor: Colors.background.subtle, borderWidth: 1, borderStyle: 'solid', borderColor: Colors.border.default, borderRadius: 16, padding: 20 }}>
+                <View style={{ gap: 8, backgroundColor: Colors.background.subtle, borderWidth: 1, borderStyle: 'solid', borderColor: Colors.border.defaultLight, borderRadius: 16, padding: 20 }}>
                     <Text style={[Typography.label.default, { color: Colors.text.secondary }]}>다음 질문</Text>
                     <Text style={[Typography.secondary.small, { color: Colors.text.secondary }]}>어느 부위인가요?{'\n'}최근 새로 쓴 제품이 있나요?</Text>
                 </View>

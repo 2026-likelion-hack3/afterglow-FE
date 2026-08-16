@@ -9,7 +9,7 @@ import { Colors } from "@/src/constants/colors";
 import { Typography } from "@/src/constants/typography";
 import { router } from "expo-router";
 import { ScrollView, StyleSheet, Text } from "react-native";
-import { View } from "react-native-reanimated/lib/typescript/Animated";
+import { View } from "react-native";
 import AlertIcon from '@/assets/icons/alert.svg';
 
 const Styles = StyleSheet.create({
@@ -41,18 +41,17 @@ export default function ScanScreen() {
                     <ActionButton text="다시 찍기" route={'/scan/ingredients'}/>
                 </View>
                 <View style={{ flexDirection:'row', gap: 12}}>
-                    <View style={{flex:1, height: 1, backgroundColor: Colors.border.default}}></View>
+                    <View style={{flex:1, height: 1, backgroundColor: Colors.border.defaultLight}}></View>
                     <View><Text style={[Typography.secondary.small, {color:Colors.text.muted}]}>또는</Text></View>
-                    <View style={{flex:1, height: 1, backgroundColor: Colors.border.default}}></View>
+                    <View style={{flex:1, height: 1, backgroundColor: Colors.border.defaultLight}}></View>
                 </View>
-                <View style={{ gap: 10, borderStyle: 'solid', borderWidth: 1, borderColor: Colors.border.default, borderRadius: 16, padding: 20, backgroundColor: Colors.background.card }}>
+                <View style={{ gap: 10, borderStyle: 'solid', borderWidth: 1, borderColor: Colors.border.defaultLight, borderRadius: 16, padding: 20, backgroundColor: Colors.background.card }}>
                     <Text style={[Typography.text.accent]}>성분을 직접 골라주셔도 돼요</Text>
                     <Text style={[Typography.secondary.small, {color: Colors.text.secondary}]}>제품 뒷면에 이런 말이 있으면 골라주세요</Text>
                     <View style={{ flexDirection:'row', gap: 8}}>
-                        <View style={{alignSelf:'flex-start', borderWidth: 1, borderStyle: 'solid', borderColor: Colors.border.default, borderRadius: 200, paddingVertical: 8, paddingHorizontal:16 }}><Text style={[Typography.label.default, {color: Colors.text.secondary}]}>레티놀</Text></View>
-                        <View style={{alignSelf:'flex-start', borderWidth: 1, borderStyle: 'solid', borderColor: Colors.border.default, borderRadius: 200, paddingVertical: 8, paddingHorizontal:16 }}><Text style={[Typography.label.default, {color: Colors.text.secondary}]}>산</Text></View>
-                        <View style={{alignSelf:'flex-start', borderWidth: 1, borderStyle: 'solid', borderColor: Colors.border.default, borderRadius: 200, paddingVertical: 8, paddingHorizontal:16 }}><Text style={[Typography.label.default, {color: Colors.text.secondary}]}>비타민씨</Text></View>
-                        <View style={{alignSelf:'flex-start', borderWidth: 1, borderStyle: 'solid', borderColor: Colors.border.default, borderRadius: 200, paddingVertical: 8, paddingHorizontal:16 }}><Text style={[Typography.label.default, {color: Colors.text.secondary}]}>고농도</Text></View>
+                        {['레티놀','산','비타민씨','고농도'].map((text,index) => (
+                            <View style={{alignSelf:'flex-start', borderWidth: 1, borderStyle: 'solid', borderColor: Colors.border.defaultLight, borderRadius: 200, paddingVertical: 8, paddingHorizontal:16 }}><Text style={[Typography.label.default, {color: Colors.text.secondary}]}>{text}</Text></View>
+                        ))}
                     </View>
                 </View>
             </View>

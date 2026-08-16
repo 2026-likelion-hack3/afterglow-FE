@@ -43,7 +43,7 @@ export default function RecordScreen() {
                 
             </ScrollView>
             <View style={{ marginBottom: 14, marginTop: 8 }}>
-                <ActionButton text="선택 완료" route={'/record/loading'} onPress={()=>{user?.recordSymptom.setRecentProduct(selected); user?.recordSymptom.setIsCompleted(true);}}/>
+                <ActionButton text="선택 완료" route={'/record/camera'} onPress={()=>{user?.recordSymptom.setRecentProduct(selected)}}/>
             </View>
         </>
     )

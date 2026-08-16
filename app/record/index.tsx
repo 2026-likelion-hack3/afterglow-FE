@@ -6,7 +6,8 @@ import ActionButton from "@/src/components/ActionButton";
 import BigOptionButton from "@/src/components/BigOptionButton";
 import HeaderNavigation from "@/src/components/HeaderNavigation";
 import { Typography } from "@/src/constants/typography";
-import { useState } from "react";
+import { UserContext } from "@/src/contexts/UserContext";
+import { useContext, useState } from "react";
 import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
 
 const Styles = StyleSheet.create({
@@ -18,6 +19,7 @@ const Styles = StyleSheet.create({
 })
 
 export default function RecordScreen() {
+    const user = useContext(UserContext);
     const options = [
         '가려움', '따가움', '예민함', '붉어짐', '트러블'
     ]
@@ -42,7 +44,7 @@ export default function RecordScreen() {
                 
             </ScrollView>
             <View style={{ marginBottom: 14, marginTop: 8 }}>
-                <ActionButton text="선택 완료" route={'/record/duration'}/>
+                <ActionButton text="선택 완료" route={'/record/duration'} onPress={()=>user?.recordSymptom.setState(selected)}/>
             </View>
         </>
     )

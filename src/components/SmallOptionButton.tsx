@@ -14,7 +14,7 @@ const Styles = StyleSheet.create({
         alignItems: 'flex-start',
         borderWidth: 1,
         borderStyle: 'solid',
-        borderColor: Colors.border.default,
+        borderColor: Colors.border.defaultLight,
         borderRadius: 10,
         padding: 20,
         backgroundColor: Colors.background.card,

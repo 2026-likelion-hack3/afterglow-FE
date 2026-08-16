@@ -13,7 +13,7 @@ const Styles = StyleSheet.create({
         alignItems: 'center',
         borderWidth: 1,
         borderStyle: 'solid',
-        borderColor: Colors.border.default,
+        borderColor: Colors.border.defaultLight,
         borderRadius: 16,
         padding: 20,
         backgroundColor: Colors.background.card,
@@ -26,7 +26,7 @@ export default function SecondaryActionButton({ text, onPress }: SecondaryAction
             onPress={ onPress }
             style={ [Styles.button] }
         >
-            <Text style={ Typography.text.default }>{ text }</Text>
+            <Text style={ Typography.button.big }>{ text }</Text>
         </Pressable>
     )
 }

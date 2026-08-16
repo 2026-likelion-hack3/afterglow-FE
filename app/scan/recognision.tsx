@@ -9,7 +9,7 @@ import { Colors } from "@/src/constants/colors";
 import { Typography } from "@/src/constants/typography";
 import { router } from "expo-router";
 import { ScrollView, StyleSheet, Text } from "react-native";
-import { View } from "react-native-reanimated/lib/typescript/Animated";
+import { View } from "react-native";
 
 const Styles = StyleSheet.create({
     container: {
@@ -29,13 +29,13 @@ export default function AddScreen() {
                 <View style={{ gap: 8 }}>
                     <Text style={Typography.title.default}>이 제품이 맞나요?</Text>
                 </View>
-                <View style={{ gap: 14, borderStyle: 'solid', borderWidth: 1, borderColor: Colors.border.default, borderRadius: 16, padding: 20, backgroundColor: Colors.background.card }}>
+                <View style={{ gap: 14, borderStyle: 'solid', borderWidth: 1, borderColor: Colors.border.defaultLight, borderRadius: 16, padding: 20, backgroundColor: Colors.background.card }}>
                     <View style={{gap: 2}}>
                         <Text style={[Typography.secondary.default, {color:Colors.text.secondary}]}>토리든</Text>
                         <Text style={[Typography.title.small]}>다이브인 세럼</Text>
                         <Text style={[Typography.secondary.default, {color:Colors.text.secondary}]}>수분 세럼</Text>
                     </View>
-                    <View style={{height:1, backgroundColor: Colors.border.default}}></View>
+                    <View style={{height:1, backgroundColor: Colors.border.defaultLight}}></View>
                     <View>
                         <Text>주요 성분</Text>
                         <Text>히알루론산, 판테놀</Text>
@@ -43,8 +43,9 @@ export default function AddScreen() {
                     <View>
                         <Text>기능 태그</Text>
                         <View style={{ flexDirection:'row', gap: 8}}>
-                            <View style={{alignSelf:'flex-start', borderWidth: 1, borderStyle: 'solid', borderColor: Colors.border.default, borderRadius: 200, paddingVertical: 8, paddingHorizontal:16 }}><Text style={[Typography.label.default, {color: Colors.text.secondary}]}>저자극</Text></View>
-                            <View style={{alignSelf:'flex-start', borderWidth: 1, borderStyle: 'solid', borderColor: Colors.border.default, borderRadius: 200, paddingVertical: 8, paddingHorizontal:16 }}><Text style={[Typography.label.default, {color: Colors.text.secondary}]}>보습</Text></View>
+                            {['저자극보습'].map((text, index) => (
+                                <View key={index} style={{alignSelf:'flex-start', borderWidth: 1, borderStyle: 'solid', borderColor: Colors.border.defaultLight, borderRadius: 200, paddingVertical: 8, paddingHorizontal:16 }}><Text style={[Typography.label.default, {color: Colors.text.secondary}]}>{text}</Text></View>
+                            ))}
                         </View>
                     </View>
                     <View>

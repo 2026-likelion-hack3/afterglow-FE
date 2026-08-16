@@ -14,7 +14,7 @@ function Log({ text }: {
             style={{
                 flexDirection: 'row',
                 justifyContent: 'space-between', alignItems: 'center',
-                borderWidth: 1, borderStyle: 'solid', borderColor: Colors.border.default,
+                borderWidth: 1, borderStyle: 'solid', borderColor: Colors.border.defaultLight,
                 borderRadius: 16,
                 paddingVertical: 18, paddingHorizontal: 20,
                 backgroundColor: Colors.background.card

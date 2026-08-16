@@ -25,6 +25,7 @@ export const Colors = {
     },
     border: {
         light: '#DFDCD4',
+        defaultLight: '#E6E4E0',
         default: '#A19E99',
         dark: '#1A1A1A'
     },

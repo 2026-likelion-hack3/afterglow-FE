@@ -9,7 +9,7 @@ import { Colors } from "@/src/constants/colors";
 import { Typography } from "@/src/constants/typography";
 import { useState } from "react";
 import { Pressable, ScrollView, StyleSheet, Text } from "react-native";
-import { View } from "react-native-reanimated/lib/typescript/Animated";
+import { View } from "react-native";
 import AlertIcon from '@/assets/icons/alert.svg';
 import { router } from "expo-router";
 

@@ -9,7 +9,7 @@ import { Colors } from "@/src/constants/colors";
 import { Typography } from "@/src/constants/typography";
 import { router } from "expo-router";
 import { Pressable, ScrollView, StyleSheet, Text, TextInput } from "react-native";
-import { View } from "react-native-reanimated/lib/typescript/Animated";
+import { View } from "react-native";
 import AlertButton from '@/assets/icons/alert.svg';
 import { useState } from "react";
 
@@ -39,7 +39,7 @@ export default function ScanScreen() {
                     <Text style={[Typography.label.default, {color: Colors.text.secondary}]}>어떤 종류인가요?</Text>
                     <View style={{ flexDirection:'row', gap: 8}}>
                         {['세안', '토너', '세럼', '크림', '선크림'].map((text, index)=>(
-                            <Pressable onPress={()=>{selected.includes(index) ? setselected([...selected.slice(0,selected.indexOf(index)), ...selected.slice(selected.indexOf(index)+1)]):setselected([...selected, index])}} style={[{alignSelf:'flex-start', borderWidth: 1, borderStyle: 'solid', borderColor: Colors.border.default, borderRadius: 200, paddingVertical: 8, paddingHorizontal:16 }, selected.includes(index) && {backgroundColor:Colors.accent.default, borderColor: Colors.accent.dark, borderWidth: 2}]}>
+                            <Pressable onPress={()=>{selected.includes(index) ? setselected([...selected.slice(0,selected.indexOf(index)), ...selected.slice(selected.indexOf(index)+1)]):setselected([...selected, index])}} style={[{alignSelf:'flex-start', borderWidth: 1, borderStyle: 'solid', borderColor: Colors.border.defaultLight, borderRadius: 200, paddingVertical: 8, paddingHorizontal:16 }, selected.includes(index) && {backgroundColor:Colors.accent.default, borderColor: Colors.accent.dark, borderWidth: 2}]}>
                                 <Text style={[Typography.label.default, {color: Colors.text.secondary}, selected.includes(index) && {color: Colors.text.default}, selected.includes(index) && Typography.label.default]}>{text}</Text>
                             </Pressable>
                         ))}
@@ -47,13 +47,13 @@ export default function ScanScreen() {
                 </View>
                 <View style={{gap:10}}>
                     <Text style={[Typography.label.default, {color: Colors.text.secondary}]}>제품 이름 (선택)</Text>
-                    <TextInput value={input} onChangeText={setInput} placeholder="기억나는 대로 적어주세요" style={[Typography.text.default, {color:Colors.text.muted, paddingVertical:18, paddingHorizontal:20}]} />
+                    <TextInput value={input} onChangeText={setInput} placeholder="기억나는 대로 적어주세요" style={[Typography.text.default, {color:Colors.text.muted, paddingVertical:18, paddingHorizontal:20, borderWidth: 1, borderStyle: 'solid', borderColor: Colors.border.defaultLight}]} />
                 </View>
                 <View style={{gap:10}}>
                     <Text style={[Typography.label.default, {color: Colors.text.secondary}]}>혹시 이런 성분이 있나요?</Text>
                     <View style={{ flexDirection:'row', gap: 8}}>
                         {['레티놀', '산'].map((text, index)=>(
-                            <Pressable onPress={()=>{selected2.includes(index) ? setselected2([...selected2.slice(0,selected2.indexOf(index)), ...selected2.slice(selected2.indexOf(index)+1)]):setselected2([...selected2, index])}} style={[{alignSelf:'flex-start', borderWidth: 1, borderStyle: 'solid', borderColor: Colors.border.default, borderRadius: 200, paddingVertical: 8, paddingHorizontal:16 }, selected.includes(index) && {backgroundColor:Colors.accent.default, borderColor: Colors.accent.dark, borderWidth: 2}]}>
+                            <Pressable onPress={()=>{selected2.includes(index) ? setselected2([...selected2.slice(0,selected2.indexOf(index)), ...selected2.slice(selected2.indexOf(index)+1)]):setselected2([...selected2, index])}} style={[{alignSelf:'flex-start', borderWidth: 1, borderStyle: 'solid', borderColor: Colors.border.defaultLight, borderRadius: 200, paddingVertical: 8, paddingHorizontal:16 }, selected.includes(index) && {backgroundColor:Colors.accent.default, borderColor: Colors.accent.dark, borderWidth: 2}]}>
                                 <Text style={[Typography.label.default, {color: Colors.text.secondary}, selected2.includes(index) && {color: Colors.text.default}, selected2.includes(index) && Typography.label.default]}>{text}</Text>
                             </Pressable>
                         ))}

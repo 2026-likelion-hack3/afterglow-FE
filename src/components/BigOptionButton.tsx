@@ -16,7 +16,7 @@ const Styles = StyleSheet.create({
         alignItems: 'flex-start',
         borderWidth: 1,
         borderStyle: 'solid',
-        borderColor: Colors.border.default,
+        borderColor: Colors.border.defaultLight,
         borderRadius: 18,
         paddingVertical: 17.5,
         paddingHorizontal: 24,
