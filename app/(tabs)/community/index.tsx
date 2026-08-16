@@ -8,7 +8,7 @@ import { Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-nati
 import NightIcon from '@/assets/icons/night.svg';
 import PathIcon from '@/assets/icons/path.svg';
 import { router } from "expo-router";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { UserContext } from "@/src/contexts/UserContext";
 
 const Styles = StyleSheet.create({
@@ -89,16 +89,24 @@ type PostProp = {
 }
 
 function Post({ prop }: PostProp) : React.JSX.Element {
+    const user = useContext(UserContext);
+
     return (
-        <Pressable onPress={()=>{router.push(`/(tabs)/community/${prop.id}`)}} style={{
-            gap: 8,
-            paddingVertical: 16,
-            paddingHorizontal: 18,
-            backgroundColor: Colors.background.card,
-            borderRadius: 16,
-            borderWidth: 1,
-            borderColor: Colors.border.defaultLight
-        }}>
+        <Pressable
+            onPress={()=>{
+                router.push(`/(tabs)/community/${prop.id}`);
+                user?.setIsReading(true);
+            }}
+            style={{
+                gap: 8,
+                paddingVertical: 16,
+                paddingHorizontal: 18,
+                backgroundColor: Colors.background.card,
+                borderRadius: 16,
+                borderWidth: 1,
+                borderColor: Colors.border.defaultLight
+            }}
+        >
             <Text style={Typography.text.accent}>{prop.title}</Text>
             <View style={{flexDirection: 'row', gap: 6}}>
                 {prop.tags && prop.tags.map((tag, index) => (
@@ -117,6 +125,10 @@ function Post({ prop }: PostProp) : React.JSX.Element {
 
 export default function CommunityScreen() {
     const user = useContext(UserContext);
+
+    useEffect(()=>{
+        user?.setIsReading(false);
+    }, []);
 
     const [selected, setselected] = useState<Array<number>>([]);
     const [selected2, setselected2] = useState<Array<number>>([]);
