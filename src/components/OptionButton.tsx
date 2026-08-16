@@ -14,7 +14,7 @@ const Styles = StyleSheet.create({
         alignItems: 'center',
         borderWidth: 1,
         borderStyle: 'solid',
-        borderColor: Colors.border.default,
+        borderColor: Colors.border.defaultLight,
         borderRadius: 16,
         padding: 23,
         backgroundColor: Colors.background.card,

@@ -9,7 +9,7 @@ import { Colors } from "@/src/constants/colors";
 import { Typography } from "@/src/constants/typography";
 import { router } from "expo-router";
 import { ScrollView, StyleSheet, Text } from "react-native";
-import { View } from "react-native-reanimated/lib/typescript/Animated";
+import { View } from "react-native";
 
 const Styles = StyleSheet.create({
     container: {
@@ -34,10 +34,10 @@ export default function ScanScreen() {
                 <View style={{borderStyle: 'dashed', borderWidth: 1, borderColor: Colors.sand[400], backgroundColor: Colors.background.subtle}}>
                     <Text>카메라화면미개발</Text>
                 </View>
-                <View style={{gap: 10, borderStyle: 'solid', borderWidth: 1, borderColor: Colors.border.default, borderRadius: 16, padding: 20, backgroundColor: Colors.background.card }}>
+                <View style={{gap: 10, borderStyle: 'solid', borderWidth: 1, borderColor: Colors.border.defaultLight, borderRadius: 16, padding: 20, backgroundColor: Colors.background.card }}>
                     <Text style={[Typography.label.default, {color:Colors.text.secondary}]}>이런 걸 찾아냅니다</Text>
                     {['레티놀', '산', '비타민씨'].map((text)=>(
-                        <View style={[{alignSelf:'flex-start', borderWidth: 1, borderStyle: 'solid', borderColor: Colors.border.default, borderRadius: 200, paddingVertical: 8, paddingHorizontal:16 }]}>
+                        <View style={[{alignSelf:'flex-start', borderWidth: 1, borderStyle: 'solid', borderColor: Colors.border.defaultLight, borderRadius: 200, paddingVertical: 8, paddingHorizontal:16 }]}>
                             <Text style={[Typography.label.default, {color: Colors.text.secondary}]}>{text}</Text>
                         </View>
                     ))}

@@ -17,6 +17,8 @@ type UserContextType = {
         isCompleted: boolean,
         setIsCompleted: (isCompleted: boolean) => void;
     };
+    isReading: boolean;
+    setIsReading: (isReading: boolean) => void;
 };
 
 export const UserContext = createContext<UserContextType | null>(null);
@@ -28,6 +30,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     const [part, setPart] = useState("");
     const [recentProduct, setRecentProduct] = useState("");
     const [isCompleted, setIsCompleted] = useState(false);
+    const [isReading, setIsReading] = useState(false);
 
     return (
         <UserContext.Provider
@@ -41,7 +44,8 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
                     part, setPart,
                     recentProduct, setRecentProduct,
                     isCompleted, setIsCompleted
-                }
+                },
+                isReading, setIsReading
             }}
         >
             {children}

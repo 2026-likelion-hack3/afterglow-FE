@@ -28,7 +28,7 @@ export default function RecordScreen() {
                 <Text style={ Typography.title.default }>3일 뒤에 비교해 보시라고{'\n'}지금 한 장 남겨둘게요.</Text>
                 {/** 개발 필요 */}
                 <View style={{ gap: 8 }}>
-                    <View style={{ borderStyle: 'dashed', borderWidth: 1, borderColor: Colors.border.default, borderRadius: 8, height: 440}}>
+                    <View style={{ borderStyle: 'dashed', borderWidth: 1, borderColor: Colors.sand[400], borderRadius: 8, height: 440}}>
                         <Text>카메라화면미개발</Text>
                     </View>
                     <View style={{ backgroundColor: Colors.sand[100], borderRadius: 8, padding: 10 }}>
