@@ -60,3 +60,40 @@ export const submitIntake = async (
 ): Promise<void> => {
   await apiClient.post(`/api/episodes/${episodeId}/intake`, data);
 };
+
+// 화면에 표시되는 한글 라벨 → API가 요구하는 enum 값 매핑
+export const symptomLabelToEnum: Record<string, PrimarySymptom> = {
+  '건조·당김': 'DRYNESS_TIGHTNESS',
+  '가려움': 'ITCHING',
+  '따가움': 'STINGING',
+  '붉어짐': 'REDNESS',
+  '트러블': 'TROUBLE',
+};
+
+// src/api/episode.ts에 추가할 함수 (Context 값 받아서 두 API 순서대로 호출)
+export const submitFullRecord = async (data: {
+  angle: number;
+  radius: number;
+  primarySymptom: PrimarySymptom;
+  severity: Severity;
+  onsetPeriod: OnsetPeriod;
+  bodyParts: BodyPart[];
+  recentNewProductName?: string;
+  notes?: string;
+}) => {
+  const episode = await createEpisode({
+    angle: data.angle,
+    radius: data.radius,
+    primarySymptom: data.primarySymptom,
+    severity: data.severity,
+  });
+
+  await submitIntake(episode.episodeId, {
+    onsetPeriod: data.onsetPeriod,
+    bodyParts: data.bodyParts,
+    recentNewProductName: data.recentNewProductName,
+    notes: data.notes,
+  });
+
+  return episode.episodeId;
+};
