@@ -77,6 +77,7 @@ const RoutineStyles = StyleSheet.create({
 })
 
 type PostTypes = {
+    id: number
     title: string
     tags?: Array<string>
     info: string
@@ -89,7 +90,7 @@ type PostProp = {
 
 function Post({ prop }: PostProp) : React.JSX.Element {
     return (
-        <View style={{
+        <Pressable onPress={()=>{router.push(`/(tabs)/community/${prop.id}`)}} style={{
             gap: 8,
             paddingVertical: 16,
             paddingHorizontal: 18,
@@ -110,7 +111,7 @@ function Post({ prop }: PostProp) : React.JSX.Element {
                 <Text>{prop.info}</Text>
                 <Text>저도 그래요 {prop.like}</Text>
             </View>
-        </View>
+        </Pressable>
     )
 }
 
@@ -122,18 +123,21 @@ export default function CommunityScreen() {
 
     const posts : Array<PostTypes> = [
         {
+            id: 0,
             title: '밤에 못 자면 다음날 꼭 가려워요',
             tags: ['가려움', '잠 못 잤을 때'],
             info: '폐경 2년차',
             like: 14
         },
         {
+            id: 1,
             title: '세라마이드 크림으로 버티는 중',
             tags: ['가려움'],
             info: '이행기',
             like: 9
         },
         {
+            id: 2,
             title: '환절기마다 반복돼서 기록 시작했어요',
             tags: ['가려움', '계절·날씨'],
             info: '폐경 4년차',
