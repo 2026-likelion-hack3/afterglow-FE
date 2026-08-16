@@ -8,6 +8,8 @@ import { Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-nati
 import NightIcon from '@/assets/icons/night.svg';
 import PathIcon from '@/assets/icons/path.svg';
 import { router } from "expo-router";
+import { useContext } from "react";
+import { UserContext } from "@/src/contexts/UserContext";
 
 const user = {
     profileImage: false
@@ -100,6 +102,8 @@ function RoutineList({ num, text }: {
 }
 
 export default function HomeScreen() {
+    const user = useContext(UserContext);
+
     return (
             <View style={ Styles.container }>
                 <View style={ Styles.header }>
@@ -135,7 +139,7 @@ export default function HomeScreen() {
                         <Text style={ [Typography.text.small, { color: Colors.text.secondary }] }>잠이 부족했던 다음 날{'\n'}건조함을 자주 기록하셨어요</Text>
                     </View>
                     {/** 피부 원인 확인하기 */}
-                    <Pressable onPress={()=>{router.push('/record')}}>
+                    <Pressable onPress={()=>{user?.recordSymptom.setIsCompleted(false); router.push('/scan');}}>
                     <View style={ [Styles.card, {backgroundColor: Colors.accent.default, position: 'relative'}] }>
                         <Text style={ [Typography.figure.big, { color: '#42362F' }] }>피부가{'\n'}불편해요</Text>
                         <View style={{ flexDirection: 'row', gap: 8, alignItems: 'center', paddingTop: 8 }}>

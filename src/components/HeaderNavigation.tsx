@@ -24,15 +24,14 @@ const Styles = StyleSheet.create({
 })
 
 type HeaderNavigationProps = {
-    title: string,
-    route: Href
+    title: string
 }
 
-export default function HeaderNavigation({ title, route }: HeaderNavigationProps) {
+export default function HeaderNavigation({ title }: HeaderNavigationProps) {
     return (
         <View style={ Styles.header }>
             <View style={ Styles.button }>
-                <PreviousButton route={ route }/>
+                <PreviousButton />
             </View>
             <View>
                 <Text style={ Typography.text.accent }>{ title }</Text>

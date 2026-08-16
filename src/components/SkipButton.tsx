@@ -20,9 +20,7 @@ const Styles = StyleSheet.create({
     }
 })
 
-const defaultOnpress = async () => await AsyncStorage.setItem("onboardingCompleted", "true");
-
-export default function SkipButton({ text, onPress=defaultOnpress, route }: SkipButtonProps) {
+export default function SkipButton({ text, onPress=()=>{}, route }: SkipButtonProps) {
     return (
         <Pressable
             onPress={async () => {

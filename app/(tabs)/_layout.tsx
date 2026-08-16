@@ -4,12 +4,13 @@ import { router, Stack } from "expo-router";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { SvgProps } from "react-native-svg";
-import { useState } from "react";
+import { useContext, useState } from "react";
 
 import HomeIcon from '@/assets/icons/home.svg';
 import CosmeticsIcon from '@/assets/icons/cosmetics.svg';
 import LogsIcon from '@/assets/icons/logs.svg';
 import CommunityIcon from '@/assets/icons/community.svg';
+import { UserContext } from "@/src/contexts/UserContext";
 
 const Styles = StyleSheet.create({
     screen: {
@@ -72,6 +73,7 @@ function Tabs({ Icon, text, width, height, onPress, current }: {
 }
 
 export default function TabLayout() {
+    const user = useContext(UserContext);
     const tabArr = [
         {
             text: '홈',
@@ -121,8 +123,8 @@ export default function TabLayout() {
     return (
         <View style={ [Styles.screen, { paddingTop: insets.top }] }>
             <Stack screenOptions={{ headerShown: false, animation: 'fade' }} />
-            <View style={ [Styles.tabBar, { paddingBottom: insets.bottom }] }>
-                {tabArr.map((item, index)=>(
+            <View style={ [Styles.tabBar, { paddingBottom: 16 }] }>
+                {!user?.isReading && tabArr.map((item, index)=>(
                     <Tabs
                         Icon={item.Icon}
                         text={item.text}

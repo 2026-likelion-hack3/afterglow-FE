@@ -1,12 +1,14 @@
 /**
- * 부위 문항 화면
+ * 부위 문항 화면 (C2-2)
  */
 
 import ActionButton from "@/src/components/ActionButton";
+import HeaderNavigation from "@/src/components/HeaderNavigation";
 import SmallOptionButton from "@/src/components/SmallOptionButton";
 import { Colors } from "@/src/constants/colors";
 import { Typography } from "@/src/constants/typography";
-import { useState } from "react";
+import { UserContext } from "@/src/contexts/UserContext";
+import { useContext, useState } from "react";
 import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
 
 const Styles = StyleSheet.create({
@@ -22,8 +24,11 @@ export default function RecordScreen() {
         '디자인 없음'
     ]
     const [selected, setselected] = useState('');
+    const user = useContext(UserContext);
+
     return (
         <>
+            <HeaderNavigation title="증상 기록" key={0} />
             <ScrollView>
             <View style={ Styles.container }>
                 <View style={{ gap: 8 }}>
@@ -35,7 +40,7 @@ export default function RecordScreen() {
                         <SmallOptionButton text={option} onPress={()=>setselected(option)} isSelected={selected == option} key={index} />
                     ))}
                 </View>
-                <View style={{ gap: 8, backgroundColor: Colors.background.subtle, borderWidth: 1, borderStyle: 'solid', borderColor: Colors.border.default, borderRadius: 16, padding: 20 }}>
+                <View style={{ gap: 8, backgroundColor: Colors.background.subtle, borderWidth: 1, borderStyle: 'solid', borderColor: Colors.border.defaultLight, borderRadius: 16, padding: 20 }}>
                     <Text style={[Typography.label.default, { color: Colors.text.secondary }]}>다음 질문</Text>
                     <Text style={[Typography.secondary.small, { color: Colors.text.secondary }]}>최근 새로 쓴 제품이 있나요?</Text>
                 </View>
@@ -43,7 +48,7 @@ export default function RecordScreen() {
                 
             </ScrollView>
             <View style={{ marginBottom: 14, marginTop: 8 }}>
-                <ActionButton text="선택 완료" route={'/record/recent'}/>
+                <ActionButton text="선택 완료" route={'/record/recent'} onPress={()=>user?.recordSymptom.setPart(selected)}/>
             </View>
         </>
     )
