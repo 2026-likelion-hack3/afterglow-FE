@@ -4,7 +4,7 @@
 
 import { Colors } from "@/src/constants/colors";
 import { Typography } from "@/src/constants/typography";
-import { Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Image, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import NightIcon from '@/assets/icons/night.svg';
 import PathIcon from '@/assets/icons/path.svg';
 import { router, useLocalSearchParams } from "expo-router";
@@ -156,6 +156,9 @@ export default function CommunityScreen() {
     
     const [selected, setselected] = useState<Array<number>>([]);
     const [selected2, setselected2] = useState<Array<number>>([]);
+    const [content, setContent] = useState('');
+
+    const [checked, setChecked] = useState(false);
 
     return (
         <View style={ Styles.container }>
@@ -164,9 +167,7 @@ export default function CommunityScreen() {
             <View style={ Styles.content }>
                 <View style={{gap:6, paddingVertical: 16, paddingHorizontal: 18, borderRadius: 16, borderWidth: 1, borderStyle: 'solid', borderColor: Colors.border.defaultLight}}>
                     <Text style={Typography.label.default}>이런 내용은 쓸 수 없어요</Text>
-                    <Text>제품명과 브랜드명 (성분은 괜찮아요)
-병원명과 시술 가격
-진단명 단정, 치료법 권유</Text>
+                    <Text>제품명과 브랜드명 (성분은 괜찮아요){'\n'}병원명과 시술 가격{'\n'}진단명 단정, 치료법 권유</Text>
                 </View>
                 <View style={{gap:10}}>
                     <Text style={[Typography.label.default, {color: Colors.text.secondary}]}>증상 태그 · 하나는 꼭 골라주세요</Text>
@@ -188,7 +189,45 @@ export default function CommunityScreen() {
                         ))}
                     </View>
                 </View>
-                <View><Text>미구현</Text></View>
+                <View>
+                    <TextInput
+                        placeholder="어떤 일이 있었는지 편하게 적어주세요"
+                        placeholderTextColor={Colors.text.muted}
+                        value={content}
+                        onChangeText={setContent}
+                        multiline
+                        textAlignVertical="top"
+                        style={[
+                            {paddingVertical: 18, paddingHorizontal: 20, backgroundColor: Colors.background.card, borderWidth: 1, borderStyle: 'solid', borderColor: Colors.border.defaultLight, borderRadius: 16, minHeight: 254},
+                            Typography.text.default
+                        ]}
+                    />
+                </View>
+                <View style={{gap:12}}>
+                    <Pressable
+                        style={{flexDirection: 'row', gap: 10, alignItems: 'center'}}
+                        onPress={() => setChecked(prev => !prev)}
+                    >
+                        <View
+                            style={{
+                                width: 22,
+                                height: 22,
+                                borderWidth: 1,
+                                borderColor: checked ? Colors.border.defaultLight : Colors.accent.dark,
+                                borderRadius: 6,
+                                alignItems: "center",
+                                justifyContent: "center",
+                                backgroundColor: checked ? Colors.background.card : Colors.accent.default,
+                            }}
+                        >
+                            {checked && (
+                                <Text style={{ color: "white" }}>✓</Text>
+                            )}
+                        </View>
+                        <Text style={Typography.text.small}>폐경 연차 공개</Text>
+                    </Pressable>
+                    <Text style={[Typography.secondary.small, {color:Colors.text.muted}]}>익명으로 올라갑니다. 얼굴 사진과 월경 상태는 포함되지 않습니다.</Text>
+                </View>
             </View>
             </ScrollView>
             <ActionButton text="작성 완료" route={'/(tabs)/community'} />
