@@ -100,7 +100,7 @@ function Post({ prop }: PostProp) : React.JSX.Element {
             borderColor: Colors.border.defaultLight
         }}>
             <Text style={Typography.text.accent}>{prop.title}</Text>
-            <View>
+            <View style={{flexDirection: 'row', gap: 6}}>
                 {prop.tags && prop.tags.map((tag, index) => (
                     <View key={index} style={[{alignSelf:'flex-start', borderWidth: 1, borderStyle: 'solid', borderColor: Colors.border.defaultLight, borderRadius: 200, paddingVertical: 8, paddingHorizontal:16 }]}>
                         <Text style={[Typography.label.default, {color: Colors.text.secondary}]}>{tag}</Text>
@@ -108,8 +108,8 @@ function Post({ prop }: PostProp) : React.JSX.Element {
                 ))}
             </View>
             <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-                <Text>{prop.info}</Text>
-                <Text>저도 그래요 {prop.like}</Text>
+                <Text style={[Typography.secondary.small, {color: Colors.text.muted}]}>{prop.info}</Text>
+                <Text style={[Typography.secondary.small, {color: Colors.text.muted}]}>저도 그래요 {prop.like}</Text>
             </View>
         </Pressable>
     )

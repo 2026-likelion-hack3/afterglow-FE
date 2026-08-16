@@ -15,7 +15,8 @@ import HeaderNavigation from "@/src/components/HeaderNavigation";
 
 const Styles = StyleSheet.create({
     container: {
-        paddingTop: 20,
+        paddingTop: 16,
+        paddingBottom: 14,
         paddingHorizontal: 16,
         flex: 1,
         gap: 16
@@ -25,7 +26,8 @@ const Styles = StyleSheet.create({
         justifyContent: 'space-between'
     },
     content: {
-        gap: 12,
+        flex: 1,
+        gap: 16,
         marginBottom: 24
     },
     card: {
@@ -89,33 +91,63 @@ type PostTypes = {
 }
 
 type PostProp = {
-    prop: PostTypes
+    post: PostTypes,
+    likes: number
+    setLikes: (likes: number)=>void
 }
 
-function Post({ prop }: PostProp) : React.JSX.Element {
+function Post({ post, likes, setLikes }: PostProp) : React.JSX.Element {
+    const [isPressed, setIsPressed] = useState(false);
+    function onPress() {
+        if (isPressed) {
+            setIsPressed(false);
+            setLikes(likes - 1);
+        } else {
+            setIsPressed(true);
+            setLikes(likes + 1);
+        }
+    }
     return (
-        <View style={{
-            gap: 8,
-            paddingVertical: 16,
-            paddingHorizontal: 18,
-            backgroundColor: Colors.background.card,
-            borderRadius: 16,
-            borderWidth: 1,
-            borderColor: Colors.border.defaultLight
-        }}>
-            <Text style={Typography.text.accent}>{prop.title}</Text>
-            <View>
-                {prop.tags && prop.tags.map((tag, index) => (
-                    <View key={index} style={[{alignSelf:'flex-start', borderWidth: 1, borderStyle: 'solid', borderColor: Colors.border.defaultLight, borderRadius: 200, paddingVertical: 8, paddingHorizontal:16 }]}>
-                        <Text style={[Typography.label.default, {color: Colors.text.secondary}]}>{tag}</Text>
-                    </View>
-                ))}
+        <>
+            <View style={{gap: 10}}>
+                <Text style={Typography.title.default} >{post.title}</Text>
+                <View style={{flexDirection: 'row', gap: 6}}>
+                    {post.tags && post.tags.map((tag, index) => (
+                        <View key={index} style={[{alignSelf:'flex-start', borderWidth: 1, borderStyle: 'solid', borderColor: Colors.border.defaultLight, borderRadius: 200, paddingVertical: 8, paddingHorizontal:16 }]}>
+                            <Text style={[Typography.label.default, {color: Colors.text.secondary}]}>{tag}</Text>
+                        </View>
+                    ))}
+                </View>
+                <Text>{post.info} · 3일 전</Text>
             </View>
-            <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-                <Text>{prop.info}</Text>
-                <Text>저도 그래요 {prop.like}</Text>
+            <View style={{
+                gap: 8,
+                padding: 20,
+                backgroundColor: Colors.background.card,
+                borderRadius: 16,
+                borderWidth: 1,
+                borderColor: Colors.border.defaultLight
+            }}>
+                <Text style={Typography.text.small}>{post.content}</Text>
             </View>
-        </View>
+            
+            <View style={{flexDirection: 'row', gap: 10}}>
+                <Pressable
+                    onPress={onPress}
+                    style={[
+                        {paddingVertical: 12, paddingHorizontal: 18, borderWidth: 1, borderStyle: 'solid', borderColor: Colors.border.defaultLight },
+                        isPressed && {borderColor: Colors.text.default}
+                    ]}
+                >
+                    <Text style={[Typography.secondary.small, {color: Colors.text.muted}]}>저도 그래요 {likes}</Text>
+                </Pressable>
+                <View
+                    style={{paddingVertical: 12, paddingHorizontal: 18, borderWidth: 1, borderStyle: 'solid', borderColor: Colors.border.defaultLight }}
+                >
+                    <Text style={[Typography.secondary.small, {color: Colors.text.muted}]}>댓글 {post.reply ? post.reply.length : 0}</Text>
+                </View>
+            </View>
+        </>
     )
 }
 
@@ -123,7 +155,7 @@ export default function CommunityScreen() {
     const user = useContext(UserContext);
     const {id} = useLocalSearchParams<{id:string}>()
     const postId = parseInt(id);
-    const getPost: PostTypes = postId == 0 ? {
+    const getPost = () => ( postId == 0 ? {
             id: 0,
             title: '밤에 못 자면 다음날 꼭 가려워요',
             tags: ['가려움', '잠 못 잤을 때'],
@@ -146,16 +178,19 @@ export default function CommunityScreen() {
             info: '폐경 4년차',
             like: 6,
             content: ''
-        }
+        })
+    const post = getPost();
+    const [likes, setLikes] = useState(post.like);
 
     return (
         <View style={ Styles.container }>
             <HeaderNavigation title="이야기" />
             <ScrollView>
             <View style={ Styles.content }>
-                <Post prop={getPost} />
+                <Post post={post} likes={likes} setLikes={setLikes} />
             </View>
             </ScrollView>
+            <Text style={[Typography.secondary.small, {textAlign: 'center', color: Colors.text.muted}]}>개인 경험이며 의학적 조언이 아닙니다</Text>
         </View>
     )
 };
