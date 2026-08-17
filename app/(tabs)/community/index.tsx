@@ -110,7 +110,7 @@ function NoPosts({ getLastHistory, undo }: NoPostsProp) : React.JSX.Element {
 
                     <Text style={[Typography.secondary.default, {color: Colors.text.secondary}]}>조건을 하나 풀어보시겠어요?</Text>
                     <Pressable style={Styles.suggestionButton} onPress={undo}>
-                        <Text style={[Typography.label.default, {textAlign: 'center'}]}>{lastHistory.lastArr.join(' + ')}만 보기 · {lastHistory.postCount}개</Text>
+                        <Text style={[Typography.label.default, {textAlign: 'center'}]}>{lastHistory.lastArr.join(' + ') + '만 보기'} · {lastHistory.postCount}개</Text>
                     </Pressable>
                     {lastHistory.lastItem[0] &&
                         <Text style={[Typography.secondary.small, {color: Colors.text.muted}]}>마지막에 더한 "{lastHistory.lastItem[0]}" 때문에 결과가 없어졌어요</Text>
@@ -151,9 +151,29 @@ export default function CommunityScreen() {
 
     // 배열의 변경 이력
     type HistoryEntry = {
-        type: "selectedSymptoms" | "selectedSituations"
+    type: "selectedSymptoms" | "selectedSituations";
         previous: string[];
-    }
+        added: string[];
+        removed: string[];
+    };
+
+    const getArrayDiff = (
+        previous: string[],
+        current: string[],
+    ) => {
+        const added = current.filter(
+            (item) => !previous.includes(item)
+        );
+
+        const removed = previous.filter(
+            (item) => !current.includes(item)
+        );
+
+        return {
+            added,
+            removed,
+        };
+    };
 
     const [history, setHistory] = useState<HistoryEntry[]>([]);
     const previousSelectedSymptoms = useRef(selectedSymptoms);
@@ -164,95 +184,138 @@ export default function CommunityScreen() {
 
     // items가 변경될 때마다 history에 기록
     useEffect(() => {
-        if (previousSelectedSymptoms.current === selectedSymptoms) return;
+        if (previousSelectedSymptoms.current === selectedSymptoms) {
+            return;
+        }
+
         if (undoingType.current === "selectedSymptoms") {
             previousSelectedSymptoms.current = selectedSymptoms;
             undoingType.current = null;
             return;
         }
+
+        const diff = getArrayDiff(
+            previousSelectedSymptoms.current,
+            selectedSymptoms,
+        );
+
         setHistory((prev) => [
             ...prev,
             {
                 type: "selectedSymptoms",
                 previous: previousSelectedSymptoms.current,
+                added: diff.added,
+                removed: diff.removed,
             },
         ]);
+
         previousSelectedSymptoms.current = selectedSymptoms;
     }, [selectedSymptoms]);
 
     useEffect(() => {
-        if (previousSelectedSituations.current === selectedSituations) return;
+        if (previousSelectedSituations.current === selectedSituations) {
+            return;
+        }
+
         if (undoingType.current === "selectedSituations") {
             previousSelectedSituations.current = selectedSituations;
             undoingType.current = null;
             return;
         }
+
+        const diff = getArrayDiff(
+            previousSelectedSituations.current,
+            selectedSituations,
+        );
+
         setHistory((prev) => [
             ...prev,
             {
-            type: "selectedSituations",
-            previous: previousSelectedSituations.current,
+                type: "selectedSituations",
+                previous: previousSelectedSituations.current,
+                added: diff.added,
+                removed: diff.removed,
             },
         ]);
+
         previousSelectedSituations.current = selectedSituations;
     }, [selectedSituations]);
-    
-    const isUndoing = useRef(false);
-
-    const getAddedItems = (
-        previous: string[],
-        current: string[]
-    ) => {
-        return current.filter(
-            (item) => !previous.includes(item)
-        );
-    };
 
     const getLastHistory = () => {
-        if (history.length === 0) return null;
-        const last = history[history.length - 1];
-        if (last.previous.length === 0) return null;
+        for (let i = history.length - 1; i >= 0; i--) {
+            const item = history[i];
 
-        let symptoms = selectedSymptoms;
-        let situations = selectedSituations;
+            // "추가"가 발생한 기록만 대상으로 함
+            if (item.added.length === 0) {
+                continue;
+            }
 
-        let added: string[];
-        if (last.type === "selectedSymptoms") {
-            added = getAddedItems(
-                last.previous,
-                selectedSymptoms
+            let suggestedSymptoms = selectedSymptoms;
+            let suggestedSituations = selectedSituations;
+
+            if (item.type === "selectedSymptoms") {
+                suggestedSymptoms = selectedSymptoms.filter(
+                    (value) => !item.added.includes(value)
+                );
+            } else {
+                suggestedSituations = selectedSituations.filter(
+                    (value) => !item.added.includes(value)
+                );
+            }
+
+            const suggestedPosts = getFilteredPosts(
+                suggestedSymptoms,
+                suggestedSituations,
             );
-        } else {
-            added = getAddedItems(
-                last.previous,
-                selectedSymptoms
-            );
+
+            // 실제로 조건을 풀었을 때 결과가 생기는 경우만 제안
+            if (suggestedPosts.length > 0) {
+                return {
+                    historyIndex: i,
+                    lastItem: item.added,
+                    lastArr: [
+                        ...suggestedSymptoms,
+                        ...suggestedSituations,
+                    ],
+                    postCount: suggestedPosts.length,
+                };
+            }
         }
-        const undoPosts = getFilteredPosts(
-            symptoms,
-            situations,
-        );
 
-        return {
-            lastItem: added,
-            lastArr: [
-                ...symptoms,
-                ...situations,
-            ],
-            postCount: undoPosts.length,
-        };
-    }
+        return null;
+    };
 
     const undo = () => {
-        if (history.length === 0) return null;
-        const last = history[history.length - 1];
-        undoingType.current = last.type;
-        if (last.type === "selectedSymptoms") {
-            setselectedSymptoms(last.previous);
-        } else {
-            setselectedSituations(last.previous);
+        const lastHistory = getLastHistory();
+
+        if (!lastHistory) {
+            return;
         }
-        setHistory((prev) => prev.slice(0, -1));
+
+        const item = history[lastHistory.historyIndex];
+
+        undoingType.current = item.type;
+
+        if (item.type === "selectedSymptoms") {
+            setselectedSymptoms((current) =>
+                current.filter(
+                    (value) => !item.added.includes(value)
+                )
+            );
+        } else {
+            setselectedSituations((current) =>
+                current.filter(
+                    (value) => !item.added.includes(value)
+                )
+            );
+        }
+
+        // 해당 history 제거
+        setHistory((prev) =>
+            prev.filter(
+                (_, index) => index !== lastHistory.historyIndex
+            )
+        );
     };
 
     const posts : Array<PostTypes> = [
