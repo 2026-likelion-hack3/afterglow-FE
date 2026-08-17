@@ -5,6 +5,7 @@
 import ActionButton from "@/src/components/ActionButton";
 import HeaderNavigation from "@/src/components/HeaderNavigation";
 import SecondaryActionButton from "@/src/components/SecondaryActionButton";
+import Tag from "@/src/components/Tag";
 import { Colors } from "@/src/constants/colors";
 import { Typography } from "@/src/constants/typography";
 import { router } from "expo-router";
@@ -14,12 +15,27 @@ import { View } from "react-native";
 const Styles = StyleSheet.create({
     container: {
         flex: 1,
-        gap: 24,
+        gap: 20,
         marginBottom: 16
+    },
+    card: {
+        gap: 14,
+        borderStyle: 'solid', borderWidth: 1, borderColor: Colors.border.defaultLight, borderRadius: 16,
+        padding: 20,
+        backgroundColor: Colors.background.card
+    },
+    line: {height:1, backgroundColor: Colors.border.defaultLight},
+    buttonContainer: {
+        marginBottom: 14,
+        marginTop: 8,
+        gap: 12
     }
 })
 
 export default function AddScreen() {
+    const name = ['토리든', '다이브인 세럼', '수분 세럼'];
+    const ingredients = ['히알루론산', '판테놀'];
+    const tags = ['저자극보습'];
     return (
         <>
             <HeaderNavigation title="제품 등록" />
@@ -29,36 +45,61 @@ export default function AddScreen() {
                 <View style={{ gap: 8 }}>
                     <Text style={Typography.title.default}>이 제품이 맞나요?</Text>
                 </View>
-                <View style={{ gap: 14, borderStyle: 'solid', borderWidth: 1, borderColor: Colors.border.defaultLight, borderRadius: 16, padding: 20, backgroundColor: Colors.background.card }}>
+                <View style={Styles.card}>
+                    {/* 제품 이름 */}
                     <View style={{gap: 2}}>
-                        <Text style={[Typography.secondary.default, {color:Colors.text.secondary}]}>토리든</Text>
-                        <Text style={[Typography.title.small]}>다이브인 세럼</Text>
-                        <Text style={[Typography.secondary.default, {color:Colors.text.secondary}]}>수분 세럼</Text>
+                        <Text
+                            style={[Typography.secondary.default, {color:Colors.text.secondary}]}
+                        >{ name[0] }</Text>
+                        <Text
+                            style={[Typography.title.small]}
+                        >{ name[1] }</Text>
+                        <Text
+                            style={[Typography.secondary.default, {color:Colors.text.secondary}]}
+                        >{ name[2] }</Text>
                     </View>
-                    <View style={{height:1, backgroundColor: Colors.border.defaultLight}}></View>
-                    <View>
-                        <Text>주요 성분</Text>
-                        <Text>히알루론산, 판테놀</Text>
+                    <View style={Styles.line}></View>
+                    {/* 주요 성분 */}
+                    <View style={{gap:8}}>
+                        <Text
+                            style={[Typography.label.default, {color: Colors.text.secondary}]}
+                        >주요 성분</Text>
+                        <Text
+                            style={Typography.text.small}
+                        >{ingredients.join(', ')}</Text>
                     </View>
-                    <View>
-                        <Text>기능 태그</Text>
+                    {/* 기능 태그 */}
+                    <View style={{gap:8}}>
+                        <Text
+                            style={[Typography.label.default, {color: Colors.text.secondary}]}
+                        >기능 태그</Text>
                         <View style={{ flexDirection:'row', gap: 8}}>
-                            {['저자극보습'].map((text, index) => (
-                                <View key={index} style={{alignSelf:'flex-start', borderWidth: 1, borderStyle: 'solid', borderColor: Colors.border.defaultLight, borderRadius: 200, paddingVertical: 8, paddingHorizontal:16 }}><Text style={[Typography.label.default, {color: Colors.text.secondary}]}>{text}</Text></View>
+                            {tags.map((text, index) => (
+                                <Tag
+                                    key={index}
+                                    color={Colors.border.defaultLight} textColor={Colors.text.secondary}
+                                    text={text}
+                                    backgroundColor={Colors.background.card}
+                                    big={true}
+                                />
                             ))}
                         </View>
                     </View>
                     <View>
-                        <Text style={[Typography.secondary.small, {color:Colors.text.muted}]}>이 태그로 조합 주의를 알려드려요.</Text>
+                        <Text
+                            style={[Typography.secondary.small, {color:Colors.text.muted}]}
+                        >이 태그로 조합 주의를 알려드려요.</Text>
                     </View>
                 </View>
                 <View style={{ gap: 8 }}>
-                    <Text style={[Typography.secondary.small, {color: Colors.text.secondary}]}>다르면 눌러서 고칠 수 있어요.</Text>
+                    <Text
+                        style={[Typography.secondary.small, {color: Colors.text.secondary}]}
+                    >다르면 눌러서 고칠 수 있어요.</Text>
                 </View>
             </View>
             </ScrollView>
 
-            <View style={{ marginBottom: 14, marginTop: 8, gap: 20 }}>
+            <View style={Styles.buttonContainer}>
                 <ActionButton text="맞아요, 다음" route={'/scan/ingredients'}/>
                 <SecondaryActionButton text="다시 찍기" onPress={()=>{router.back()}} />
             </View>

@@ -5,6 +5,7 @@
 import ActionButton from "@/src/components/ActionButton";
 import HeaderNavigation from "@/src/components/HeaderNavigation";
 import SecondaryActionButton from "@/src/components/SecondaryActionButton";
+import Tag from "@/src/components/Tag";
 import { Colors } from "@/src/constants/colors";
 import { Typography } from "@/src/constants/typography";
 import { router } from "expo-router";
@@ -16,10 +17,27 @@ const Styles = StyleSheet.create({
         flex: 1,
         gap: 18,
         marginBottom: 16
+    },
+    cameraContainer: {
+        height: 230,
+        borderStyle: 'dashed', borderWidth: 1, borderColor: Colors.sand[400], borderRadius: 20,
+        backgroundColor: Colors.background.subtle
+    },
+    card: {
+        gap: 10,
+        borderStyle: 'solid', borderWidth: 1, borderColor: Colors.border.defaultLight, borderRadius: 16,
+        padding: 20,
+        backgroundColor: Colors.background.card
+    },
+    buttonContainer: {
+        marginBottom: 14,
+        marginTop: 8,
+        gap: 12
     }
 })
 
 export default function ScanScreen() {
+    const tags = ['레티놀', '산', '비타민씨'];
     return (
         <>
             <HeaderNavigation title="제품 등록" />
@@ -27,27 +45,44 @@ export default function ScanScreen() {
             <ScrollView>
             <View style={ Styles.container }>
                 <View style={{ gap: 8 }}>
-                    <Text style={Typography.title.big}>뒷면 성분표도{'\n'}한 장 찍어주세요</Text>
-                    <Text style={[Typography.secondary.default, {color: Colors.text.secondary}]}>함께 쓰면 안 되는 조합을 알려드릴 수 있어요</Text>
+                    <Text
+                        style={Typography.title.big}
+                    >뒷면 성분표도{'\n'}한 장 찍어주세요</Text>
+                    <Text
+                        style={[Typography.secondary.default, {color: Colors.text.secondary}]}
+                    >함께 쓰면 안 되는 조합을 알려드릴 수 있어요</Text>
                 </View>
                 {/* 개발 필요 */}
-                <View style={{borderStyle: 'dashed', borderWidth: 1, borderColor: Colors.sand[400], backgroundColor: Colors.background.subtle}}>
+                <View style={Styles.cameraContainer}>
                     <Text>카메라화면미개발</Text>
                 </View>
-                <View style={{gap: 10, borderStyle: 'solid', borderWidth: 1, borderColor: Colors.border.defaultLight, borderRadius: 16, padding: 20, backgroundColor: Colors.background.card }}>
-                    <Text style={[Typography.label.default, {color:Colors.text.secondary}]}>이런 걸 찾아냅니다</Text>
-                    {['레티놀', '산', '비타민씨'].map((text)=>(
-                        <View style={[{alignSelf:'flex-start', borderWidth: 1, borderStyle: 'solid', borderColor: Colors.border.defaultLight, borderRadius: 200, paddingVertical: 8, paddingHorizontal:16 }]}>
-                            <Text style={[Typography.label.default, {color: Colors.text.secondary}]}>{text}</Text>
-                        </View>
-                    ))}
-                    <Text style={[Typography.secondary.small, {color: Colors.text.muted}]}>성분 전체를 저장하지 않고 이 태그만 남깁니다</Text>
+                <View style={Styles.card}>
+                    <Text
+                        style={[Typography.label.default, {color:Colors.text.secondary}]}
+                    >이런 걸 찾아냅니다</Text>
+                    {/* 성분 예시 */}
+                    <View style={{ flexDirection:'row', gap: 8}}>
+                        {tags.map((text, index) => (
+                            <Tag
+                                key={index}
+                                color={Colors.border.defaultLight} textColor={Colors.text.secondary}
+                                text={text}
+                                backgroundColor={Colors.background.card}
+                                big={true}
+                            />
+                        ))}
+                    </View>
+                    <Text
+                        style={[Typography.secondary.small, {color: Colors.text.muted}]}
+                    >성분 전체를 저장하지 않고 이 태그만 남깁니다</Text>
                 </View>
-                <Text style={[Typography.secondary.small, {color: Colors.text.secondary}]}>건너뛰셔도 등록은 끝납니다. 나중에 추가하셔도 돼요.</Text>
+                <Text
+                    style={[Typography.secondary.small, {color: Colors.text.secondary}]}
+                >건너뛰셔도 등록은 끝납니다. 나중에 추가하셔도 돼요.</Text>
             </View>
             </ScrollView>
 
-            <View style={{ marginBottom: 14, marginTop: 8, gap: 20 }}>
+            <View style={Styles.buttonContainer}>
                 <ActionButton text="촬영" route={'/scan/fallback'}/>
                 <SecondaryActionButton text="건너뛰기" onPress={()=>{router.push('/scan/info')}} />
             </View>
