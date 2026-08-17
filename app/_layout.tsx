@@ -1,10 +1,14 @@
-import { router, Stack } from "expo-router";
+import { router, Stack, useFocusEffect } from "expo-router";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { useFonts } from "expo-font"
 import { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { UserProvider } from "@/src/contexts/UserContext";
 import * as NavigationBar from "expo-navigation-bar";
+import { AppState, AppStateStatus } from "react-native";
+import { ScanProvider } from "@/src/contexts/ScanContext";
+import { RecordSymptomProvider } from "@/src/contexts/RecordContext";
+import { UserDataProvider } from "@/src/contexts/UserDataContext";
 
 export default function RootLayout() {
   const [loaded] = useFonts({
@@ -13,8 +17,24 @@ export default function RootLayout() {
     "Noto Sans KR Regular": require("../assets/fonts/NotoSansKR-Regular.ttf"),
   });
   
-  useEffect(() => {
+  useFocusEffect(() => {
     NavigationBar.setVisibilityAsync("hidden");
+  });
+
+  useEffect(() => {
+    const handleAppStateChange = (nextAppState: AppStateStatus) => {
+      if (nextAppState === "active") {
+        NavigationBar.setVisibilityAsync("hidden");
+      }
+    };
+
+    // 앱 상태 변화 리스너 등록
+    const subscription = AppState.addEventListener("change", handleAppStateChange);
+
+    return () => {
+      // 컴포넌트 언마운트 시 리스너 제거
+      subscription.remove();
+    };
   }, []);
 
   useEffect(() => {
@@ -36,7 +56,13 @@ export default function RootLayout() {
   return (
     <SafeAreaProvider>
       <UserProvider>
-        <Stack screenOptions={{ headerShown: false, animation: 'none' }} />
+        <UserDataProvider>
+        <RecordSymptomProvider>
+        <ScanProvider>
+          <Stack screenOptions={{ headerShown: false, animation: 'none' }} />
+        </ScanProvider>
+        </RecordSymptomProvider>
+        </UserDataProvider>
       </UserProvider>
     </SafeAreaProvider>
   );
