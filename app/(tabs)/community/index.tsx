@@ -110,10 +110,15 @@ function NoPosts({ getLastHistory, undo }: NoPostsProp) : React.JSX.Element {
 
                     <Text style={[Typography.secondary.default, {color: Colors.text.secondary}]}>조건을 하나 풀어보시겠어요?</Text>
                     <Pressable style={Styles.suggestionButton} onPress={undo}>
-                        <Text style={[Typography.label.default, {textAlign: 'center'}]}>{lastHistory.lastArr.join(' + ') + '만 보기'} · {lastHistory.postCount}개</Text>
+                        <Text
+                            style={[Typography.label.default, {textAlign: 'center'}]}
+                        >{lastHistory.lastArr.length > 0
+                            ? `${lastHistory.lastArr.join(" + ")}만 보기`
+                            : "전체 보기"
+                        } · {lastHistory.postCount}개</Text>
                     </Pressable>
                     {lastHistory.lastItem[0] &&
-                        <Text style={[Typography.secondary.small, {color: Colors.text.muted}]}>마지막에 더한 "{lastHistory.lastItem[0]}" 때문에 결과가 없어졌어요</Text>
+                        <Text style={[Typography.secondary.small, {color: Colors.text.muted}]}>마지막에 더한 "{lastHistory.lastItem.join(", ")}" 때문에 결과가 없어졌어요</Text>
                     }
                 </>
                 :
@@ -242,37 +247,58 @@ export default function CommunityScreen() {
     }, [selectedSituations]);
 
     const getLastHistory = () => {
+        // 현재 결과가 있다면 NoPosts 자체가 나오지 않아야 함
+        if (filteredPosts.length > 0) {
+            return null;
+        }
+
+        // 가장 최근 history부터 과거로 탐색
         for (let i = history.length - 1; i >= 0; i--) {
             const item = history[i];
 
-            // "추가"가 발생한 기록만 대상으로 함
+            // 조건을 추가하지 않은 변경은 후보가 아님
             if (item.added.length === 0) {
                 continue;
             }
 
-            let suggestedSymptoms = selectedSymptoms;
-            let suggestedSituations = selectedSituations;
+            // 현재도 선택되어 있는 조건만 후보로 사용
+            const currentAdded = item.added.filter((tag) => {
+                if (item.type === "selectedSymptoms") {
+                    return selectedSymptoms.includes(tag);
+                }
+
+                return selectedSituations.includes(tag);
+            });
+
+            if (currentAdded.length === 0) {
+                continue;
+            }
+
+            // 현재 조건에서 해당 조건을 제거한 상태
+            let suggestedSymptoms = [...selectedSymptoms];
+            let suggestedSituations = [...selectedSituations];
 
             if (item.type === "selectedSymptoms") {
-                suggestedSymptoms = selectedSymptoms.filter(
-                    (value) => !item.added.includes(value)
+                suggestedSymptoms = suggestedSymptoms.filter(
+                    (tag) => !currentAdded.includes(tag)
                 );
             } else {
-                suggestedSituations = selectedSituations.filter(
-                    (value) => !item.added.includes(value)
+                suggestedSituations = suggestedSituations.filter(
+                    (tag) => !currentAdded.includes(tag)
                 );
             }
 
+            // 조건을 제거했을 때의 검색 결과
             const suggestedPosts = getFilteredPosts(
                 suggestedSymptoms,
-                suggestedSituations,
+                suggestedSituations
             );
 
-            // 실제로 조건을 풀었을 때 결과가 생기는 경우만 제안
+            // ⭐ 결과가 생겼다면 이 조건을 추천
             if (suggestedPosts.length > 0) {
                 return {
                     historyIndex: i,
-                    lastItem: item.added,
+                    lastItem: currentAdded,
                     lastArr: [
                         ...suggestedSymptoms,
                         ...suggestedSituations,
@@ -282,6 +308,7 @@ export default function CommunityScreen() {
             }
         }
 
+        // 어떤 조건을 하나 제거해도 결과가 생기지 않음
         return null;
     };
 
@@ -299,18 +326,17 @@ export default function CommunityScreen() {
         if (item.type === "selectedSymptoms") {
             setselectedSymptoms((current) =>
                 current.filter(
-                    (value) => !item.added.includes(value)
+                    (tag) => !lastHistory.lastItem.includes(tag)
                 )
             );
         } else {
             setselectedSituations((current) =>
                 current.filter(
-                    (value) => !item.added.includes(value)
+                    (tag) => !lastHistory.lastItem.includes(tag)
                 )
             );
         }
 
-        // 해당 history 제거
         setHistory((prev) =>
             prev.filter(
                 (_, index) => index !== lastHistory.historyIndex
