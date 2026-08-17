@@ -5,6 +5,7 @@ import { router } from "expo-router";
 import { useContext, useEffect } from "react";
 import { Text, View } from "react-native";
 import LoadingIcon from '@/assets/icons/loading.svg';
+import { RecordSymptomContext } from "@/src/contexts/RecordContext";
 
 function Log({ text }: {
     text: string,
@@ -31,16 +32,17 @@ function Log({ text }: {
 
 export default function loadingScreen() {
     const user = useContext(UserContext);
+    const record = useContext(RecordSymptomContext);
 
     useEffect(() => {
-        if (!user?.recordSymptom.isCompleted) return;
+        if (!record?.isCompleted) return;
 
         const timer = setTimeout(() => {
             router.replace("/result");
         }, 5000);
 
         return () => clearTimeout(timer);
-    }, [user?.recordSymptom.isCompleted]);
+    }, [record?.isCompleted]);
     
     return (
         <View style={{ flex: 1, justifyContent: 'center' }}>
