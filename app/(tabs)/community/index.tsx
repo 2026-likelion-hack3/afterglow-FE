@@ -4,12 +4,13 @@
 
 import { Colors } from "@/src/constants/colors";
 import { Typography } from "@/src/constants/typography";
-import { Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
-import NightIcon from '@/assets/icons/night.svg';
-import PathIcon from '@/assets/icons/path.svg';
+import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { router } from "expo-router";
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from "@/src/contexts/UserContext";
+import TagButtonList from "@/src/components/TagButtonList";
+import { useFocusEffect } from "@react-navigation/native";
+import Tag from "@/src/components/Tag";
 
 const Styles = StyleSheet.create({
     container: {
@@ -18,61 +19,18 @@ const Styles = StyleSheet.create({
         flex: 1,
         gap: 16
     },
-    header: {
-        flexDirection: 'row',
-        justifyContent: 'space-between'
-    },
     content: {
         gap: 12,
         marginBottom: 24
     },
-    card: {
-        borderRadius: 18,
-        padding: 20
-    }
-})
-
-const SleepStyles = StyleSheet.create({
-    container: {
-        gap: 2,
-        backgroundColor: Colors.sand[200]
-    },
-    header: {
-        flexDirection: 'row',
-        justifyContent: 'space-between'
-    },
-    time: {
-        flexDirection: 'row',
-        justifyContent: 'flex-start',
-        alignItems: 'baseline',
-        gap: 6
-    }
-})
-
-const RoutineStyles = StyleSheet.create({
-    container: {
-        gap: 8
-    },
-    header: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center'
-    },
-    selected: {
-        borderRadius: 60,
-        paddingVertical: 4,
-        paddingHorizontal: 8,
-        backgroundColor: Colors.accent.light
-    },
-    selectedText: {
-        ...Typography.text.accent,
-        color: '#42362F'
-    },
-    list: {
-        height: 48,
-        flexDirection: 'row',
-        gap: 10,
-        alignItems: 'center'
+    postContainer: {
+        gap: 8,
+        paddingVertical: 16,
+        paddingHorizontal: 18,
+        backgroundColor: Colors.background.card,
+        borderRadius: 16,
+        borderWidth: 1,
+        borderColor: Colors.border.defaultLight
     }
 })
 
@@ -89,30 +47,22 @@ type PostProp = {
 }
 
 function Post({ prop }: PostProp) : React.JSX.Element {
-    const user = useContext(UserContext);
-
     return (
         <Pressable
             onPress={()=>{
                 router.push(`/(tabs)/community/${prop.id}`);
-                user?.setIsReading(true);
             }}
-            style={{
-                gap: 8,
-                paddingVertical: 16,
-                paddingHorizontal: 18,
-                backgroundColor: Colors.background.card,
-                borderRadius: 16,
-                borderWidth: 1,
-                borderColor: Colors.border.defaultLight
-            }}
+            style={Styles.postContainer}
         >
             <Text style={Typography.text.accent}>{prop.title}</Text>
             <View style={{flexDirection: 'row', gap: 6}}>
                 {prop.tags && prop.tags.map((tag, index) => (
-                    <View key={index} style={[{alignSelf:'flex-start', borderWidth: 1, borderStyle: 'solid', borderColor: Colors.border.defaultLight, borderRadius: 200, paddingVertical: 8, paddingHorizontal:16 }]}>
-                        <Text style={[Typography.label.default, {color: Colors.text.secondary}]}>{tag}</Text>
-                    </View>
+                    <Tag
+                        key={index}
+                        color={Colors.border.defaultLight} textColor={Colors.text.secondary}
+                        text={tag}
+                        backgroundColor={Colors.background.card}
+                    />
                 ))}
             </View>
             <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
@@ -126,12 +76,16 @@ function Post({ prop }: PostProp) : React.JSX.Element {
 export default function CommunityScreen() {
     const user = useContext(UserContext);
 
-    useEffect(()=>{
+    useFocusEffect(()=>{
         user?.setIsReading(false);
-    }, []);
+        user?.setIsWriting(false);
+    });
 
-    const [selected, setselected] = useState<Array<number>>([]);
-    const [selected2, setselected2] = useState<Array<number>>([]);
+    const symptomList = ['가려움', '건조·당김', '따가움'];
+    const situationList = ['잠 못 잤을 때', '스트레스'];
+
+    const [symptom, setsymptom] = useState<Array<string>>([]);
+    const [situation, setsituation] = useState<Array<string>>([]);
 
     const posts : Array<PostTypes> = [
         {
@@ -161,25 +115,26 @@ export default function CommunityScreen() {
             <View style={ Styles.container }>
                 <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
                     <Text style={ Typography.title.default }>이야기</Text>
-                    <Pressable>
+                    <Pressable onPress={()=>router.push('/community/post')}>
                         <Text style={[Typography.label.default, {color:Colors.text.accent}]}>글쓰기</Text>
                     </Pressable>
                 </View>
-                 <View style={{ flexDirection:'row', gap: 8}}>
-                    {['가려움', '건조·당김', '따가움'].map((text, index)=>(
-                        <Pressable onPress={()=>{selected.includes(index) ? setselected([...selected.slice(0,selected.indexOf(index)), ...selected.slice(selected.indexOf(index)+1)]):setselected([...selected, index])}} style={[{alignSelf:'flex-start', borderWidth: 1, borderStyle: 'solid', borderColor: Colors.border.defaultLight, borderRadius: 200, paddingVertical: 8, paddingHorizontal:16 }, selected.includes(index) && {backgroundColor:Colors.accent.default, borderColor: Colors.accent.dark, borderWidth: 2}]}>
-                            <Text style={[Typography.label.default, {color: Colors.text.secondary}, selected.includes(index) && {color: Colors.text.default}, selected.includes(index) && Typography.label.default]}>{text}</Text>
-                        </Pressable>
-                    ))}
-                </View>
-                <View style={{ flexDirection:'row', gap: 8}}>
-                    {['잠 못 잤을 때', '스트레스'].map((text, index)=>(
-                        <Pressable onPress={()=>{selected2.includes(index) ? setselected2([...selected2.slice(0,selected2.indexOf(index)), ...selected2.slice(selected2.indexOf(index)+1)]):setselected2([...selected2, index])}} style={[{alignSelf:'flex-start', borderWidth: 1, borderStyle: 'solid', borderColor: Colors.border.defaultLight, borderRadius: 200, paddingVertical: 8, paddingHorizontal:16 }, selected.includes(index) && {backgroundColor:Colors.accent.default, borderColor: Colors.accent.dark, borderWidth: 2}]}>
-                            <Text style={[Typography.label.default, {color: Colors.text.secondary}, selected2.includes(index) && {color: Colors.text.default}, selected2.includes(index) && Typography.label.default]}>{text}</Text>
-                        </Pressable>
-                    ))}
-                </View>
-                <Text style={[Typography.secondary.small, {color: Colors.text.secondary}]}>가려움 · 12개</Text>
+                <TagButtonList
+                    tagList={symptomList}
+                    selection={symptom}
+                    setSelection={setsymptom}
+                />
+                <TagButtonList
+                    tagList={situationList}
+                    selection={situation}
+                    setSelection={setsituation}
+                />
+                <Text
+                    style={[
+                        Typography.secondary.small,
+                        {color: Colors.text.secondary}
+                    ]}
+                >{[...symptom, ...situation, posts.length + '개'].join(' · ')}</Text>
                 <ScrollView>
                 <View style={ Styles.content }>
                     {posts.map((post, index) => (

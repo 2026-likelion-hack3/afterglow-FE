@@ -12,6 +12,8 @@ import { useContext, useState } from "react";
 import { UserContext } from "@/src/contexts/UserContext";
 import HeaderNavigation from "@/src/components/HeaderNavigation";
 import ActionButton from "@/src/components/ActionButton";
+import TagButtonList from "@/src/components/TagButtonList";
+import { useFocusEffect } from "@react-navigation/native";
 
 const Styles = StyleSheet.create({
     container: {
@@ -21,143 +23,43 @@ const Styles = StyleSheet.create({
         flex: 1,
         gap: 16
     },
-    header: {
-        flexDirection: 'row',
-        justifyContent: 'space-between'
-    },
     content: {
         flex: 1,
         gap: 16,
         marginBottom: 24
     },
-    card: {
-        borderRadius: 18,
-        padding: 20
-    }
-})
-
-const SleepStyles = StyleSheet.create({
-    container: {
-        gap: 2,
+    information: {
+        gap: 6,
+        borderWidth: 1, borderStyle: 'solid', borderColor: Colors.border.defaultLight, borderRadius: 16,
+        paddingVertical: 16, paddingHorizontal: 18,
         backgroundColor: Colors.sand[200]
     },
-    header: {
-        flexDirection: 'row',
-        justifyContent: 'space-between'
+    textarea: {
+        minHeight: 254,
+        borderWidth: 1, borderStyle: 'solid', borderColor: Colors.border.defaultLight, borderRadius: 16,
+        paddingVertical: 18, paddingHorizontal: 20,
+        backgroundColor: Colors.background.card,
+        includeFontPadding: false
     },
-    time: {
-        flexDirection: 'row',
-        justifyContent: 'flex-start',
-        alignItems: 'baseline',
-        gap: 6
+    checkbox: {
+        width: 22, height: 22,
+        borderWidth: 1,
+        borderRadius: 6,
+        justifyContent: "center", alignItems: "center",
     }
 })
-
-const RoutineStyles = StyleSheet.create({
-    container: {
-        gap: 8
-    },
-    header: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center'
-    },
-    selected: {
-        borderRadius: 60,
-        paddingVertical: 4,
-        paddingHorizontal: 8,
-        backgroundColor: Colors.accent.light
-    },
-    selectedText: {
-        ...Typography.text.accent,
-        color: '#42362F'
-    },
-    list: {
-        height: 48,
-        flexDirection: 'row',
-        gap: 10,
-        alignItems: 'center'
-    }
-})
-
-type PostTypes = {
-    id: number
-    title: string
-    tags?: Array<string>
-    info: string
-    like: number,
-    content: string
-    reply?: Array<String>
-}
-
-type PostProp = {
-    post: PostTypes,
-    likes: number
-    setLikes: (likes: number)=>void
-}
-
-function Post({ post, likes, setLikes }: PostProp) : React.JSX.Element {
-    const [isPressed, setIsPressed] = useState(false);
-    function onPress() {
-        if (isPressed) {
-            setIsPressed(false);
-            setLikes(likes - 1);
-        } else {
-            setIsPressed(true);
-            setLikes(likes + 1);
-        }
-    }
-    return (
-        <>
-            <View style={{gap: 10}}>
-                <Text style={Typography.title.default} >{post.title}</Text>
-                <View style={{flexDirection: 'row', gap: 6}}>
-                    {post.tags && post.tags.map((tag, index) => (
-                        <View key={index} style={[{alignSelf:'flex-start', borderWidth: 1, borderStyle: 'solid', borderColor: Colors.border.defaultLight, borderRadius: 200, paddingVertical: 8, paddingHorizontal:16 }]}>
-                            <Text style={[Typography.label.default, {color: Colors.text.secondary}]}>{tag}</Text>
-                        </View>
-                    ))}
-                </View>
-                <Text>{post.info} · 3일 전</Text>
-            </View>
-            <View style={{
-                gap: 8,
-                padding: 20,
-                backgroundColor: Colors.background.card,
-                borderRadius: 16,
-                borderWidth: 1,
-                borderColor: Colors.border.defaultLight
-            }}>
-                <Text style={Typography.text.small}>{post.content}</Text>
-            </View>
-            
-            <View style={{flexDirection: 'row', gap: 10}}>
-                <Pressable
-                    onPress={onPress}
-                    style={[
-                        {paddingVertical: 12, paddingHorizontal: 18, borderWidth: 1, borderStyle: 'solid', borderColor: Colors.border.defaultLight },
-                        isPressed && {borderColor: Colors.text.default}
-                    ]}
-                >
-                    <Text style={[Typography.secondary.small, {color: Colors.text.muted}]}>저도 그래요 {likes}</Text>
-                </Pressable>
-                <View
-                    style={{paddingVertical: 12, paddingHorizontal: 18, borderWidth: 1, borderStyle: 'solid', borderColor: Colors.border.defaultLight }}
-                >
-                    <Text style={[Typography.secondary.small, {color: Colors.text.muted}]}>댓글 {post.reply ? post.reply.length : 0}</Text>
-                </View>
-            </View>
-        </>
-    )
-}
 
 export default function CommunityScreen() {
     const user = useContext(UserContext);
+    useFocusEffect(() => user?.setIsWriting(true))
     
-    const [selected, setselected] = useState<Array<number>>([]);
-    const [selected2, setselected2] = useState<Array<number>>([]);
-    const [content, setContent] = useState('');
+    const symptomList = ['가려움', '건조·당김', '따가움'];
+    const situationList = ['잠 못 잤을 때', '스트레스'];
 
+    const [symptom, setsymptom] = useState<Array<string>>([]);
+    const [situation, setsituation] = useState<Array<string>>([]);
+
+    const [content, setContent] = useState('');
     const [checked, setChecked] = useState(false);
 
     return (
@@ -165,29 +67,29 @@ export default function CommunityScreen() {
             <HeaderNavigation title="경험 남기기" />
             <ScrollView>
             <View style={ Styles.content }>
-                <View style={{gap:6, paddingVertical: 16, paddingHorizontal: 18, borderRadius: 16, borderWidth: 1, borderStyle: 'solid', borderColor: Colors.border.defaultLight}}>
+                <View style={Styles.information}>
                     <Text style={Typography.label.default}>이런 내용은 쓸 수 없어요</Text>
-                    <Text>제품명과 브랜드명 (성분은 괜찮아요){'\n'}병원명과 시술 가격{'\n'}진단명 단정, 치료법 권유</Text>
+                    <Text style={[Typography.secondary.small, {color: Colors.text.secondary}]}>제품명과 브랜드명 (성분은 괜찮아요){'\n'}병원명과 시술 가격{'\n'}진단명 단정, 치료법 권유</Text>
                 </View>
                 <View style={{gap:10}}>
-                    <Text style={[Typography.label.default, {color: Colors.text.secondary}]}>증상 태그 · 하나는 꼭 골라주세요</Text>
-                    <View style={{ flexDirection:'row', gap: 8}}>
-                        {['가려움', '건조·당김', '따가움'].map((text, index)=>(
-                            <Pressable onPress={()=>{selected.includes(index) ? setselected([...selected.slice(0,selected.indexOf(index)), ...selected.slice(selected.indexOf(index)+1)]):setselected([...selected, index])}} style={[{alignSelf:'flex-start', borderWidth: 1, borderStyle: 'solid', borderColor: Colors.border.defaultLight, borderRadius: 200, paddingVertical: 8, paddingHorizontal:16 }, selected.includes(index) && {backgroundColor:Colors.accent.default, borderColor: Colors.accent.dark, borderWidth: 2}]}>
-                                <Text style={[Typography.label.default, {color: Colors.text.secondary}, selected.includes(index) && {color: Colors.text.default}, selected.includes(index) && Typography.label.default]}>{text}</Text>
-                            </Pressable>
-                        ))}
-                    </View>
+                    <Text
+                        style={[Typography.label.default, {color: Colors.text.secondary}]}
+                    >증상 태그 · 하나는 꼭 골라주세요</Text>
+                    <TagButtonList
+                        tagList={symptomList}
+                        selection={symptom}
+                        setSelection={setsymptom}
+                    />
                 </View>
                 <View style={{gap:10}}>
-                    <Text style={[Typography.label.default, {color: Colors.text.secondary}]}>상황 태그 · 선택</Text>
-                    <View style={{ flexDirection:'row', gap: 8}}>
-                        {['잠 못 잤을 때', '스트레스'].map((text, index)=>(
-                            <Pressable onPress={()=>{selected2.includes(index) ? setselected2([...selected2.slice(0,selected2.indexOf(index)), ...selected2.slice(selected2.indexOf(index)+1)]):setselected2([...selected2, index])}} style={[{alignSelf:'flex-start', borderWidth: 1, borderStyle: 'solid', borderColor: Colors.border.defaultLight, borderRadius: 200, paddingVertical: 8, paddingHorizontal:16 }, selected.includes(index) && {backgroundColor:Colors.accent.default, borderColor: Colors.accent.dark, borderWidth: 2}]}>
-                                <Text style={[Typography.label.default, {color: Colors.text.secondary}, selected2.includes(index) && {color: Colors.text.default}, selected2.includes(index) && Typography.label.default]}>{text}</Text>
-                            </Pressable>
-                        ))}
-                    </View>
+                    <Text
+                        style={[Typography.label.default, {color: Colors.text.secondary}]}
+                    >상황 태그 · 선택</Text>
+                    <TagButtonList
+                        tagList={situationList}
+                        selection={situation}
+                        setSelection={setsituation}
+                    />
                 </View>
                 <View>
                     <TextInput
@@ -197,10 +99,7 @@ export default function CommunityScreen() {
                         onChangeText={setContent}
                         multiline
                         textAlignVertical="top"
-                        style={[
-                            {paddingVertical: 18, paddingHorizontal: 20, backgroundColor: Colors.background.card, borderWidth: 1, borderStyle: 'solid', borderColor: Colors.border.defaultLight, borderRadius: 16, minHeight: 254},
-                            Typography.text.default
-                        ]}
+                        style={[Styles.textarea, Typography.text.default]}
                     />
                 </View>
                 <View style={{gap:12}}>
@@ -209,24 +108,22 @@ export default function CommunityScreen() {
                         onPress={() => setChecked(prev => !prev)}
                     >
                         <View
-                            style={{
-                                width: 22,
-                                height: 22,
-                                borderWidth: 1,
-                                borderColor: checked ? Colors.border.defaultLight : Colors.accent.dark,
-                                borderRadius: 6,
-                                alignItems: "center",
-                                justifyContent: "center",
-                                backgroundColor: checked ? Colors.background.card : Colors.accent.default,
-                            }}
+                            style={[
+                                Styles.checkbox,
+                                {
+                                    borderColor: checked ? Colors.accent.dark : Colors.border.defaultLight,
+                                    backgroundColor: checked ? Colors.accent.default : Colors.background.card,
+                                }
+                            ]}
                         >
-                            {checked && (
-                                <Text style={{ color: "white" }}>✓</Text>
-                            )}
+                            {checked && <Text style={{ color: "white" }}>V</Text>}
                         </View>
                         <Text style={Typography.text.small}>폐경 연차 공개</Text>
                     </Pressable>
-                    <Text style={[Typography.secondary.small, {color:Colors.text.muted}]}>익명으로 올라갑니다. 얼굴 사진과 월경 상태는 포함되지 않습니다.</Text>
+                    
+                    <Text
+                        style={[Typography.secondary.small, {color:Colors.text.muted}]}
+                    >익명으로 올라갑니다. 얼굴 사진과 월경 상태는 포함되지 않습니다.</Text>
                 </View>
             </View>
             </ScrollView>
