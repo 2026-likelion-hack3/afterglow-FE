@@ -6,11 +6,12 @@ import { Colors } from "@/src/constants/colors";
 import { Typography } from "@/src/constants/typography";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { router } from "expo-router";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { UserContext } from "@/src/contexts/UserContext";
 import TagButtonList from "@/src/components/TagButtonList";
 import { useFocusEffect } from "@react-navigation/native";
 import Tag from "@/src/components/Tag";
+import SecondaryActionButton from "@/src/components/SecondaryActionButton";
 
 const Styles = StyleSheet.create({
     container: {
@@ -31,6 +32,20 @@ const Styles = StyleSheet.create({
         borderRadius: 16,
         borderWidth: 1,
         borderColor: Colors.border.defaultLight
+    },
+    card: {
+        borderRadius: 16,
+        borderWidth: 1,
+        borderColor: Colors.border.defaultLight,
+        padding: 20
+    },
+    suggestionButton: {
+        paddingVertical: 14,
+        paddingHorizontal: 18,
+        borderRadius: 999,
+        borderWidth: 1,
+        borderColor: Colors.text.default,
+        backgroundColor: Colors.background.subtle
     }
 })
 
@@ -73,6 +88,53 @@ function Post({ prop }: PostProp) : React.JSX.Element {
     )
 }
 
+type NoPostsProp = {
+    getLastHistory: () => {
+        lastItem: string[], lastArr: string[], postCount: number
+    } | null
+    undo: () => void
+}
+
+function NoPosts({ getLastHistory, undo }: NoPostsProp) : React.JSX.Element {
+    const lastHistory = getLastHistory();
+    return (
+        <View style={{gap: 16}}>
+            <View style={[
+                Styles.card,
+                {gap: 12, backgroundColor: Colors.background.card}
+            ]}>
+                {
+                lastHistory ?
+                <>
+                    <Text style={Typography.text.accent}>아직 이 조건에 맞는 글이 없어요</Text>
+
+                    <Text style={[Typography.secondary.default, {color: Colors.text.secondary}]}>조건을 하나 풀어보시겠어요?</Text>
+                    <Pressable style={Styles.suggestionButton} onPress={undo}>
+                        <Text style={[Typography.label.default, {textAlign: 'center'}]}>{lastHistory.lastArr.join(' + ')}만 보기 · {lastHistory.postCount}개</Text>
+                    </Pressable>
+                    {lastHistory.lastItem[0] &&
+                        <Text style={[Typography.secondary.small, {color: Colors.text.muted}]}>마지막에 더한 "{lastHistory.lastItem[0]}" 때문에 결과가 없어졌어요</Text>
+                    }
+                </>
+                :
+                <>
+                    <Text style={Typography.text.accent}>아직 글이 없어요</Text>
+                </>
+                }
+                
+            </View>
+            <View style={[
+                Styles.card,
+                {gap: 10, backgroundColor: Colors.background.subtle}
+            ]}>
+                <Text style={Typography.text.accent}>첫 글을 남겨주시겠어요?</Text>
+                <Text style={[Typography.secondary.small, {color: Colors.text.secondary}]}>비슷한 분들이 나중에 이 글을 보게 됩니다</Text>
+                <SecondaryActionButton text="경험 남기기" onPress={() => router.push('/(tabs)/community/post')} />
+            </View>
+        </View>
+    )
+}
+
 export default function CommunityScreen() {
     const user = useContext(UserContext);
 
@@ -86,6 +148,112 @@ export default function CommunityScreen() {
 
     const [selectedSymptoms, setselectedSymptoms] = useState<Array<string>>([]);
     const [selectedSituations, setselectedSituations] = useState<Array<string>>([]);
+
+    // 배열의 변경 이력
+    type HistoryEntry = {
+        type: "selectedSymptoms" | "selectedSituations"
+        previous: string[];
+    }
+
+    const [history, setHistory] = useState<HistoryEntry[]>([]);
+    const previousSelectedSymptoms = useRef(selectedSymptoms);
+    const previousSelectedSituations = useRef(selectedSituations);
+    const undoingType = useRef<
+        "selectedSymptoms" | "selectedSituations" | null
+    >(null);
+
+    // items가 변경될 때마다 history에 기록
+    useEffect(() => {
+        if (previousSelectedSymptoms.current === selectedSymptoms) return;
+        if (undoingType.current === "selectedSymptoms") {
+            previousSelectedSymptoms.current = selectedSymptoms;
+            undoingType.current = null;
+            return;
+        }
+        setHistory((prev) => [
+            ...prev,
+            {
+                type: "selectedSymptoms",
+                previous: previousSelectedSymptoms.current,
+            },
+        ]);
+        previousSelectedSymptoms.current = selectedSymptoms;
+    }, [selectedSymptoms]);
+
+    useEffect(() => {
+        if (previousSelectedSituations.current === selectedSituations) return;
+        if (undoingType.current === "selectedSituations") {
+            previousSelectedSituations.current = selectedSituations;
+            undoingType.current = null;
+            return;
+        }
+        setHistory((prev) => [
+            ...prev,
+            {
+            type: "selectedSituations",
+            previous: previousSelectedSituations.current,
+            },
+        ]);
+        previousSelectedSituations.current = selectedSituations;
+    }, [selectedSituations]);
+    
+    const isUndoing = useRef(false);
+
+    const getAddedItems = (
+        previous: string[],
+        current: string[]
+    ) => {
+        return current.filter(
+            (item) => !previous.includes(item)
+        );
+    };
+
+    const getLastHistory = () => {
+        if (history.length === 0) return null;
+        const last = history[history.length - 1];
+        if (last.previous.length === 0) return null;
+
+        let symptoms = selectedSymptoms;
+        let situations = selectedSituations;
+
+        let added: string[];
+        if (last.type === "selectedSymptoms") {
+            added = getAddedItems(
+                last.previous,
+                selectedSymptoms
+            );
+        } else {
+            added = getAddedItems(
+                last.previous,
+                selectedSymptoms
+            );
+        }
+        const undoPosts = getFilteredPosts(
+            symptoms,
+            situations,
+        );
+
+        return {
+            lastItem: added,
+            lastArr: [
+                ...symptoms,
+                ...situations,
+            ],
+            postCount: undoPosts.length,
+        };
+    }
+
+    const undo = () => {
+        if (history.length === 0) return null;
+        const last = history[history.length - 1];
+        undoingType.current = last.type;
+        if (last.type === "selectedSymptoms") {
+            setselectedSymptoms(last.previous);
+        } else {
+            setselectedSituations(last.previous);
+        }
+        setHistory((prev) => prev.slice(0, -1));
+    };
 
     const posts : Array<PostTypes> = [
         {
@@ -110,6 +278,36 @@ export default function CommunityScreen() {
             like: 6
         }
     ]
+
+    const selectedTags = [
+        ...selectedSymptoms,
+        ...selectedSituations,
+    ];
+
+    const getFilteredPosts = (
+        symptoms: string[],
+        situations: string[],
+    ) => {
+        const selectedTags = [
+            ...symptoms,
+            ...situations,
+        ];
+
+        return posts.filter((post) => {
+            if (selectedTags.length === 0) {
+                return true;
+            }
+
+            return selectedTags.every((tag) =>
+                post.tags?.includes(tag)
+            );
+        });
+    };
+
+    const filteredPosts = getFilteredPosts(
+        selectedSymptoms,
+        selectedSituations,
+    );
 
     return (
             <View style={ Styles.container }>
@@ -136,12 +334,19 @@ export default function CommunityScreen() {
                     ]}
                 >{[
                     [...selectedSymptoms, ...selectedSituations].join(' + ') || '전체',
-                    posts.length + '개'].join(' · ')}</Text>
+                    filteredPosts.length + '개'].join(' · ')}</Text>
                 <ScrollView>
                 <View style={ Styles.content }>
-                    {posts.map((post, index) => (
-                        <Post prop={post} key={index} />
-                    ))}
+                    {
+                    filteredPosts.length > 0 ?
+                    <>
+                        {filteredPosts.map((post, index) => (
+                            <Post prop={post} key={index} />
+                        ))}
+                    </>
+                    :
+                        <NoPosts getLastHistory={getLastHistory} undo={undo} />
+                    }
                 </View>
                 </ScrollView>
             </View>
