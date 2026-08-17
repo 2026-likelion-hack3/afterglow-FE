@@ -123,8 +123,10 @@ export default function TabLayout() {
     return (
         <View style={ [Styles.screen, { paddingTop: insets.top }] }>
             <Stack screenOptions={{ headerShown: false, animation: 'fade' }} />
-            <View style={ [Styles.tabBar, { paddingBottom: 16 }] }>
-                {!user?.isReading && tabArr.map((item, index)=>(
+            {
+            !user?.isReading && !user?.isWriting &&
+                <View style={ [Styles.tabBar, { paddingBottom: 16 }] }>
+                {tabArr.map((item, index)=>(
                     <Tabs
                         Icon={item.Icon}
                         text={item.text}
@@ -135,7 +137,8 @@ export default function TabLayout() {
                         key={index}
                     />
                 ))}
-            </View>
+                </View>
+            }
         </View>
     );
 }

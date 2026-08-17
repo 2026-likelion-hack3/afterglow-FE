@@ -10,18 +10,35 @@ const Styles = StyleSheet.create({
         borderRadius: 999,
         paddingVertical: 4,
         paddingHorizontal: 8
+    },
+    selected: {
+        backgroundColor: Colors.accent.default,
+        borderColor: Colors.accent.dark,
+        borderWidth: 2
+    },
+    selectedText: {
+        ...Typography.label.default
     }
 })
 
 type TagProps = {
     color?: string,
-    text: string
+    text: string,
+    textColor?: string,
+    backgroundColor?: string,
+    isSelected?: boolean
 }
 
-export default function Tag({ color=Colors.alert.text, text }: TagProps) {
+export default function Tag({ color=Colors.alert.text, text, textColor=color, backgroundColor="transparent", isSelected=false }: TagProps) {
     return (
-        <View style={ [Styles.tag, { borderColor: color }] }>
-            <Text style={ [Typography.label.default, { color }] }>{ text }</Text>
+        <View style={[
+            Styles.tag, { borderColor: color, backgroundColor },
+            isSelected && Styles.selected
+        ]}>
+            <Text style={[
+                Typography.label.default, { color: textColor },
+                isSelected && Styles.selectedText]
+            }>{ text }</Text>
         </View>
     )
 }

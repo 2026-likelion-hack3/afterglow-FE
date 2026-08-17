@@ -4,12 +4,14 @@
 
 import { Colors } from "@/src/constants/colors";
 import { Typography } from "@/src/constants/typography";
-import { Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
-import NightIcon from '@/assets/icons/night.svg';
-import PathIcon from '@/assets/icons/path.svg';
+import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { router } from "expo-router";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { UserContext } from "@/src/contexts/UserContext";
+import TagButtonList from "@/src/components/TagButtonList";
+import { useFocusEffect } from "@react-navigation/native";
+import Tag from "@/src/components/Tag";
+import SecondaryActionButton from "@/src/components/SecondaryActionButton";
 
 const Styles = StyleSheet.create({
     container: {
@@ -18,61 +20,32 @@ const Styles = StyleSheet.create({
         flex: 1,
         gap: 16
     },
-    header: {
-        flexDirection: 'row',
-        justifyContent: 'space-between'
-    },
     content: {
         gap: 12,
         marginBottom: 24
     },
+    postContainer: {
+        gap: 8,
+        paddingVertical: 16,
+        paddingHorizontal: 18,
+        backgroundColor: Colors.background.card,
+        borderRadius: 16,
+        borderWidth: 1,
+        borderColor: Colors.border.defaultLight
+    },
     card: {
-        borderRadius: 18,
+        borderRadius: 16,
+        borderWidth: 1,
+        borderColor: Colors.border.defaultLight,
         padding: 20
-    }
-})
-
-const SleepStyles = StyleSheet.create({
-    container: {
-        gap: 2,
-        backgroundColor: Colors.sand[200]
     },
-    header: {
-        flexDirection: 'row',
-        justifyContent: 'space-between'
-    },
-    time: {
-        flexDirection: 'row',
-        justifyContent: 'flex-start',
-        alignItems: 'baseline',
-        gap: 6
-    }
-})
-
-const RoutineStyles = StyleSheet.create({
-    container: {
-        gap: 8
-    },
-    header: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center'
-    },
-    selected: {
-        borderRadius: 60,
-        paddingVertical: 4,
-        paddingHorizontal: 8,
-        backgroundColor: Colors.accent.light
-    },
-    selectedText: {
-        ...Typography.text.accent,
-        color: '#42362F'
-    },
-    list: {
-        height: 48,
-        flexDirection: 'row',
-        gap: 10,
-        alignItems: 'center'
+    suggestionButton: {
+        paddingVertical: 14,
+        paddingHorizontal: 18,
+        borderRadius: 999,
+        borderWidth: 1,
+        borderColor: Colors.text.default,
+        backgroundColor: Colors.background.subtle
     }
 })
 
@@ -89,30 +62,22 @@ type PostProp = {
 }
 
 function Post({ prop }: PostProp) : React.JSX.Element {
-    const user = useContext(UserContext);
-
     return (
         <Pressable
             onPress={()=>{
                 router.push(`/(tabs)/community/${prop.id}`);
-                user?.setIsReading(true);
             }}
-            style={{
-                gap: 8,
-                paddingVertical: 16,
-                paddingHorizontal: 18,
-                backgroundColor: Colors.background.card,
-                borderRadius: 16,
-                borderWidth: 1,
-                borderColor: Colors.border.defaultLight
-            }}
+            style={Styles.postContainer}
         >
             <Text style={Typography.text.accent}>{prop.title}</Text>
             <View style={{flexDirection: 'row', gap: 6}}>
                 {prop.tags && prop.tags.map((tag, index) => (
-                    <View key={index} style={[{alignSelf:'flex-start', borderWidth: 1, borderStyle: 'solid', borderColor: Colors.border.defaultLight, borderRadius: 200, paddingVertical: 8, paddingHorizontal:16 }]}>
-                        <Text style={[Typography.label.default, {color: Colors.text.secondary}]}>{tag}</Text>
-                    </View>
+                    <Tag
+                        key={index}
+                        color={Colors.border.defaultLight} textColor={Colors.text.secondary}
+                        text={tag}
+                        backgroundColor={Colors.background.card}
+                    />
                 ))}
             </View>
             <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
@@ -123,15 +88,302 @@ function Post({ prop }: PostProp) : React.JSX.Element {
     )
 }
 
+type NoPostsProp = {
+    getLastHistory: () => {
+        removedTags: string[];
+        lastArr: string[];
+        postCount: number;
+    } | null;
+
+    undo: () => void;
+};
+
+function NoPosts({ getLastHistory, undo }: NoPostsProp) : React.JSX.Element {
+    const lastHistory = getLastHistory();
+    return (
+        <View style={{gap: 16}}>
+            <View style={[
+                Styles.card,
+                {gap: 12, backgroundColor: Colors.background.card}
+            ]}>
+                {
+                lastHistory ?
+                <>
+                    <Text style={Typography.text.accent}>아직 이 조건에 맞는 글이 없어요</Text>
+
+                    <Text style={[Typography.secondary.default, {color: Colors.text.secondary}]}>조건을 하나 풀어보시겠어요?</Text>
+                    <Pressable style={Styles.suggestionButton} onPress={undo}>
+                        <Text
+                            style={[Typography.label.default, {textAlign: 'center'}]}
+                        >{lastHistory.lastArr.length > 0
+                            ? `${lastHistory.lastArr.join(" + ")}만 보기`
+                            : "전체 보기"
+                        } · {lastHistory.postCount}개</Text>
+                    </Pressable>
+                    {lastHistory.removedTags.length > 0 &&
+                        <Text style={[Typography.secondary.small, {color: Colors.text.muted}]}>마지막에 더한 "{lastHistory.removedTags.join(", ")}" 때문에 결과가 없어졌어요</Text>
+                    }
+                </>
+                :
+                <>
+                    <Text style={Typography.text.accent}>아직 글이 없어요</Text>
+                </>
+                }
+                
+            </View>
+            <View style={[
+                Styles.card,
+                {gap: 10, backgroundColor: Colors.background.subtle}
+            ]}>
+                <Text style={Typography.text.accent}>첫 글을 남겨주시겠어요?</Text>
+                <Text style={[Typography.secondary.small, {color: Colors.text.secondary}]}>비슷한 분들이 나중에 이 글을 보게 됩니다</Text>
+                <SecondaryActionButton text="경험 남기기" onPress={() => router.push('/(tabs)/community/post')} />
+            </View>
+        </View>
+    )
+}
+
 export default function CommunityScreen() {
     const user = useContext(UserContext);
 
-    useEffect(()=>{
+    useFocusEffect(()=>{
         user?.setIsReading(false);
-    }, []);
+        user?.setIsWriting(false);
+    });
 
-    const [selected, setselected] = useState<Array<number>>([]);
-    const [selected2, setselected2] = useState<Array<number>>([]);
+    const symptomsList = ['가려움', '건조·당김', '따가움'];
+    const situationsList = ['잠 못 잤을 때', '스트레스'];
+
+    const [selectedSymptoms, setselectedSymptoms] = useState<Array<string>>([]);
+    const [selectedSituations, setselectedSituations] = useState<Array<string>>([]);
+
+    // 배열의 변경 이력
+    type HistoryEntry = {
+    type: "selectedSymptoms" | "selectedSituations";
+        previous: string[];
+        added: string[];
+        removed: string[];
+    };
+
+    const getArrayDiff = (
+        previous: string[],
+        current: string[],
+    ) => {
+        const added = current.filter(
+            (item) => !previous.includes(item)
+        );
+
+        const removed = previous.filter(
+            (item) => !current.includes(item)
+        );
+
+        return {
+            added,
+            removed,
+        };
+    };
+
+    const [history, setHistory] = useState<HistoryEntry[]>([]);
+    const previousSelectedSymptoms = useRef(selectedSymptoms);
+    const previousSelectedSituations = useRef(selectedSituations);
+    const undoingType = useRef<
+        "selectedSymptoms" | "selectedSituations" | null
+    >(null);
+
+    // items가 변경될 때마다 history에 기록
+    useEffect(() => {
+        if (previousSelectedSymptoms.current === selectedSymptoms) {
+            return;
+        }
+
+        if (undoingType.current === "selectedSymptoms") {
+            previousSelectedSymptoms.current = selectedSymptoms;
+            undoingType.current = null;
+            return;
+        }
+
+        const diff = getArrayDiff(
+            previousSelectedSymptoms.current,
+            selectedSymptoms,
+        );
+
+        setHistory((prev) => [
+            ...prev,
+            {
+                type: "selectedSymptoms",
+                previous: previousSelectedSymptoms.current,
+                added: diff.added,
+                removed: diff.removed,
+            },
+        ]);
+
+        previousSelectedSymptoms.current = selectedSymptoms;
+    }, [selectedSymptoms]);
+
+    useEffect(() => {
+        if (previousSelectedSituations.current === selectedSituations) {
+            return;
+        }
+
+        if (undoingType.current === "selectedSituations") {
+            previousSelectedSituations.current = selectedSituations;
+            undoingType.current = null;
+            return;
+        }
+
+        const diff = getArrayDiff(
+            previousSelectedSituations.current,
+            selectedSituations,
+        );
+
+        setHistory((prev) => [
+            ...prev,
+            {
+                type: "selectedSituations",
+                previous: previousSelectedSituations.current,
+                added: diff.added,
+                removed: diff.removed,
+            },
+        ]);
+
+        previousSelectedSituations.current = selectedSituations;
+    }, [selectedSituations]);
+
+    const getAddedTagOrder = () => {
+        const result: {
+            tag: string;
+            type: "selectedSymptoms" | "selectedSituations";
+        }[] = [];
+
+        for (let i = history.length - 1; i >= 0; i--) {
+            const item = history[i];
+
+            // 추가된 조건이 없다면 무시
+            if (item.added.length === 0) {
+                continue;
+            }
+
+            for (let j = item.added.length - 1; j >= 0; j--) {
+                const tag = item.added[j];
+
+                const isSelected =
+                    item.type === "selectedSymptoms"
+                        ? selectedSymptoms.includes(tag)
+                        : selectedSituations.includes(tag);
+
+                if (!isSelected) {
+                    continue;
+                }
+
+                // 이미 들어간 태그는 중복 제거
+                if (result.some((item) => item.tag === tag)) {
+                    continue;
+                }
+
+                result.push({
+                    tag,
+                    type: item.type,
+                });
+            }
+        }
+
+        return result;
+    };
+
+    const getLastHistory = () => {
+        // 현재 결과가 있으면 추천하지 않음
+        if (filteredPosts.length > 0) {
+            return null;
+        }
+
+        const tagOrder = getAddedTagOrder();
+
+        if (tagOrder.length === 0) {
+            return null;
+        }
+
+        /*
+        * 최근 추가된 조건부터 하나씩 제거해본다.
+        *
+        * 예:
+        *
+        * [스트레스, 따가움, 가려움]
+        *
+        * 1. 스트레스 제거
+        * 2. 스트레스 + 따가움 제거
+        * 3. 스트레스 + 따가움 + 가려움 제거
+        */
+
+        for (let count = 1; count <= tagOrder.length; count++) {
+            const removedTags = tagOrder
+                .slice(0, count)
+                .map((item) => item.tag);
+
+            const suggestedSymptoms =
+                selectedSymptoms.filter(
+                    (tag) => !removedTags.includes(tag)
+                );
+
+            const suggestedSituations =
+                selectedSituations.filter(
+                    (tag) => !removedTags.includes(tag)
+                );
+
+            const suggestedPosts = getFilteredPosts(
+                suggestedSymptoms,
+                suggestedSituations,
+            );
+
+            // ⭐ 결과가 생겼다면 추천
+            if (suggestedPosts.length > 0) {
+                return {
+                    removedTags,
+
+                    lastArr: [
+                        ...suggestedSymptoms,
+                        ...suggestedSituations,
+                    ],
+
+                    postCount: suggestedPosts.length,
+                };
+            }
+        }
+
+        return null;
+    };
+
+    const undo = () => {
+        const suggestion = getLastHistory();
+
+        if (!suggestion) {
+            return;
+        }
+
+        const removedTags = suggestion.removedTags;
+
+        undoingType.current = null;
+
+        setselectedSymptoms((current) =>
+            current.filter(
+                (tag) => !removedTags.includes(tag)
+            )
+        );
+
+        setselectedSituations((current) =>
+            current.filter(
+                (tag) => !removedTags.includes(tag)
+            )
+        );
+
+        // 해당 조건을 추가했던 history도 제거
+        setHistory((prev) =>
+            prev.filter((item) => {
+                return !item.added.some((tag) =>
+                    removedTags.includes(tag)
+                );
+            })
+        );
+    };
 
     const posts : Array<PostTypes> = [
         {
@@ -157,34 +409,74 @@ export default function CommunityScreen() {
         }
     ]
 
+    const selectedTags = [
+        ...selectedSymptoms,
+        ...selectedSituations,
+    ];
+
+    const getFilteredPosts = (
+        symptoms: string[],
+        situations: string[],
+    ) => {
+        const selectedTags = [
+            ...symptoms,
+            ...situations,
+        ];
+
+        return posts.filter((post) => {
+            if (selectedTags.length === 0) {
+                return true;
+            }
+
+            return selectedTags.every((tag) =>
+                post.tags?.includes(tag)
+            );
+        });
+    };
+
+    const filteredPosts = getFilteredPosts(
+        selectedSymptoms,
+        selectedSituations,
+    );
+
     return (
             <View style={ Styles.container }>
                 <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
                     <Text style={ Typography.title.default }>이야기</Text>
-                    <Pressable>
+                    <Pressable onPress={()=>router.push('/community/post')}>
                         <Text style={[Typography.label.default, {color:Colors.text.accent}]}>글쓰기</Text>
                     </Pressable>
                 </View>
-                 <View style={{ flexDirection:'row', gap: 8}}>
-                    {['가려움', '건조·당김', '따가움'].map((text, index)=>(
-                        <Pressable onPress={()=>{selected.includes(index) ? setselected([...selected.slice(0,selected.indexOf(index)), ...selected.slice(selected.indexOf(index)+1)]):setselected([...selected, index])}} style={[{alignSelf:'flex-start', borderWidth: 1, borderStyle: 'solid', borderColor: Colors.border.defaultLight, borderRadius: 200, paddingVertical: 8, paddingHorizontal:16 }, selected.includes(index) && {backgroundColor:Colors.accent.default, borderColor: Colors.accent.dark, borderWidth: 2}]}>
-                            <Text style={[Typography.label.default, {color: Colors.text.secondary}, selected.includes(index) && {color: Colors.text.default}, selected.includes(index) && Typography.label.default]}>{text}</Text>
-                        </Pressable>
-                    ))}
-                </View>
-                <View style={{ flexDirection:'row', gap: 8}}>
-                    {['잠 못 잤을 때', '스트레스'].map((text, index)=>(
-                        <Pressable onPress={()=>{selected2.includes(index) ? setselected2([...selected2.slice(0,selected2.indexOf(index)), ...selected2.slice(selected2.indexOf(index)+1)]):setselected2([...selected2, index])}} style={[{alignSelf:'flex-start', borderWidth: 1, borderStyle: 'solid', borderColor: Colors.border.defaultLight, borderRadius: 200, paddingVertical: 8, paddingHorizontal:16 }, selected.includes(index) && {backgroundColor:Colors.accent.default, borderColor: Colors.accent.dark, borderWidth: 2}]}>
-                            <Text style={[Typography.label.default, {color: Colors.text.secondary}, selected2.includes(index) && {color: Colors.text.default}, selected2.includes(index) && Typography.label.default]}>{text}</Text>
-                        </Pressable>
-                    ))}
-                </View>
-                <Text style={[Typography.secondary.small, {color: Colors.text.secondary}]}>가려움 · 12개</Text>
+                <TagButtonList
+                    tagList={symptomsList}
+                    selection={selectedSymptoms}
+                    setSelection={setselectedSymptoms}
+                />
+                <TagButtonList
+                    tagList={situationsList}
+                    selection={selectedSituations}
+                    setSelection={setselectedSituations}
+                />
+                <Text
+                    style={[
+                        Typography.secondary.small,
+                        {color: Colors.text.secondary}
+                    ]}
+                >{[
+                    [...selectedSymptoms, ...selectedSituations].join(' + ') || '전체',
+                    filteredPosts.length + '개'].join(' · ')}</Text>
                 <ScrollView>
                 <View style={ Styles.content }>
-                    {posts.map((post, index) => (
-                        <Post prop={post} key={index} />
-                    ))}
+                    {
+                    filteredPosts.length > 0 ?
+                    <>
+                        {filteredPosts.map((post, index) => (
+                            <Post prop={post} key={index} />
+                        ))}
+                    </>
+                    :
+                        <NoPosts getLastHistory={getLastHistory} undo={undo} />
+                    }
                 </View>
                 </ScrollView>
             </View>
