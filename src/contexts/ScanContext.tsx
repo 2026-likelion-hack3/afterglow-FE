@@ -9,12 +9,16 @@ type ScanContextType = {
     setProductName: (productName: string) => void
     skincareFunction: string | null
     setSkincareFunction: (skincareFunction: string | null) => void
-    ingredients: string[]
-    setIngredients: (ingredients: string[]) => void
-    featureTags: string[]
-    setFeatureTags: (featureTags: string[]) => void
+    ingredients: string[] | null
+    setIngredients: (ingredients: string[] | null) => void
+    featureTags: string[] | null
+    setFeatureTags: (featureTags: string[] | null) => void
     BackImageUri: string | null
     setBackImageUri: (imageUri: string | null) => void
+    openedDate: string,
+    setopenedDate: (openedDate: string) => void,
+    usingTime: string,
+    setusingTime: (usingTime: string) => void,
 };
 
 export const ScanContext = createContext<ScanContextType | null>(null);
@@ -24,9 +28,11 @@ export function ScanProvider({ children }: { children: React.ReactNode }) {
     const [brandName, setBrandName] = useState<string | null>(null);
     const [productName, setProductName] = useState<string>('');
     const [skincareFunction, setSkincareFunction] = useState<string | null>(null);
-    const [ingredients, setIngredients] = useState<string[]>([]);
-    const [featureTags, setFeatureTags] = useState<string[]>([]);
+    const [ingredients, setIngredients] = useState<string[] | null>(null);
+    const [featureTags, setFeatureTags] = useState<string[] | null>(null);
     const [BackImageUri, setBackImageUri] = useState<string | null>(null);
+    const [openedDate, setopenedDate] = useState('');
+    const [usingTime, setusingTime] = useState('');
 
     return (
         <ScanContext.Provider
@@ -38,6 +44,8 @@ export function ScanProvider({ children }: { children: React.ReactNode }) {
                 ingredients, setIngredients,
                 featureTags, setFeatureTags,
                 BackImageUri, setBackImageUri,
+                openedDate, setopenedDate,
+                usingTime, setusingTime
             }}
         >
             {children}

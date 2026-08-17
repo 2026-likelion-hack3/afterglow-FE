@@ -11,7 +11,8 @@ import HeaderNavigation from "@/src/components/HeaderNavigation";
 import SecondaryActionButton from "@/src/components/SecondaryActionButton";
 import { Colors } from "@/src/constants/colors";
 import { Typography } from "@/src/constants/typography";
-import { useRef, useState } from "react";
+import { ScanContext } from "@/src/contexts/ScanContext";
+import { useContext, useEffect, useRef, useState } from "react";
 import { ScrollView, StyleSheet, Text } from "react-native";
 import { View } from "react-native";
 
@@ -40,6 +41,18 @@ const Styles = StyleSheet.create({
 })
 
 export default function ScanScreen() {
+    useEffect(()=>{
+        scan?.setBackImageUri(null);
+        scan?.setBrandName(null);
+        scan?.setFeatureTags(null);
+        scan?.setFrontImageUri(null);
+        scan?.setIngredients(null);
+        scan?.setProductName('');
+        scan?.setSkincareFunction(null);
+        scan?.setopenedDate('');
+        scan?.setusingTime('');
+    }, [])
+    const scan = useContext(ScanContext);
     const cameraRef = useRef<CameraCaptureRef>(null);
 
   const [photoUri, setPhotoUri] = useState<string | null>(null);
@@ -54,6 +67,7 @@ export default function ScanScreen() {
     console.log("촬영 완료:", uri);
 
     setPhotoUri(uri);
+    scan?.setFrontImageUri(uri);
   };
     return (
         <>
@@ -69,7 +83,6 @@ export default function ScanScreen() {
                         style={[Typography.secondary.default, {color: Colors.text.secondary}]}
                     >이름과 브랜드를 읽어올게요</Text>
                 </View>
-                {/* 카메라 - 개발 필요 */}
                 <View style={Styles.cameraContainer}>
                     <CameraCapture ref={cameraRef} />
                 </View>
@@ -85,7 +98,11 @@ export default function ScanScreen() {
             </ScrollView>
 
             <View style={Styles.buttonContainer}>
-                <ActionButton text="촬영" route={'/scan/recognision'} onPress={handleTakePhoto}/>
+                <ActionButton
+                    text="촬영"
+                    route={'/scan/recognision'}
+                    onPress={handleTakePhoto}
+                />
                 <SecondaryActionButton text="직접 입력하기" onPress={()=>{}} />
             </View>
         </>

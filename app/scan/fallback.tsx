@@ -11,8 +11,9 @@ import { router } from "expo-router";
 import { Pressable, ScrollView, StyleSheet, Text, TextInput } from "react-native";
 import { View } from "react-native";
 import AlertButton from '@/assets/icons/alert.svg';
-import { useState } from "react";
+import { useContext, useState } from "react";
 import TagButtonList from "@/src/components/TagButtonList";
+import { ScanContext } from "@/src/contexts/ScanContext";
 
 const Styles = StyleSheet.create({
     container: {
@@ -30,6 +31,7 @@ const Styles = StyleSheet.create({
 })
 
 export default function ScanScreen() {
+    const scan = useContext(ScanContext);
     const [selectedType, setselectedType] = useState<Array<string>>([]);
     const [selectedIngredients, setSelectedIngredients] = useState<Array<string>>([]);
     const [input, setInput] = useState('');
@@ -90,7 +92,11 @@ export default function ScanScreen() {
             </ScrollView>
 
             <View style={Styles.buttonContainer}>
-                <ActionButton text="등록하기" route={'/scan/info'}/>
+                <ActionButton
+                    text="등록하기"
+                    route={'/scan/info'}
+                    deactivated={selectedType.length == 0}
+                />
             </View>
         </>
     )

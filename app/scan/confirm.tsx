@@ -11,8 +11,9 @@ import { router } from "expo-router";
 import { Pressable, ScrollView, StyleSheet, Text } from "react-native";
 import { View } from "react-native";
 import AlertButton from '@/assets/icons/alert.svg';
-import { useState } from "react";
+import { useContext, useState } from "react";
 import TagButtonList from "@/src/components/TagButtonList";
+import { ScanContext } from "@/src/contexts/ScanContext";
 
 const Styles = StyleSheet.create({
     container: {
@@ -31,10 +32,12 @@ const Styles = StyleSheet.create({
 })
 
 export default function ScanScreen() {
+    const scan = useContext(ScanContext);
+    // const ingredientsList = scan?.ingredients; // 기존에 선택한 성분 불러오기
     const ingredientsList = ['세안', '토너', '세럼', '크림', '선크림'];
     const [selectedIngredients, setSelectedIngredients] = useState<string[]>(ingredientsList);
-    const infoList = ['정제수', '글리세린', '나이아신아마이드', '레**놀', '토코페롤'];
-
+    // const infoList = ['정제수', '글리세린', '나이아신아마이드', '레**놀', '토코페롤'];
+    const resultText = `정제수, 글리세린, 나이아신아마이드, 레**놀, 토코페롤`
     return (
         <>
             <HeaderNavigation title="제품 등록" />
@@ -55,7 +58,9 @@ export default function ScanScreen() {
                     >읽어낸 부분</Text>
                     <Text
                         style={Typography.text.small}
-                    >{infoList.join(', ')}</Text>
+                    >
+                    {/* infoList.join(', ') */}
+                    {resultText}</Text>
                 </View>
                 <View style={[Styles.card, {gap: 10, backgroundColor: Colors.background.card}]}>
                     <Text
@@ -77,7 +82,13 @@ export default function ScanScreen() {
             </ScrollView>
 
             <View style={Styles.buttonContainer}>
-                <ActionButton text="맞아요, 다음" route={'/scan/info'}/>
+                <ActionButton
+                    text="맞아요, 다음"
+                    route={'/scan/info'}
+                    onPress={()=>{
+                        scan?.setIngredients(selectedIngredients);
+                    }}
+                />
                 <SecondaryActionButton text="다시찍기" onPress={()=>{router.push('/scan/ingredients')}} />
             </View>
         </>

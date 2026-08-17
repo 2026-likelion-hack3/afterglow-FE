@@ -8,7 +8,9 @@ import SecondaryActionButton from "@/src/components/SecondaryActionButton";
 import Tag from "@/src/components/Tag";
 import { Colors } from "@/src/constants/colors";
 import { Typography } from "@/src/constants/typography";
+import { ScanContext } from "@/src/contexts/ScanContext";
 import { router } from "expo-router";
+import { useContext } from "react";
 import { ScrollView, StyleSheet, Text } from "react-native";
 import { View } from "react-native";
 
@@ -32,10 +34,12 @@ const Styles = StyleSheet.create({
     }
 })
 
-export default function AddScreen() {
+export default function ScanScreen() {
+    const scan = useContext(ScanContext);
     const name = ['토리든', '다이브인 세럼', '수분 세럼'];
     const ingredients = ['히알루론산', '판테놀'];
-    const tags = ['저자극보습'];
+    const tags = ['저자극','보습'];
+
     return (
         <>
             <HeaderNavigation title="제품 등록" />
@@ -48,12 +52,15 @@ export default function AddScreen() {
                 <View style={Styles.card}>
                     {/* 제품 이름 */}
                     <View style={{gap: 2}}>
+                        {/* brand name */}
                         <Text
                             style={[Typography.secondary.default, {color:Colors.text.secondary}]}
                         >{ name[0] }</Text>
+                        {/* product name */}
                         <Text
                             style={[Typography.title.small]}
                         >{ name[1] }</Text>
+                        {/* skincare function */}
                         <Text
                             style={[Typography.secondary.default, {color:Colors.text.secondary}]}
                         >{ name[2] }</Text>
@@ -100,7 +107,17 @@ export default function AddScreen() {
             </ScrollView>
 
             <View style={Styles.buttonContainer}>
-                <ActionButton text="맞아요, 다음" route={'/scan/ingredients'}/>
+                <ActionButton
+                    text="맞아요, 다음"
+                    route={'/scan/ingredients'}
+                    onPress={()=>{
+                        scan?.setBrandName(name[0]);
+                        scan?.setProductName(name[1]);
+                        scan?.setSkincareFunction(name[2]);
+                        scan?.setIngredients(ingredients);
+                        scan?.setFeatureTags(tags);
+                    }}
+                />
                 <SecondaryActionButton text="다시 찍기" onPress={()=>{router.back()}} />
             </View>
         </>

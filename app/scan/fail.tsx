@@ -11,8 +11,9 @@ import { router } from "expo-router";
 import { ScrollView, StyleSheet, Text } from "react-native";
 import { View } from "react-native";
 import AlertIcon from '@/assets/icons/alert.svg';
-import { useState } from "react";
+import { useContext, useState } from "react";
 import TagButtonList from "@/src/components/TagButtonList";
+import { ScanContext } from "@/src/contexts/ScanContext";
 
 const Styles = StyleSheet.create({
     container: {
@@ -51,6 +52,7 @@ const Styles = StyleSheet.create({
 })
 
 export default function ScanScreen() {
+    const scan = useContext(ScanContext);
     const ingredientsList = ['레티놀','산','비타민씨','고농도'];
     const [selectedIngredients, setSelectedIngredients] = useState<string[]>([]);
 
@@ -105,6 +107,14 @@ export default function ScanScreen() {
             </ScrollView>
 
             <View style={Styles.buttonContainer}>
+                <ActionButton
+                    text="다음"
+                    route={'/scan/info'}
+                    onPress={()=>{
+                        if (selectedIngredients.length > 0) scan?.setIngredients(selectedIngredients)
+                    }}
+                    deactivated={selectedIngredients.length == 0}
+                />
                 <SecondaryActionButton text="건너뛰기" onPress={()=>{router.push('/scan/info')}} />
                 <Text
                     style={[Typography.secondary.small, {color: Colors.text.muted, textAlign: 'center'}]}

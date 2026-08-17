@@ -8,7 +8,8 @@ import SecondaryActionButton from "@/src/components/SecondaryActionButton";
 import TagRadioButtonList from "@/src/components/TagRadioButtonList";
 import { Colors } from "@/src/constants/colors";
 import { Typography } from "@/src/constants/typography";
-import { useState } from "react";
+import { ScanContext } from "@/src/contexts/ScanContext";
+import { useContext, useState } from "react";
 import { Pressable, ScrollView, StyleSheet, Text } from "react-native";
 import { View } from "react-native";
 
@@ -31,6 +32,7 @@ const Styles = StyleSheet.create({
 })
 
 export default function ScanScreen() {
+    const scan = useContext(ScanContext);
     const openedDateList = ['최근', '1~3개월', '6개월 이상'];
     const usingTimeList = ['아침', '저녁', '둘 다'];
     const [openedDate, setopenedDate] = useState('');
@@ -80,7 +82,15 @@ export default function ScanScreen() {
             </ScrollView>
 
             <View style={Styles.buttonContainer}>
-                <ActionButton text="화장대에 넣기" route={'/scan/complete'}/>
+                <ActionButton
+                    text="화장대에 넣기"
+                    route={'/scan/complete'}
+                    onPress={()=>{
+                        scan?.setopenedDate(openedDate);
+                        scan?.setusingTime(usingTime);
+                    }}
+                    deactivated={!openedDate||!usingTime}
+                />
             </View>
         </>
     )
