@@ -61,16 +61,7 @@ export const submitIntake = async (
   await apiClient.post(`/api/episodes/${episodeId}/intake`, data);
 };
 
-// 화면에 표시되는 한글 라벨 → API가 요구하는 enum 값 매핑
-export const symptomLabelToEnum: Record<string, PrimarySymptom> = {
-  '건조·당김': 'DRYNESS_TIGHTNESS',
-  '가려움': 'ITCHING',
-  '따가움': 'STINGING',
-  '붉어짐': 'REDNESS',
-  '트러블': 'TROUBLE',
-};
-
-// src/api/episode.ts에 추가할 함수 (Context 값 받아서 두 API 순서대로 호출)
+// 통합 제출 함수 (Context 값 받아서 두 API 순서대로 호출)
 export const submitFullRecord = async (data: {
   angle: number;
   radius: number;
@@ -96,4 +87,23 @@ export const submitFullRecord = async (data: {
   });
 
   return episode.episodeId;
+};
+
+// --- 화면 텍스트(한글) -> API enum 값 매핑 ---
+
+// record/index.tsx의 증상 선택 옵션과 매칭
+export const symptomLabelToEnum: Record<string, PrimarySymptom> = {
+  '건조·당김': 'DRYNESS_TIGHTNESS',
+  '가려움': 'ITCHING',
+  '따가움': 'STINGING',
+  '붉어짐': 'REDNESS',
+  '트러블': 'TROUBLE',
+};
+
+// record/duration.tsx의 옵션과 매칭
+export const onsetPeriodLabelToEnum: Record<string, OnsetPeriod> = {
+  '오늘부터': 'TODAY',
+  '2~3일 전부터': 'TWO_TO_THREE_DAYS_AGO',
+  '일주일쯤 전부터': 'ONE_WEEK_AGO',
+  '2주 이상 됐다': 'TWO_WEEKS_OR_MORE',
 };
