@@ -6,6 +6,7 @@ import HeaderNavigation from "@/src/components/HeaderNavigation";
 import SmallOptionButton from "@/src/components/SmallOptionButton";
 import { Colors } from "@/src/constants/colors";
 import { Typography } from "@/src/constants/typography";
+import { RecordSymptomContext } from "@/src/contexts/RecordContext";
 import { UserContext } from "@/src/contexts/UserContext";
 import { useContext, useState } from "react";
 import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
@@ -24,6 +25,7 @@ export default function RecordScreen() {
     ]
     const [selected, setselected] = useState('');
     const user = useContext(UserContext);
+    const record = useContext(RecordSymptomContext);
 
     return (
         <>
@@ -43,7 +45,14 @@ export default function RecordScreen() {
                 
             </ScrollView>
             <View style={{ marginBottom: 14, marginTop: 8 }}>
-                <ActionButton text="선택 완료" route={'/record/camera'} onPress={()=>{user?.recordSymptom.setRecentProduct(selected)}}/>
+                <ActionButton
+                    text="선택 완료"
+                    route={'/record/camera'}
+                    onPress={()=>{
+                        user?.recordSymptom.setRecentProduct(selected);
+                        record?.setRecentProduct(selected);
+                    }}
+                />
             </View>
         </>
     )
