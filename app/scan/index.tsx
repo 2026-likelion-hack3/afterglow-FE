@@ -3,10 +3,15 @@
  */
 
 import ActionButton from "@/src/components/ActionButton";
+import CameraCapture, {
+  CameraCaptureRef,
+} from "@/src/components/CameraCapture";
+
 import HeaderNavigation from "@/src/components/HeaderNavigation";
 import SecondaryActionButton from "@/src/components/SecondaryActionButton";
 import { Colors } from "@/src/constants/colors";
 import { Typography } from "@/src/constants/typography";
+import { useRef, useState } from "react";
 import { ScrollView, StyleSheet, Text } from "react-native";
 import { View } from "react-native";
 
@@ -35,6 +40,21 @@ const Styles = StyleSheet.create({
 })
 
 export default function ScanScreen() {
+    const cameraRef = useRef<CameraCaptureRef>(null);
+
+  const [photoUri, setPhotoUri] = useState<string | null>(null);
+
+  const handleTakePhoto = async () => {
+    const uri = await cameraRef.current?.takePhoto();
+
+    if (!uri) {
+      return;
+    }
+
+    console.log("촬영 완료:", uri);
+
+    setPhotoUri(uri);
+  };
     return (
         <>
             <HeaderNavigation title="제품 등록" />
@@ -51,7 +71,7 @@ export default function ScanScreen() {
                 </View>
                 {/* 카메라 - 개발 필요 */}
                 <View style={Styles.cameraContainer}>
-                    <Text>카메라화면미개발</Text>
+                    <CameraCapture ref={cameraRef} />
                 </View>
                 <View style={Styles.card}>
                     <Text
@@ -65,7 +85,7 @@ export default function ScanScreen() {
             </ScrollView>
 
             <View style={Styles.buttonContainer}>
-                <ActionButton text="촬영" route={'/scan/recognision'}/>
+                <ActionButton text="촬영" route={'/scan/recognision'} onPress={handleTakePhoto}/>
                 <SecondaryActionButton text="직접 입력하기" onPress={()=>{}} />
             </View>
         </>
