@@ -7,6 +7,7 @@ type ActionButtonProps = {
     text: string,
     onPress?: ()=>void,
     route: Href
+    deactivated?: boolean
 }
 
 const Styles = StyleSheet.create({
@@ -16,19 +17,34 @@ const Styles = StyleSheet.create({
         borderRadius: 16,
         padding: 20,
         backgroundColor: Colors.action.default,
+    },
+    deactivated: {
+        backgroundColor: Colors.background.subtle,
+    },
+    deactivatedText: {
+        color: Colors.text.muted
     }
 })
 
-export default function ActionButton({ text, onPress=()=>{}, route }: ActionButtonProps) {
+export default function ActionButton({ text, onPress=()=>{}, route, deactivated=false }: ActionButtonProps) {
     return (
         <Pressable
             onPress={async () => {
-                onPress();
-                router.push(route);
+                if (!deactivated) {
+                    onPress();
+                    router.push(route);
+                }
             }}
-            style={ Styles.button }
+            style={[
+                Styles.button,
+                deactivated && Styles.deactivated
+            ]}
         >
-            <Text style={ [Typography.button.big, { color: Colors.text.inverted }] }>{ text }</Text>
+            <Text style={[
+                Typography.button.big,
+                { color: Colors.text.inverted },
+                deactivated && Styles.deactivatedText
+            ]}>{ text }</Text>
         </Pressable>
     )
 }
