@@ -10,8 +10,8 @@ import { Colors } from "@/src/constants/colors";
 import { Typography } from "@/src/constants/typography";
 import { ScanContext } from "@/src/contexts/ScanContext";
 import { router } from "expo-router";
-import { useContext } from "react";
-import { ScrollView, StyleSheet, Text } from "react-native";
+import { useContext, useRef, useState } from "react";
+import { ScrollView, StyleSheet, Text, TextInput } from "react-native";
 import { View } from "react-native";
 
 const Styles = StyleSheet.create({
@@ -37,7 +37,14 @@ const Styles = StyleSheet.create({
 export default function ScanScreen() {
     const scan = useContext(ScanContext);
     const name = ['토리든', '다이브인 세럼', '수분 세럼'];
+    const [brandName, setBrandName] = useState('토리든');
+    const [productName, setProductName] = useState('다이브인 세럼');
+    const [skincareFunction, setSkincareFunction] = useState('수분 세럼');
+    const detectedBrandName = useRef(brandName);
+    const detectedProductName = useRef(productName);
+    const detectedSkincareFunction = useRef(skincareFunction);
     const ingredients = ['히알루론산', '판테놀'];
+    const [ingredientsInput, setIngredientsInput] = useState(ingredients.join(', '))
     const tags = ['저자극','보습'];
 
     return (
@@ -51,19 +58,44 @@ export default function ScanScreen() {
                 </View>
                 <View style={Styles.card}>
                     {/* 제품 이름 */}
-                    <View style={{gap: 2}}>
-                        {/* brand name */}
+                    <View>
+                        {/* 기존 코드 - 편집 불가
                         <Text
                             style={[Typography.secondary.default, {color:Colors.text.secondary}]}
                         >{ name[0] }</Text>
-                        {/* product name */}
                         <Text
                             style={[Typography.title.small]}
                         >{ name[1] }</Text>
-                        {/* skincare function */}
                         <Text
                             style={[Typography.secondary.default, {color:Colors.text.secondary}]}
                         >{ name[2] }</Text>
+                         */}
+                        <TextInput
+                            placeholder={detectedBrandName.current}
+                            placeholderTextColor={Colors.text.secondary}
+                            value={brandName}
+                            onChangeText={setBrandName}
+                            multiline
+                            textAlignVertical="top"
+                            style={[Typography.secondary.default,{color:Colors.text.secondary, padding: 0, includeFontPadding: false}]}
+                        />
+                        <TextInput
+                            placeholder={detectedProductName.current}
+                            value={productName}
+                            onChangeText={setProductName}
+                            multiline
+                            textAlignVertical="top"
+                            style={[Typography.title.small, {padding: 0, includeFontPadding: false}]}
+                        />
+                        <TextInput
+                            placeholder={detectedSkincareFunction.current}
+                            placeholderTextColor={Colors.text.secondary}
+                            value={skincareFunction}
+                            onChangeText={setSkincareFunction}
+                            multiline
+                            textAlignVertical="top"
+                            style={[Typography.secondary.default, {color:Colors.text.secondary, padding: 0, includeFontPadding: false}]}
+                        />
                     </View>
                     <View style={Styles.line}></View>
                     {/* 주요 성분 */}
@@ -74,6 +106,15 @@ export default function ScanScreen() {
                         <Text
                             style={Typography.text.small}
                         >{ingredients.join(', ')}</Text>
+                        <TextInput
+                            placeholder={ingredients.join(', ')}
+                            placeholderTextColor={Colors.text.secondary}
+                            value={ingredientsInput}
+                            onChangeText={setIngredientsInput}
+                            multiline
+                            textAlignVertical="top"
+                            style={[Typography.text.small, {padding: 0, includeFontPadding: false}]}
+                        />
                     </View>
                     {/* 기능 태그 */}
                     <View style={{gap:8}}>
@@ -111,10 +152,14 @@ export default function ScanScreen() {
                     text="맞아요, 다음"
                     route={'/scan/ingredients'}
                     onPress={()=>{
-                        scan?.setBrandName(name[0]);
-                        scan?.setProductName(name[1]);
-                        scan?.setSkincareFunction(name[2]);
-                        scan?.setIngredients(ingredients);
+                        let userInputIngredients: string[] | null = null;
+                        if (ingredientsInput) {
+                            userInputIngredients = ingredientsInput.split(',').map(item => item.trim());
+                        }
+                        scan?.setBrandName(brandName || detectedBrandName.current);
+                        scan?.setProductName(productName || detectedProductName.current);
+                        scan?.setSkincareFunction(skincareFunction || detectedSkincareFunction.current);
+                        scan?.setIngredients(userInputIngredients || ingredients);
                         scan?.setFeatureTags(tags);
                     }}
                 />
