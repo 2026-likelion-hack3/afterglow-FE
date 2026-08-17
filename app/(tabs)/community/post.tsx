@@ -53,11 +53,11 @@ export default function CommunityScreen() {
     const user = useContext(UserContext);
     useFocusEffect(() => user?.setIsWriting(true))
     
-    const symptomList = ['가려움', '건조·당김', '따가움'];
-    const situationList = ['잠 못 잤을 때', '스트레스'];
+    const symptomsList = ['가려움', '건조·당김', '따가움'];
+    const situationsList = ['잠 못 잤을 때', '스트레스'];
 
-    const [symptom, setsymptom] = useState<Array<string>>([]);
-    const [situation, setsituation] = useState<Array<string>>([]);
+    const [selectedSymptoms, setselectedSymptoms] = useState<Array<string>>([]);
+    const [selectedSituations, setselectedSituations] = useState<Array<string>>([]);
 
     const [content, setContent] = useState('');
     const [checked, setChecked] = useState(false);
@@ -76,9 +76,9 @@ export default function CommunityScreen() {
                         style={[Typography.label.default, {color: Colors.text.secondary}]}
                     >증상 태그 · 하나는 꼭 골라주세요</Text>
                     <TagButtonList
-                        tagList={symptomList}
-                        selection={symptom}
-                        setSelection={setsymptom}
+                        tagList={symptomsList}
+                        selection={selectedSymptoms}
+                        setSelection={setselectedSymptoms}
                     />
                 </View>
                 <View style={{gap:10}}>
@@ -86,9 +86,9 @@ export default function CommunityScreen() {
                         style={[Typography.label.default, {color: Colors.text.secondary}]}
                     >상황 태그 · 선택</Text>
                     <TagButtonList
-                        tagList={situationList}
-                        selection={situation}
-                        setSelection={setsituation}
+                        tagList={situationsList}
+                        selection={selectedSituations}
+                        setSelection={setselectedSituations}
                     />
                 </View>
                 <View>

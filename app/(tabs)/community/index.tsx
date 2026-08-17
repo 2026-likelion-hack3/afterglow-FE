@@ -81,11 +81,11 @@ export default function CommunityScreen() {
         user?.setIsWriting(false);
     });
 
-    const symptomList = ['가려움', '건조·당김', '따가움'];
-    const situationList = ['잠 못 잤을 때', '스트레스'];
+    const symptomsList = ['가려움', '건조·당김', '따가움'];
+    const situationsList = ['잠 못 잤을 때', '스트레스'];
 
-    const [symptom, setsymptom] = useState<Array<string>>([]);
-    const [situation, setsituation] = useState<Array<string>>([]);
+    const [selectedSymptoms, setselectedSymptoms] = useState<Array<string>>([]);
+    const [selectedSituations, setselectedSituations] = useState<Array<string>>([]);
 
     const posts : Array<PostTypes> = [
         {
@@ -120,21 +120,23 @@ export default function CommunityScreen() {
                     </Pressable>
                 </View>
                 <TagButtonList
-                    tagList={symptomList}
-                    selection={symptom}
-                    setSelection={setsymptom}
+                    tagList={symptomsList}
+                    selection={selectedSymptoms}
+                    setSelection={setselectedSymptoms}
                 />
                 <TagButtonList
-                    tagList={situationList}
-                    selection={situation}
-                    setSelection={setsituation}
+                    tagList={situationsList}
+                    selection={selectedSituations}
+                    setSelection={setselectedSituations}
                 />
                 <Text
                     style={[
                         Typography.secondary.small,
                         {color: Colors.text.secondary}
                     ]}
-                >{[...symptom, ...situation, posts.length + '개'].join(' · ')}</Text>
+                >{[
+                    [...selectedSymptoms, ...selectedSituations].join(' + ') || '전체',
+                    posts.length + '개'].join(' · ')}</Text>
                 <ScrollView>
                 <View style={ Styles.content }>
                     {posts.map((post, index) => (
