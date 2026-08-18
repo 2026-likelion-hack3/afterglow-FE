@@ -2,7 +2,11 @@ import { createContext, useState } from "react";
 
 type RecordSymptomType = {
     state: string;
-    setState: (duration: string) => void;
+    setState: (state: string) => void;
+    angle: number;
+    setAngle: (angle: number) => void;
+    extent: string;
+    setExtent: (extent: string) => void;
     duration: string;
     setDuration: (duration: string) => void;
     part: string;
@@ -19,6 +23,8 @@ export const RecordSymptomContext = createContext<RecordSymptomType | null>(null
 
 export function RecordSymptomProvider({ children }: { children: React.ReactNode }) {
     const [state, setState] = useState("");
+    const [angle, setAngle] = useState(0);
+    const [extent, setExtent] = useState("");
     const [duration, setDuration] = useState("");
     const [part, setPart] = useState("");
     const [imgURI, setImgURI] = useState("");
@@ -29,6 +35,8 @@ export function RecordSymptomProvider({ children }: { children: React.ReactNode 
         <RecordSymptomContext.Provider
             value={{
                 state, setState,
+                angle, setAngle,
+                extent, setExtent,
                 duration, setDuration,
                 part, setPart,
                 recentProduct, setRecentProduct,
