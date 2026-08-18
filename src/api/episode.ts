@@ -93,7 +93,7 @@ export const submitFullRecord = async (data: {
 
 // record/index.tsx의 증상 선택 옵션과 매칭
 export const symptomLabelToEnum: Record<string, PrimarySymptom> = {
-  '건조·당김': 'DRYNESS_TIGHTNESS',
+  '건조 · 당김': 'DRYNESS_TIGHTNESS',
   '가려움': 'ITCHING',
   '따가움': 'STINGING',
   '붉어짐': 'REDNESS',

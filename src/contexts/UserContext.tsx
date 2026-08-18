@@ -20,6 +20,8 @@ type UserContextType = {
         setImgURI: (recentProduct: string) => void;
         isCompleted: boolean,
         setIsCompleted: (isCompleted: boolean) => void;
+        episodeId: number | null;
+        setEpisodeId: (episodeId: number | null) => void;
     };
     isReading: boolean;
     setIsReading: (isReading: boolean) => void;
@@ -38,6 +40,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     const [imgURI, setImgURI] = useState("");
     const [recentProduct, setRecentProduct] = useState("");
     const [isCompleted, setIsCompleted] = useState(false);
+    const [episodeId, setEpisodeId] = useState<number | null>(null);
     const [isReading, setIsReading] = useState(false);
     const [isWriting, setIsWriting] = useState(false);
 
@@ -54,7 +57,8 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
                     part, setPart,
                     recentProduct, setRecentProduct,
                     isCompleted, setIsCompleted,
-                    imgURI, setImgURI
+                    imgURI, setImgURI,
+                    episodeId, setEpisodeId
                 },
                 isReading, setIsReading,
                 isWriting, setIsWriting
