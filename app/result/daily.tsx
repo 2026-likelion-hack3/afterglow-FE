@@ -17,6 +17,7 @@ import { Colors } from "@/src/constants/colors";
 
 import { FlatList, Dimensions } from "react-native";
 import Tag from "@/src/components/Tag";
+import { router } from "expo-router";
 
 type CarouselProp = {
     cards: Array<CardInfo>
@@ -57,6 +58,30 @@ const Styles = StyleSheet.create({
     },
     img: {
         width: "100%",
+    },
+    cardContainer: {
+        flex: 1,
+        borderWidth: 1, borderStyle: 'solid', borderColor: Colors.border.default, borderRadius: 16
+    },
+    cardWrapper: {
+        flex: 1,
+        justifyContent: 'center', alignItems: 'center',
+        gap: 8,
+        paddingVertical: 30, paddingHorizontal: 33,
+    },
+    imageWrapper: {
+        flex: 1,
+        justifyContent: 'center', alignItems: 'center',
+        alignSelf: 'stretch'
+    },
+    button: {
+        borderRadius: 16,
+        padding: 16,
+        backgroundColor: Colors.background.card
+    },
+    footer: {
+        marginBottom: 14, marginTop: 8,
+        gap: 20
     }
 })
 
@@ -101,22 +126,9 @@ function Card({ props } : CardProp
         imgHeight = height * ratio;
     }
     return (
-        <View style={{
-            flex: 1,
-            borderWidth: 1,
-            borderStyle: 'solid',
-            borderColor: Colors.border.default,
-            borderRadius: 16
-        }}>
+        <View style={Styles.cardContainer}>
             <props.bgSvg />
-            <View style={{
-                flex: 1,
-                justifyContent: 'center',
-                alignItems: 'center',
-                gap: 8,
-                paddingVertical: 30,
-                paddingHorizontal: 33,
-            }}>
+            <View style={Styles.cardWrapper}>
                 <View style={{ alignItems: 'center' }}>
                     <IconTag
                         Icon={ props.icon.tagIcon }
@@ -126,18 +138,29 @@ function Card({ props } : CardProp
                         color={ props.icon.tagColor }
                     />
                 </View>
-                <Text style={[Typography.title.small, {textAlign: 'center'}]}>{ props.text }</Text>
+                <Text
+                    style={[
+                        Typography.title.small, {textAlign: 'center'}
+                    ]}
+                >{ props.text }</Text>
                 {
                     props.description?.imgsource && imgWidth && imgHeight &&
-                    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', alignSelf: 'stretch' }}>
-                        <Image style={{width: imgWidth, height: imgHeight}} source={props.description.imgsource} />
+                    <View style={Styles.imageWrapper}>
+                        <Image
+                            style={{ width: imgWidth, height: imgHeight }}
+                            source={props.description.imgsource}
+                        />
                     </View>
                 }
                 {
                     props.description &&
                     <View style={{ gap: 4 }}>
-                        <Text style={[Typography.text.accent, {color: Colors.text.accent, textAlign: 'center'}]}>{ props.description.title }</Text>
-                        <Text style={[Typography.secondary.default, {color: Colors.text.accent, textAlign: 'center'}]}>{ props.description.name }</Text>
+                        <Text
+                            style={[Typography.text.accent, {color: Colors.text.accent, textAlign: 'center'}]}
+                        >{ props.description.title }</Text>
+                        <Text
+                            style={[Typography.secondary.default, {color: Colors.text.accent, textAlign: 'center'}]}
+                        >{ props.description.name }</Text>
                     </View>
                 }
                 {
@@ -194,73 +217,84 @@ function makeBgSvg(obj: svgobj) {
     )
 }
 
+const IconSets = {
+    pause: {
+        tagIcon: PauseIcon,
+        iconWidth: 16.67,
+        iconHeight: 16.67,
+        tagColor: Colors.text.inverted,
+        tagText: '멈춰야 할 것',
+    },
+    hand: {
+        tagIcon: HandIcon,
+        iconWidth: 16.75,
+        iconHeight: 16.67,
+        tagColor: Colors.text.inverted,
+        tagText: '사용할 것',
+    },
+    alert: {
+        tagIcon: AlertIcon,
+        iconWidth: 16.68,
+        iconHeight: 15.01,
+        tagColor: Colors.alert.default,
+        tagText: '이럴 때는 병원으로',
+    }
+}
+const bgSvgs = {
+    pauseBg: makeBgSvg({
+        point: { rx: "135.8%", ry: "100%", cx: "50%", cy: "0%" },
+        gradientpoints: [
+            {offset: "1%", color: '#878170'},
+            {offset: "35%", color: Colors.sand[400]},
+            {offset: "75%", color: Colors.sand[300]},
+            {offset: "100%", color: Colors.sand[200]},
+        ]
+    }),
+    suggestBg: makeBgSvg({
+        point: { rx: "149.9%", ry: "100%", cx: "50%", cy: "0%" },
+        gradientpoints: [
+            {offset: "0.46%", color: '#C28936'},
+            {offset: "55.29%", color: '#FAC87E'},
+            {offset: "100%", color: '#FCD37F'},
+        ],
+    }),
+    alertBg: makeBgSvg({
+        point: { rx: "135.8%", ry: "100%", cx: "50%", cy: "0%" },
+        gradientpoints: [
+            {offset: "0%", color: '#FFCCBE'},
+            {offset: "100%", color: '#E2DBCF'},
+        ]
+    })
+};
+
 export default function ResultScreen() {
     const cards: Array<CardInfo> = [
         {
-            icon: {
-                tagIcon: PauseIcon,
-                iconWidth: 16.67,
-                iconHeight: 16.67,
-                tagColor: Colors.text.inverted,
-                tagText: '멈춰야 할 것',
-            },
+            icon: IconSets.pause,
             text: '2주 전부터 쓰신 고농도 앰플을 3일간 멈춰보세요.',
-            bgSvg: makeBgSvg({
-                point: { rx: "135.8%", ry: "100%", cx: "50%", cy: "0%" },
-                gradientpoints: [
-                    {offset: "1%", color: '#878170'},
-                    {offset: "35%", color: Colors.sand[400] },
-                    {offset: "75%", color: Colors.sand[300] },
-                    {offset: "100%", color: Colors.sand[200] },
-                ]
-            }),
             description: {
                 title: '최근 새로 쓴 제품',
                 name: '윤작 카밍&컴포팅 앰플',
                 tags: [{text: '고농도'}, {text: '보습'}],
                 imgsource: require('@/assets/images/pause_example.png')
             },
+            bgSvg: bgSvgs.pauseBg,
         },
         {
-            icon: {
-                tagIcon: HandIcon,
-                iconWidth: 16.75,
-                iconHeight: 16.67,
-                tagColor: Colors.text.inverted,
-                tagText: '사용할 것',
-            },
+            icon: IconSets.hand,
             text: '지금 가지고 계신\n세라마이드 크림을 사용해 보세요.',
-            bgSvg: makeBgSvg({
-                point: { rx: "149.9%", ry: "100%", cx: "50%", cy: "0%" },
-                gradientpoints: [
-                    {offset: "0.46%", color: '#C28936' },
-                    {offset: "55.29%", color: '#FAC87E' },
-                    {offset: "100%", color: '#FCD37F' },
-                ],
-            }),
             description: {
                 title: '현재 사용하면 좋은 제품',
                 name: '멀티 세라마이드 크림',
                 tags: [{text: '보습'}, {text: '세라마이드'}],
                 imgsource: require('@/assets/images/hand_example.png')
-            }
+            },
+            bgSvg: bgSvgs.suggestBg,
         },
         {
-            icon: {
-                tagIcon: AlertIcon,
-                iconWidth: 16.68,
-                iconHeight: 15.01,
-                tagColor: Colors.alert.default,
-                tagText: '이럴 때는 병원으로',
-            },
+            icon: IconSets.alert,
             text: '3일 뒤에도 열감이 있거나 진물이 나면\n피부과에 가보세요!',
-            bgSvg: makeBgSvg({
-                point: { rx: "135.8%", ry: "100%", cx: "50%", cy: "0%" },
-                gradientpoints: [
-                    {offset: "0%", color: '#FFCCBE' },
-                    {offset: "100%", color: '#E2DBCF' },
-                ]
-            })
+            bgSvg: bgSvgs.alertBg
         }
     ]
 
@@ -269,26 +303,31 @@ export default function ResultScreen() {
             <HeaderNavigation title="결과 확인" key={0} />
             <ScrollView>
             <View style={ Styles.container }>
-                <Text style={ Typography.title.big }>오늘부터는{'\n'}이렇게 해 보세요!</Text>
+                <Text
+                    style={ Typography.title.big }
+                >오늘부터는{'\n'}이렇게 해 보세요!</Text>
                 
                 {/* 캐러셀 */}
                 <Carousel cards={cards} />
             </View>
             </ScrollView>
 
-            <View style={{ marginBottom: 14, marginTop: 8, gap: 20 }}>
-                <Text style={{ textAlign: 'center' }}>진단이 아닙니다. 최근 7일 기록을 근거로 했습니다.</Text>
-                <View style={{
-                    gap: 10
-                }}>
+            <View style={Styles.footer}>
+                <Text
+                    style={{ textAlign: 'center' }}
+                >진단이 아닙니다. 최근 7일 기록을 근거로 했습니다.</Text>
+                <View style={{ gap: 10 }}>
                     <ActionButton text="좋아졌다" route={'/(tabs)'}/>
-                    <Pressable style={{
-                        borderRadius: 16,
-                        padding: 16,
-                        backgroundColor: Colors.background.card
-                    }}>
-                        <Text style={ [Typography.text.accent, { color: '#3D5C80', textAlign: 'center' }] }>같은 가려움을 겪은 분들의 이야기 12개</Text>
-                        <Text style={ [Typography.secondary.small, { color: Colors.text.secondary, textAlign: 'center' }] }>같은 피부고민을 겪는 사람들의 이야기를 확인해 보세요.</Text>
+                    <Pressable
+                        style={Styles.button}
+                        onPress={()=>router.replace('/(tabs)/community')}
+                    >
+                        <Text
+                            style={[Typography.text.accent, { color: '#3D5C80', textAlign: 'center' }]}
+                        >같은 가려움을 겪은 분들의 이야기 12개</Text>
+                        <Text
+                            style={[Typography.secondary.small, { color: Colors.text.secondary, textAlign: 'center' }]}
+                        >같은 피부고민을 겪는 사람들의 이야기를 확인해 보세요.</Text>
                     </Pressable>
                 </View>
             </View>
