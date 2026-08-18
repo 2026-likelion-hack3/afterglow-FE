@@ -95,7 +95,7 @@ export default function ScanScreen() {
                 <ActionButton
                     text="등록하기"
                     route={'/scan/info'}
-                    deactivated={selectedType.length == 0}
+                    disabled={selectedType.length == 0}
                 />
             </View>
         </>

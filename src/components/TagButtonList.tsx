@@ -33,7 +33,7 @@ export default function TagButtonList({ gap=8, tagList, selection, setSelection 
                         text={option}
                         isSelected={selection.includes(option)}
                         backgroundColor={Colors.background.card}
-                        big={true}
+                        isLarge={true}
                     />
                 </Pressable>
             ))}

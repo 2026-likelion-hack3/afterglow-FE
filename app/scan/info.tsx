@@ -89,7 +89,7 @@ export default function ScanScreen() {
                         scan?.setopenedDate(openedDate);
                         scan?.setusingTime(usingTime);
                     }}
-                    deactivated={!openedDate||!usingTime}
+                    disabled={!openedDate||!usingTime}
                 />
             </View>
         </>

@@ -27,15 +27,15 @@ type TagProps = {
     textColor?: string,
     backgroundColor?: string,
     isSelected?: boolean,
-    big?: boolean
+    isLarge?: boolean
 }
 
-export default function Tag({ color=Colors.alert.text, text, textColor=color, backgroundColor="transparent", isSelected=false, big=false }: TagProps) {
+export default function Tag({ color=Colors.alert.text, text, textColor=color, backgroundColor="transparent", isSelected=false, isLarge=false }: TagProps) {
     return (
         <View style={[
             Styles.tag, { borderColor: color, backgroundColor },
             isSelected && Styles.selected,
-            big && {paddingVertical: 8, paddingHorizontal: 16}
+            isLarge && {paddingVertical: 8, paddingHorizontal: 16}
         ]}>
             <Text style={[
                 Typography.label.default, { color: textColor },
