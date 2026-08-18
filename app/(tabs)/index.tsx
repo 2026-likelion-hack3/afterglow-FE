@@ -144,7 +144,7 @@ export default function HomeScreen() {
                     <Pressable onPress={()=>{
                         user?.recordSymptom.setIsCompleted(false);
                         record?.setIsCompleted(false);
-                        router.push('/scan');
+                        router.push('/record');
                     }}>
                     <View style={ [Styles.card, {backgroundColor: Colors.accent.default, position: 'relative'}] }>
                         <Text style={ [Typography.figure.big, { color: '#42362F' }] }>피부가{'\n'}불편해요</Text>

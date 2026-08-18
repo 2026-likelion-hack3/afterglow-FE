@@ -1,10 +1,10 @@
 import { Colors } from "@/src/constants/colors";
 import { Typography } from "@/src/constants/typography";
-import { router, Stack } from "expo-router";
+import { router, Stack, usePathname } from "expo-router";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { SvgProps } from "react-native-svg";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
 import HomeIcon from '@/assets/icons/home.svg';
 import CosmeticsIcon from '@/assets/icons/cosmetics.svg';
@@ -73,6 +73,7 @@ function Tabs({ Icon, text, width, height, onPress, current }: {
 }
 
 export default function TabLayout() {
+    const pathname = usePathname();
     const user = useContext(UserContext);
     const tabArr = [
         {
@@ -116,6 +117,24 @@ export default function TabLayout() {
             }
         }
     ];
+    useEffect(()=>{
+        switch (pathname) {
+            case '/':
+                setselectedTab('홈');
+                break;
+            case '/cosmetics':
+                setselectedTab('화장대');
+                break;
+            case '/log':
+                setselectedTab('기록');
+                break;
+            case '/community':
+                setselectedTab('이야기');
+                break;
+            default:
+                break;
+        }
+    }, [pathname])
 
     const [selectedTab, setselectedTab] = useState('홈');
 
