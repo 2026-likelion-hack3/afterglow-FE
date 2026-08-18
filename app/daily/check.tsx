@@ -7,6 +7,7 @@ import OptionButton from "@/src/components/OptionButton";
 import { Colors } from "@/src/constants/colors";
 import { Typography } from "@/src/constants/typography";
 import { UserContext } from "@/src/contexts/UserContext";
+import { UserDataContext } from "@/src/contexts/UserDataContext";
 import { router } from "expo-router";
 import { useContext, useState } from "react";
 import { Image, ImageSourcePropType, ScrollView, Text, View } from "react-native";
@@ -38,10 +39,12 @@ function ImageCard({ source=null, text }: Props) : React.JSX.Element {
 
 export default function DailyCheckScreen() {
     const user = useContext(UserContext);
+    const userData = useContext(UserDataContext);
     const [selected, setselected] = useState('');
     const options = ['좋아졌다', '비슷하다', '나빠졌다'];
     const onPress = (option: string) => {
         setselected(option);
+        userData?.setDailyCheck(option);
         const interval = setInterval(() => {
             router.replace('/')
             clearInterval(interval)
