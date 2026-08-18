@@ -9,7 +9,7 @@ import { Typography } from "@/src/constants/typography";
 import { UserContext } from "@/src/contexts/UserContext";
 import { UserDataContext } from "@/src/contexts/UserDataContext";
 import { router } from "expo-router";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Image, ImageSourcePropType, ScrollView, Text, View } from "react-native";
 
 interface Props {
@@ -42,6 +42,9 @@ export default function DailyCheckScreen() {
     const userData = useContext(UserDataContext);
     const [selected, setselected] = useState('');
     const options = ['좋아졌다', '비슷하다', '나빠졌다'];
+    useEffect(()=>{
+        userData?.setDailyCheck(null);
+    }, [])
     const onPress = (option: string) => {
         setselected(option);
         userData?.setDailyCheck(option);
