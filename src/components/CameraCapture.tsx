@@ -9,7 +9,12 @@ export type CameraCaptureRef = {
   takePhoto: () => Promise<string | null>;
 };
 
-const CameraCapture = forwardRef<CameraCaptureRef>((_, ref) => {
+type CameraCaptureProps = {
+  facing?: "front" | "back";
+  borderRadius?: number
+};
+
+const CameraCapture = forwardRef<CameraCaptureRef, CameraCaptureProps>(({ facing = "back", borderRadius = 20 }, ref) => {
   const cameraRef = useRef<CameraView>(null);
   const [permission, requestPermission] = useCameraPermissions();
 
@@ -38,11 +43,17 @@ const CameraCapture = forwardRef<CameraCaptureRef>((_, ref) => {
   }
 
   return (
-    <View style={styles.container}>
+    <View style={{
+      flex: 1,
+      borderRadius,
+    }}>
       <CameraView
         ref={cameraRef}
-        style={styles.camera}
-        facing="back"
+        style={{
+          flex: 1,
+          borderRadius,
+        }}
+        facing={facing}
       />
     </View>
   );
