@@ -8,12 +8,13 @@ import SecondaryActionButton from "@/src/components/SecondaryActionButton";
 import { Colors } from "@/src/constants/colors";
 import { Typography } from "@/src/constants/typography";
 import { router } from "expo-router";
-import { ScrollView, StyleSheet, Text } from "react-native";
+import { LayoutAnimation, Platform, Pressable, ScrollView, StyleSheet, Text, UIManager } from "react-native";
 import { View } from "react-native";
 import AlertIcon from '@/assets/icons/alert.svg';
 import { useContext, useState } from "react";
 import TagButtonList from "@/src/components/TagButtonList";
 import { ScanContext } from "@/src/contexts/ScanContext";
+import Animated, { Easing, LinearTransition, useAnimatedStyle, withTiming } from "react-native-reanimated";
 
 const Styles = StyleSheet.create({
     container: {
@@ -51,10 +52,24 @@ const Styles = StyleSheet.create({
     buttonContainer: { marginBottom: 14, marginTop: 8, gap: 10 }
 })
 
+function TagContainer({ children, opacity }
+    : { children: React.ReactNode, opacity: number }
+) : React.JSX.Element {
+    return (
+        <View style={{opacity}}>
+            {children}
+        </View>
+    )
+}
+
 export default function ScanScreen() {
     const scan = useContext(ScanContext);
-    const ingredientsList = ['레티놀','산','비타민씨','고농도'];
+    const ingredientsList = ['레티놀','산','비타민씨'];
+    const extendedIngredientsList = ['레티놀','산','비타민씨', '고농도', '에탄올', '글리세린', '오일', '향료',  '메칠파라벤', '디메치콘', '구연산', '콜라겐', '파라벤', '비오틴'];
     const [selectedIngredients, setSelectedIngredients] = useState<string[]>([]);
+    const [list, setList] = useState<string[]>(ingredientsList);
+    const [isExpanded, setIsExpanded] = useState(false);
+    const [opacity, setOpacity] = useState(0)
 
     return (
         <>
@@ -90,23 +105,66 @@ export default function ScanScreen() {
                     </View>
                     <View style={Styles.line}></View>
                 </View>
-                <View style={Styles.card}>
+                <Animated.View
+                    style={[Styles.card, {overflow: "hidden"}]}
+                    layout={LinearTransition.duration(300).easing(Easing.quad)} 
+                >
                     <Text
                         style={[Typography.text.accent]}
                     >성분을 직접 골라주셔도 돼요</Text>
                     <Text
                         style={[Typography.secondary.small, {color: Colors.text.secondary}]}
                     >제품 뒷면에 이런 말이 있으면 골라주세요</Text>
-                    <TagButtonList
+                    <View>
+                        <TagButtonList
+                            tagList={list}
+                            selection={selectedIngredients}
+                            setSelection={setSelectedIngredients}
+                        />
+                    </View>
+                    {/* <TagButtonList
                         tagList={ingredientsList}
                         selection={selectedIngredients}
                         setSelection={setSelectedIngredients}
                     />
-                </View>
+                    {isExpanded &&
+                    <View style={{overflow: 'hidden'}}>
+                    <TagButtonList
+                        tagList={extendedIngredientsList}
+                        selection={selectedIngredients}
+                        setSelection={setSelectedIngredients}
+                    />
+                    </View>
+                    } */}
+                    <Pressable
+                        style={{alignSelf: 'center'}}
+                        onPress={()=>{
+                            if (!isExpanded) {
+                                setList(extendedIngredientsList);
+                            } else {
+                                setList(ingredientsList);
+                            }
+                            setIsExpanded(!isExpanded);
+                        }}
+                    >
+                        <View>
+                        <Text
+                            style={[
+                                Typography.secondary.default,
+                                {
+                                    color:Colors.text.secondary,
+                                    textDecorationColor: Colors.text.secondary, textDecorationLine: "underline", textDecorationStyle: "solid"
+                                }
+                            ]}
+                        >{isExpanded ? '접기' : '펼치기'}</Text>
+                        </View>
+                    </Pressable>
+                </Animated.View>
             </View>
             </ScrollView>
 
             <View style={Styles.buttonContainer}>
+                {/* 1. 선택 전까지 비활성화된 버튼 보이기
                 <ActionButton
                     text="다음"
                     route={'/scan/info'}
@@ -114,7 +172,16 @@ export default function ScanScreen() {
                         if (selectedIngredients.length > 0) scan?.setIngredients(selectedIngredients)
                     }}
                     deactivated={selectedIngredients.length == 0}
-                />
+                /> */}
+                {/* 2. 선택 후 버튼 보이기
+                selectedIngredients.length > 0 && <ActionButton
+                    text="다음"
+                    route={'/scan/info'}
+                    onPress={()=>{
+                        if (selectedIngredients.length > 0) scan?.setIngredients(selectedIngredients)
+                    }}
+                    deactivated={selectedIngredients.length == 0}
+                /> */}
                 <SecondaryActionButton text="건너뛰기" onPress={()=>{router.push('/scan/info')}} />
                 <Text
                     style={[Typography.secondary.small, {color: Colors.text.muted, textAlign: 'center'}]}
