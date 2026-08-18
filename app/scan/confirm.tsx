@@ -40,8 +40,9 @@ export default function ScanScreen() {
     const resultText = `정제수, 글리세린, 나이아신아마이드, 레**놀, 토코페롤`
     return (
         <>
-            <HeaderNavigation title="제품 등록" />
-
+            <View style={{paddingVertical: 20}}>
+                <HeaderNavigation title="제품 등록" />
+            </View>
             <ScrollView>
             <View style={ Styles.container }>
                 <View style={{ gap: 8 }}>

@@ -10,7 +10,8 @@ import { UserContext } from "@/src/contexts/UserContext";
 import { UserDataContext } from "@/src/contexts/UserDataContext";
 import { router } from "expo-router";
 import { useContext, useEffect, useState } from "react";
-import { Image, ImageSourcePropType, ScrollView, Text, View } from "react-native";
+import { Image, ImageSourcePropType, ScrollView, StyleSheet, Text, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 interface Props {
   source?: ImageSourcePropType | null;
@@ -36,6 +37,14 @@ function ImageCard({ source=null, text }: Props) : React.JSX.Element {
     );
 }
 
+const Styles = StyleSheet.create({
+    screen: {
+        flex: 1,
+        paddingHorizontal: 16,
+        paddingTop: 20,
+        gap: 20
+    },
+})
 
 export default function DailyCheckScreen() {
     const user = useContext(UserContext);
@@ -56,7 +65,7 @@ export default function DailyCheckScreen() {
     const imgURI: ImageSourcePropType | null = null;
     const imgAlt = '8월 5일'
     return (
-        <View style={{flex: 1,paddingTop: 16, paddingHorizontal: 16}}>
+        <SafeAreaView style={ Styles.screen }>
             <HeaderNavigation title="일일 체크" />
             <ScrollView>
             <View style={{gap:24, marginBottom: 16}}>
@@ -80,6 +89,6 @@ export default function DailyCheckScreen() {
                 <Text style={[Typography.text.default, {color: Colors.text.secondary, textAlign:'center'}]}>가려움 기준으로 답해주세요.</Text>
             </View>
             </ScrollView>
-        </View>
+        </SafeAreaView>
     )
 }

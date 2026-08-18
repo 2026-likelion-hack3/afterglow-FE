@@ -144,8 +144,9 @@ export default function ResultScreen() {
 
     return (
         <>
-            <HeaderNavigation title="결과 확인" key={0} />
-
+            <View style={{paddingVertical: 20}}>
+                <HeaderNavigation title="결과 확인" key={0} />
+            </View>
             <ScrollView>
             <View style={ Styles.container }>
                 <View style={{ gap: 8 }}>
