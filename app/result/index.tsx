@@ -74,14 +74,14 @@ const IconSets = {
         tagIcon: PauseIcon,
         iconWidth: 16.67,
         iconHeight: 16.67,
-        tagColor: Colors.text.inverted,
+        tagColor: Colors.text.default,
         tagText: '멈춰야 할 것',
     },
     hand: {
         tagIcon: HandIcon,
         iconWidth: 16.75,
         iconHeight: 16.67,
-        tagColor: Colors.text.inverted,
+        tagColor: Colors.text.default,
         tagText: '사용할 것',
     },
     alert: {
@@ -124,7 +124,10 @@ export default function ResultScreen() {
                 
                 <View style={{ gap: 12 }}>
                     {cards.map((obj, index) => (
-                        <Card props={obj} key={index} />
+                        <Card
+                            key={index}
+                            props={obj}
+                        />
                     ))}
                 </View>
             </View>
