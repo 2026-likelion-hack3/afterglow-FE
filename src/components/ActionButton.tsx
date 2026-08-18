@@ -6,7 +6,7 @@ import { Typography } from "../constants/typography";
 type ActionButtonProps = {
     text: string,
     onPress?: ()=>void,
-    route: Href
+    route?: Href
     disabled?: boolean
 }
 
@@ -32,7 +32,9 @@ export default function ActionButton({ text, onPress=()=>{}, route, disabled=fal
             onPress={async () => {
                 if (!disabled) {
                     onPress();
-                    router.push(route);
+                    if (route) {
+                        router.push(route);
+                    }
                 }
             }}
             style={[

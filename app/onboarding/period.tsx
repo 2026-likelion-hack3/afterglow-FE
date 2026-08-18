@@ -12,6 +12,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
 import { UserContext } from "@/src/contexts/UserContext";
 import { UserDataContext } from "@/src/contexts/UserDataContext";
+import { submitOnboarding, ageRangeLabelToEnum, menstrualStatusLabelToEnum } from "@/src/api/onboarding";
 
 const Styles = StyleSheet.create({
     header: {
@@ -35,6 +36,31 @@ export default function Onboarding() {
     const user = useContext(UserContext);
     const userData = useContext(UserDataContext);
 
+    const handleNext = async () => {
+        // 1. Context 업데이트
+        user?.data.setPeriod(period);
+        userData?.setPeriod(period);
+
+        // 2. 한글 -> Enum 매핑
+        const ageRange = user?.data.age ? ageRangeLabelToEnum[user.data.age] : undefined;
+        const menstrualStatus = menstrualStatusLabelToEnum[period];
+
+        // 3. 매핑 예외 처리
+        if (!ageRange || !menstrualStatus) {
+            console.error("❌ 온보딩 데이터 매핑 실패 - age:", user?.data.age, "period:", period);
+            return;
+        }
+
+        // 4. API 전송 및 라우팅
+        try {
+            await submitOnboarding({ ageRange, menstrualStatus });
+            await completeOnboarding();
+            router.replace('/(tabs)');
+        } catch (error) {
+            console.error("❌ 온보딩 저장 실패:", error);
+        }
+    };
+
     return (
         <>
             <View style={ Styles.header }>
@@ -50,7 +76,7 @@ export default function Onboarding() {
                 </ScrollView>
                 <View style={{ paddingTop: 8 }}>
                     <View>
-                        <ActionButton text="다음으로" route={'/(tabs)'} onPress={() => {user?.data.setPeriod(period); userData?.setPeriod(period); completeOnboarding(); router.replace('/(tabs)')}} disabled={!period} />
+                        <ActionButton text="다음으로" onPress={handleNext} disabled={!period} />
                     </View>
                     <View style={{ alignItems: 'center', paddingTop: 8, paddingBottom: 12}}>
                         <SkipButton text="건너뛰기" route={'/(tabs)'} onPress={ completeOnboarding } />
