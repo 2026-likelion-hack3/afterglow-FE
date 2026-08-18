@@ -20,10 +20,6 @@ export default function RootLayout() {
     "Noto Sans KR Bold": require("../assets/fonts/NotoSansKR-Bold.ttf"),
     "Noto Sans KR Regular": require("../assets/fonts/NotoSansKR-Regular.ttf"),
   });
-  
-  useFocusEffect(() => {
-    NavigationBar.setVisibilityAsync("hidden");
-  });
 
   useEffect(() => {
     const handleAppStateChange = (nextAppState: AppStateStatus) => {
