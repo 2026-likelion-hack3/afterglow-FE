@@ -14,6 +14,7 @@ import HeaderNavigation from "@/src/components/HeaderNavigation";
 import ActionButton from "@/src/components/ActionButton";
 import TagButtonList from "@/src/components/TagButtonList";
 import { useFocusEffect } from "@react-navigation/native";
+import { PostContext } from "@/src/contexts/PostContext";
 
 const Styles = StyleSheet.create({
     container: {
@@ -51,6 +52,7 @@ const Styles = StyleSheet.create({
 
 export default function CommunityScreen() {
     const user = useContext(UserContext);
+    const postcontext = useContext(PostContext);
     useFocusEffect(() => user?.setIsWriting(true))
     
     const symptomsList = ['가려움', '건조·당김', '따가움'];
@@ -60,7 +62,7 @@ export default function CommunityScreen() {
     const [selectedSituations, setselectedSituations] = useState<Array<string>>([]);
 
     const [content, setContent] = useState('');
-    const [checked, setChecked] = useState(false);
+    const [isChecked, setIsChecked] = useState(false);
 
     return (
         <View style={ Styles.container }>
@@ -105,18 +107,18 @@ export default function CommunityScreen() {
                 <View style={{gap:12}}>
                     <Pressable
                         style={{flexDirection: 'row', gap: 10, alignItems: 'center'}}
-                        onPress={() => setChecked(prev => !prev)}
+                        onPress={() => setIsChecked(prev => !prev)}
                     >
                         <View
                             style={[
                                 Styles.checkbox,
                                 {
-                                    borderColor: checked ? Colors.accent.dark : Colors.border.defaultLight,
-                                    backgroundColor: checked ? Colors.accent.default : Colors.background.card,
+                                    borderColor: isChecked ? Colors.accent.dark : Colors.border.defaultLight,
+                                    backgroundColor: isChecked ? Colors.accent.default : Colors.background.card,
                                 }
                             ]}
                         >
-                            {checked && <Text style={{ color: "white" }}>V</Text>}
+                            {isChecked && <Text style={{ color: "white" }}>V</Text>}
                         </View>
                         <Text style={Typography.text.small}>폐경 연차 공개</Text>
                     </Pressable>
@@ -127,7 +129,16 @@ export default function CommunityScreen() {
                 </View>
             </View>
             </ScrollView>
-            <ActionButton text="작성 완료" route={'/(tabs)/community'} />
+            <ActionButton
+                text="작성 완료"
+                route={'/(tabs)/community'}
+                onPress={()=>{
+                    postcontext?.setSymptomTags(selectedSymptoms);
+                    postcontext?.setSituationTags(selectedSituations);
+                    postcontext?.setContent(content);
+                    postcontext?.setIsChecked(isChecked);
+                }}
+            />
         </View>
     )
 };

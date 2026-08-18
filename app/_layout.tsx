@@ -9,6 +9,7 @@ import { AppState, AppStateStatus } from "react-native";
 import { ScanProvider } from "@/src/contexts/ScanContext";
 import { RecordSymptomProvider } from "@/src/contexts/RecordContext";
 import { UserDataProvider } from "@/src/contexts/UserDataContext";
+import { PostProvider } from "@/src/contexts/PostContext";
 
 export default function RootLayout() {
   const [loaded] = useFonts({
@@ -59,7 +60,9 @@ export default function RootLayout() {
         <UserDataProvider>
         <RecordSymptomProvider>
         <ScanProvider>
+        <PostProvider>
           <Stack screenOptions={{ headerShown: false, animation: 'none' }} />
+        </PostProvider>
         </ScanProvider>
         </RecordSymptomProvider>
         </UserDataProvider>
