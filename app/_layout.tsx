@@ -10,6 +10,9 @@ import { ScanProvider } from "@/src/contexts/ScanContext";
 import { RecordSymptomProvider } from "@/src/contexts/RecordContext";
 import { UserDataProvider } from "@/src/contexts/UserDataContext";
 import { PostProvider } from "@/src/contexts/PostContext";
+import * as SplashScreen from "expo-splash-screen";
+
+SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const [loaded] = useFonts({
@@ -53,6 +56,18 @@ export default function RootLayout() {
 
     checkOnboarding();
   }, [loaded]);
+
+  
+
+  useEffect(() => {
+    if (loaded) {
+      SplashScreen.hideAsync();
+    }
+  }, [loaded]);
+
+  if (!loaded) {
+    return null;
+  }
 
   return (
     <SafeAreaProvider>

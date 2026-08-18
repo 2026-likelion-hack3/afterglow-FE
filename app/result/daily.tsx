@@ -167,7 +167,11 @@ function Card({ props } : CardProp
                     props.description?.tags &&
                     <View style={{ flexDirection: 'row', gap: 5 }}>
                         {props.description.tags.map((tag, index) => (
-                            <Tag key={index} text={tag.text} color={tag.color ?? Colors.alert.text} />
+                            <Tag
+                                key={index}
+                                text={tag.text}
+                                color={tag.color ?? Colors.alert.text}
+                            />
                         ))}
                     </View>
                 }
@@ -204,7 +208,11 @@ function makeBgSvg(obj: svgobj) {
                     cx={obj.point.cx}  cy={obj.point.cy}
                 >
                     {obj.gradientpoints.map((point, index) => (
-                        <Stop key={index} offset={point.offset} stopColor={point.color} />
+                        <Stop
+                            key={index}
+                            offset={point.offset}
+                            stopColor={point.color}
+                        />
                     ))}
                 </RadialGradient>
             </Defs>

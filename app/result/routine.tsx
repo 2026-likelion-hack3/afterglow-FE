@@ -82,8 +82,8 @@ function Card({ props } : CardProp
             <View style={{ flexDirection: 'row' }}>
                 {props.suggestedProducts.map((product, index) => (
                     <View
-                        style={Styles.routineContainer}
                         key={index}
+                        style={Styles.routineContainer}
                     >
                         <View style={Styles.imgContainer}>
                             {product.imgsource &&
@@ -155,7 +155,10 @@ export default function ResultScreen() {
                 
                 <View style={{ gap: 12 }}>
                     {cards.map((obj, index) => (
-                        <Card props={obj} key={index} />
+                        <Card
+                            key={index}
+                            props={obj}
+                        />
                     ))}
                 </View>
             </View>

@@ -20,6 +20,8 @@ const profileImage = user.profileImage
   ? { uri: user.profileImage }
   : require("../../assets/images/profile.png");
 
+const logo = require('@/assets/images/logo.png');
+
 const Styles = StyleSheet.create({
     container: {
         paddingTop: 20,
@@ -29,7 +31,8 @@ const Styles = StyleSheet.create({
     },
     header: {
         flexDirection: 'row',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+        alignItems: 'flex-start'
     },
     content: {
         gap: 8,
@@ -109,7 +112,7 @@ export default function HomeScreen() {
     return (
             <View style={ Styles.container }>
                 <View style={ Styles.header }>
-                    <Text style={ Typography.title.small }>애프터글로우</Text>
+                    <Image source={logo} style={{width: 173, height: 27}} />
                     <Image
                         source={profileImage}
                         width={30}
