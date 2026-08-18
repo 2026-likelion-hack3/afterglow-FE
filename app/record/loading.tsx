@@ -68,7 +68,7 @@ export default function loadingScreen() {
     const record = useContext(RecordSymptomContext);
 
     useEffect(() => {
-        if (!record?.isCompleted) return;
+        if (!record?.isCompleted || !user) return;
 
         // ============================================
         // API 연동: 서버에 증상 기록 저장
@@ -117,7 +117,7 @@ export default function loadingScreen() {
         }, 5000);
 
         return () => clearTimeout(timer);
-    }, [record?.isCompleted]);
+    }, [record?.isCompleted, user]);
     
     return (
         <View style={Styles.container}>
