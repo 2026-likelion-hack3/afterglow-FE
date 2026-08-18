@@ -22,6 +22,24 @@ const Styles = StyleSheet.create({
     },
     img: {
         width: "100%"
+    },
+    cardContainer: {
+        borderWidth: 1,
+        borderStyle: 'solid',
+        borderColor: Colors.border.default,
+        borderRadius: 16,
+        padding: 20,
+        gap: 8,
+    },
+    routineContainer: {
+        flex: 1,
+        gap: 5.42,
+        padding: 5,
+    },
+    imgContainer: {
+        minHeight: 100,
+        justifyContent: 'center', alignItems: 'center',
+        borderRadius: 10.84, backgroundColor: Colors.background.card,
     }
 })
 
@@ -35,9 +53,9 @@ type CardInfo = {
         tagIcon: React.FC<SvgProps>,
         iconWidth: number,
         iconHeight: number,
+        tagColor: string,
+        tagText: string,
     }
-    tagColor: string,
-    tagText: string,
     suggestedProducts: Array<products>,
     bgColor: string
 }
@@ -49,31 +67,35 @@ type CardProp = {
 function Card({ props } : CardProp
 ) : React.JSX.Element {
     return (
-        <View style={{
-            borderWidth: 1,
-            borderStyle: 'solid',
-            borderColor: Colors.border.default,
-            borderRadius: 16,
-            padding: 20,
-            gap: 8,
-            backgroundColor: props.bgColor
-        }}>
+        <View
+            style={[Styles.cardContainer, { backgroundColor: props.bgColor }]}
+        >
             <View style={{ alignItems: 'center' }}>
                 <IconTag
                     Icon={ props.icon.tagIcon }
                     iconWidth={ props.icon.iconWidth }
                     iconHeight={ props.icon.iconHeight }
-                    text={ props.tagText }
-                    color={ props.tagColor }
+                    text={ props.icon.tagText }
+                    color={ props.icon.tagColor }
                 />
             </View>
-            <View style={{ flexDirection: 'row'}}>
+            <View style={{ flexDirection: 'row' }}>
                 {props.suggestedProducts.map((product, index) => (
-                    <View style={{ flex: 1, padding: 5, gap: 5.42 }} key={index}>
-                        <View style={{ justifyContent: 'center', alignItems: 'center', borderRadius: 10.84, backgroundColor: Colors.background.card, minHeight: 100 }}>
-                            {product.imgsource && <Image source={product.imgsource} style={Styles.img} />}
+                    <View
+                        style={Styles.routineContainer}
+                        key={index}
+                    >
+                        <View style={Styles.imgContainer}>
+                            {product.imgsource &&
+                            <Image
+                                source={product.imgsource}
+                                style={Styles.img}
+                            />
+                            }
                         </View>
-                        <Text style={ [Typography.secondary.default, { textAlign: 'center' }] }>{product.name}</Text>
+                        <Text
+                            style={[Typography.secondary.default, { textAlign: 'center' }]}
+                        >{product.name}</Text>
                     </View>
                 ))}
             </View>
@@ -81,35 +103,40 @@ function Card({ props } : CardProp
     )
 }
 
+const IconSets = {
+    morning: {
+        tagIcon: MorningIcon,
+        iconWidth: 16.67,
+        iconHeight: 16.67,
+        tagColor: Colors.text.default,
+        tagText: '아침 루틴',
+    },
+    night: {
+        tagIcon: NightIcon,
+        iconWidth: 15.83,
+        iconHeight: 15,
+        tagColor: Colors.text.default,
+        tagText: '저녁 루틴',
+    },
+}
+
 export default function ResultScreen() {
     const cards: Array<CardInfo> = [
         {
-            icon: {
-                tagIcon: MorningIcon,
-                iconWidth: 16.67,
-                iconHeight: 16.67
-            },
-            tagColor: Colors.text.default,
-            tagText: '아침 루틴',
+            icon: IconSets.morning,
             suggestedProducts: [
-                {name: '약산성 세라마이드 크림'},
-                {name: '저분자 히알루론산 토너'},
-                {name: 'PDRN 펩타이드 앰플'}
+                {name: '약산성 세라마이드 크림', imgsource: null},
+                {name: '저분자 히알루론산 토너', imgsource: null},
+                {name: 'PDRN 펩타이드 앰플', imgsource: null}
             ],
             bgColor: Colors.sand[100]
         },
         {
-            icon: {
-                tagIcon: NightIcon,
-                iconWidth: 15.83,
-                iconHeight: 15
-            },
-            tagColor: Colors.text.default,
-            tagText: '저녁 루틴',
+            icon: IconSets.night,
             suggestedProducts: [
-                {name: '약산성 세라마이드 크림'},
-                {name: '저분자 히알루론산 토너'},
-                {name: 'PDRN 펩타이드 앰플'}
+                {name: '약산성 세라마이드 크림', imgsource: null},
+                {name: '저분자 히알루론산 토너', imgsource: null},
+                {name: 'PDRN 펩타이드 앰플', imgsource: null}
             ],
             bgColor: Colors.sand[300]
         }
