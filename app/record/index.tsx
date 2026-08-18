@@ -228,6 +228,8 @@ export default function RecordScreen() {
                             user?.recordSymptom.setState(selected);
                             record?.setState(selected);
                         }
+                        if (angle) record?.setAngle(angle);
+                        if (extent) record?.setExtent(extent);
                     }}
                 />
             </View>
