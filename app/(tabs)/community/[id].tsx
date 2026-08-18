@@ -71,7 +71,9 @@ function Post({ post, likes, setLikes }: PostProp) : React.JSX.Element {
     return (
         <>
             <View style={{gap: 10}}>
-                <Text style={Typography.title.default} >{post.title}</Text>
+                <Text
+                    style={Typography.title.default}
+                >{post.title}</Text>
                 <View style={{flexDirection: 'row', gap: 6}}>
                     {post.tags && post.tags.map((tag, index) => (
                         <Tag
@@ -82,10 +84,14 @@ function Post({ post, likes, setLikes }: PostProp) : React.JSX.Element {
                         />
                     ))}
                 </View>
-                <Text style={[Typography.secondary.small, {color: Colors.text.muted}]}>{post.info.join(' · ')}</Text>
+                <Text
+                    style={[Typography.secondary.small, {color: Colors.text.muted}]}
+                >{post.info.join(' · ')}</Text>
             </View>
             <View style={Styles.postContent}>
-                <Text style={Typography.text.small}>{post.content}</Text>
+                <Text
+                    style={Typography.text.small}
+                >{post.content}</Text>
             </View>
             
             <View style={{flexDirection: 'row', gap: 10}}>
@@ -159,7 +165,9 @@ export default function CommunityScreen() {
                 <Post post={post} likes={likes} setLikes={setLikes} />
             </View>
             </ScrollView>
-            <Text style={[Typography.secondary.small, {textAlign: 'center', color: Colors.text.muted}]}>개인 경험이며 의학적 조언이 아닙니다</Text>
+            <Text
+                style={[Typography.secondary.small, {textAlign: 'center', color: Colors.text.muted}]}
+            >개인 경험이며 의학적 조언이 아닙니다</Text>
         </View>
     )
 };

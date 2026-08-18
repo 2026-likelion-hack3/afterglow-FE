@@ -70,8 +70,12 @@ export default function CommunityScreen() {
             <ScrollView>
             <View style={ Styles.content }>
                 <View style={Styles.information}>
-                    <Text style={Typography.label.default}>이런 내용은 쓸 수 없어요</Text>
-                    <Text style={[Typography.secondary.small, {color: Colors.text.secondary}]}>제품명과 브랜드명 (성분은 괜찮아요){'\n'}병원명과 시술 가격{'\n'}진단명 단정, 치료법 권유</Text>
+                    <Text
+                        style={Typography.label.default}
+                    >이런 내용은 쓸 수 없어요</Text>
+                    <Text
+                        style={[Typography.secondary.small, {color: Colors.text.secondary}]}
+                    >제품명과 브랜드명 (성분은 괜찮아요){'\n'}병원명과 시술 가격{'\n'}진단명 단정, 치료법 권유</Text>
                 </View>
                 <View style={{gap:10}}>
                     <Text
@@ -120,7 +124,9 @@ export default function CommunityScreen() {
                         >
                             {isChecked && <Text style={{ color: "white" }}>V</Text>}
                         </View>
-                        <Text style={Typography.text.small}>폐경 연차 공개</Text>
+                        <Text
+                            style={Typography.text.small}
+                        >폐경 연차 공개</Text>
                     </Pressable>
                     
                     <Text

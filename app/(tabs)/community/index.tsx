@@ -20,6 +20,10 @@ const Styles = StyleSheet.create({
         flex: 1,
         gap: 16
     },
+    header: {
+        flexDirection: 'row',
+        justifyContent: 'space-between', alignItems: 'center'
+    },
     content: {
         gap: 12,
         marginBottom: 24
@@ -109,10 +113,17 @@ function NoPosts({ getLastHistory, undo }: NoPostsProp) : React.JSX.Element {
                 {
                 lastHistory ?
                 <>
-                    <Text style={Typography.text.accent}>아직 이 조건에 맞는 글이 없어요</Text>
+                    <Text
+                        style={Typography.text.accent}
+                    >아직 이 조건에 맞는 글이 없어요</Text>
 
-                    <Text style={[Typography.secondary.default, {color: Colors.text.secondary}]}>조건을 하나 풀어보시겠어요?</Text>
-                    <Pressable style={Styles.suggestionButton} onPress={undo}>
+                    <Text
+                        style={[Typography.secondary.default, {color: Colors.text.secondary}]}
+                    >조건을 하나 풀어보시겠어요?</Text>
+                    <Pressable
+                        style={Styles.suggestionButton}
+                        onPress={undo}
+                    >
                         <Text
                             style={[Typography.label.default, {textAlign: 'center'}]}
                         >{lastHistory.lastArr.length > 0
@@ -121,23 +132,31 @@ function NoPosts({ getLastHistory, undo }: NoPostsProp) : React.JSX.Element {
                         } · {lastHistory.postCount}개</Text>
                     </Pressable>
                     {lastHistory.removedTags.length > 0 &&
-                        <Text style={[Typography.secondary.small, {color: Colors.text.muted}]}>마지막에 더한 "{lastHistory.removedTags.join(", ")}" 때문에 결과가 없어졌어요</Text>
+                        <Text
+                            style={[Typography.secondary.small, {color: Colors.text.muted}]}
+                        >마지막에 더한 "{lastHistory.removedTags.join(", ")}" 때문에 결과가 없어졌어요</Text>
                     }
                 </>
                 :
                 <>
-                    <Text style={Typography.text.accent}>아직 글이 없어요</Text>
+                    <Text
+                        style={Typography.text.accent}
+                    >아직 글이 없어요</Text>
                 </>
                 }
                 
             </View>
-            <View style={[
-                Styles.card,
-                {gap: 10, backgroundColor: Colors.background.subtle}
-            ]}>
-                <Text style={Typography.text.accent}>첫 글을 남겨주시겠어요?</Text>
-                <Text style={[Typography.secondary.small, {color: Colors.text.secondary}]}>비슷한 분들이 나중에 이 글을 보게 됩니다</Text>
-                <SecondaryActionButton text="경험 남기기" onPress={() => router.push('/(tabs)/community/post')} />
+            <View style={[Styles.card, {gap: 10, backgroundColor: Colors.background.subtle}]}>
+                <Text
+                    style={Typography.text.accent}
+                >첫 글을 남겨주시겠어요?</Text>
+                <Text
+                    style={[Typography.secondary.small, {color: Colors.text.secondary}]}
+                >비슷한 분들이 나중에 이 글을 보게 됩니다</Text>
+                <SecondaryActionButton
+                    text="경험 남기기"
+                    onPress={() => router.push('/(tabs)/community/post')}
+                />
             </View>
         </View>
     )
@@ -441,10 +460,14 @@ export default function CommunityScreen() {
 
     return (
             <View style={ Styles.container }>
-                <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
-                    <Text style={ Typography.title.default }>이야기</Text>
+                <View style={Styles.header}>
+                    <Text
+                        style={ Typography.title.default }
+                    >이야기</Text>
                     <Pressable onPress={()=>router.push('/community/post')}>
-                        <Text style={[Typography.label.default, {color:Colors.text.accent}]}>글쓰기</Text>
+                        <Text
+                            style={[Typography.label.default, {color:Colors.text.accent}]}
+                        >글쓰기</Text>
                     </Pressable>
                 </View>
                 <TagButtonList
