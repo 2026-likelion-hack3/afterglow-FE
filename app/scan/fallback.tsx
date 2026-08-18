@@ -40,7 +40,9 @@ export default function ScanScreen() {
 
     return (
         <>
-            <HeaderNavigation title="제품 등록" />
+            <View style={{paddingVertical: 20}}>
+                <HeaderNavigation title="제품 등록" />
+            </View>
 
             <ScrollView>
             <View style={ Styles.container }>

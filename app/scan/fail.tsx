@@ -73,8 +73,9 @@ export default function ScanScreen() {
 
     return (
         <>
-            <HeaderNavigation title="제품 등록" />
-
+            <View style={{paddingVertical: 18}}>
+                <HeaderNavigation title="제품 등록" />
+            </View>
             <ScrollView>
             <View style={ Styles.container }>
                 <View style={{ gap: 8 }}>

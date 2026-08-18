@@ -32,7 +32,9 @@ export default function RecordScreen() {
 
     return (
         <>
-            <HeaderNavigation title="증상 기록" key={0} />
+            <View style={{paddingVertical: 20}}>
+                <HeaderNavigation title="증상 기록" key={0} />
+            </View>
             <ScrollView>
             <View style={ Styles.container }>
                 <View style={{ gap: 8 }}>

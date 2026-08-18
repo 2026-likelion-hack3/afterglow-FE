@@ -66,7 +66,9 @@ export default function RecordScreen() {
       };
     return (
         <>
-            <HeaderNavigation title="증상 기록" key={0} />
+            <View style={{paddingVertical: 20}}>
+                <HeaderNavigation title="증상 기록" key={0} />
+            </View>
             <ScrollView>
             <View style={ Styles.container }>
                 <Text
@@ -90,8 +92,8 @@ export default function RecordScreen() {
                     </View>
                 </View>
             </View>
-                
             </ScrollView>
+
             <View>
                 <View style={{ marginTop: 8 }}>
                     <ActionButton
