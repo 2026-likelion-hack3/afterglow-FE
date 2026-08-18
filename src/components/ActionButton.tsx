@@ -7,6 +7,7 @@ type ActionButtonProps = {
     text: string,
     onPress?: ()=>void,
     route: Href
+    disabled?: boolean
 }
 
 const Styles = StyleSheet.create({
@@ -16,19 +17,34 @@ const Styles = StyleSheet.create({
         borderRadius: 16,
         padding: 20,
         backgroundColor: Colors.action.default,
+    },
+    disabled: {
+        backgroundColor: Colors.background.subtle,
+    },
+    disabledText: {
+        color: Colors.text.muted
     }
 })
 
-export default function ActionButton({ text, onPress=()=>{}, route }: ActionButtonProps) {
+export default function ActionButton({ text, onPress=()=>{}, route, disabled=false }: ActionButtonProps) {
     return (
         <Pressable
             onPress={async () => {
-                onPress();
-                router.push(route);
+                if (!disabled) {
+                    onPress();
+                    router.push(route);
+                }
             }}
-            style={ Styles.button }
+            style={[
+                Styles.button,
+                disabled && Styles.disabled
+            ]}
         >
-            <Text style={ [Typography.button.big, { color: Colors.text.inverted }] }>{ text }</Text>
+            <Text style={[
+                Typography.button.big,
+                { color: Colors.text.inverted },
+                disabled && Styles.disabledText
+            ]}>{ text }</Text>
         </Pressable>
     )
 }

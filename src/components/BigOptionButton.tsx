@@ -28,7 +28,8 @@ const Styles = StyleSheet.create({
     },
     buttonWrapper: {
         flexDirection: 'row',
-        alignItems: 'center'
+        alignItems: 'center',
+        gap: 8,
     }
 })
 
@@ -39,10 +40,10 @@ export default function BigOptionButton({ text, extent='', description='', onPre
             style={ [Styles.button, isSelected && Styles.selected] }
         >
             <Text style={ isSelected ? Typography.button.accent : Typography.button.big }>{ text }</Text>
-            <View>
+            {isSelected && <View style={Styles.buttonWrapper}>
                 {extent && (<Text style={ Typography.text.accent }>{ extent }</Text>)}
                 {description && (<Text style={ Typography.secondary.default }>{ description }</Text>)}
-            </View>
+            </View>}
         </Pressable>
     )
 }
