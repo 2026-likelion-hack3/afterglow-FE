@@ -16,6 +16,9 @@ const Styles = StyleSheet.create({
         flex: 1,
         gap: 24,
         marginBottom: 16
+    },
+    buttonContainer: {
+        marginBottom: 14, marginTop: 8
     }
 })
 
@@ -31,7 +34,9 @@ export default function RecordScreen() {
             <HeaderNavigation title="증상 기록" key={0} />
             <ScrollView>
             <View style={ Styles.container }>
-                <Text style={ Typography.title.big }>지금 어떤{'\n'}상태에 가깝나요?</Text>
+                <Text
+                    style={ Typography.title.big }
+                >지금 어떤{'\n'}상태에 가깝나요?</Text>
                 {/** 개발 필요 */}
                 <View style={{ borderStyle: 'solid', borderWidth: 1, borderColor: '#492', height: 288}}>
                     <Text>선택화면미개발</Text>
@@ -39,13 +44,18 @@ export default function RecordScreen() {
                 
                 <View style={{ gap: 8 }}>
                     {options.map((option, index) => (
-                        <BigOptionButton text={option} onPress={()=>setselected(option)} isSelected={selected == option} key={index} />
+                        <BigOptionButton
+                            key={index}
+                            text={option}
+                            onPress={()=>setselected(option)}
+                            isSelected={selected == option}
+                        />
                     ))}
                 </View>
             </View>
                 
             </ScrollView>
-            <View style={{ marginBottom: 14, marginTop: 8 }}>
+            <View style={Styles.buttonContainer}>
                 <ActionButton
                     text="선택 완료"
                     route={'/record/duration'}

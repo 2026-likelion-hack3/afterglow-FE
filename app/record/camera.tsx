@@ -18,6 +18,19 @@ const Styles = StyleSheet.create({
         flex: 1,
         gap: 20,
         marginBottom: 16
+    },
+    cameraContainer: {
+        height: 440,
+        borderStyle: 'dashed', borderWidth: 1, borderColor: Colors.sand[400], borderRadius: 8,
+    },
+    caption: {
+        borderRadius: 8,
+        padding: 10,
+        backgroundColor: Colors.sand[100],
+    },
+    buttonContainer: {
+        alignItems: 'center',
+        paddingTop: 8, paddingBottom: 12
     }
 })
 
@@ -30,14 +43,18 @@ export default function RecordScreen() {
             <HeaderNavigation title="증상 기록" key={0} />
             <ScrollView>
             <View style={ Styles.container }>
-                <Text style={ Typography.title.default }>3일 뒤에 비교해 보시라고{'\n'}지금 한 장 남겨둘게요.</Text>
+                <Text
+                    style={ Typography.title.default }
+                >3일 뒤에 비교해 보시라고{'\n'}지금 한 장 남겨둘게요.</Text>
                 {/** 개발 필요 */}
                 <View style={{ gap: 8 }}>
-                    <View style={{ borderStyle: 'dashed', borderWidth: 1, borderColor: Colors.sand[400], borderRadius: 8, height: 440}}>
+                    <View style={Styles.cameraContainer}>
                         <Text>카메라화면미개발</Text>
                     </View>
-                    <View style={{ backgroundColor: Colors.sand[100], borderRadius: 8, padding: 10 }}>
-                        <Text style={ [Typography.secondary.default, { color: Colors.text.secondary }] }>사진은 휴대폰 안에만 보관됩니다.{'\n'}분석할 때만 잠시 보냈다가 곧바로 지웁니다.</Text>
+                    <View style={Styles.caption}>
+                        <Text
+                            style={ [Typography.secondary.default, { color: Colors.text.secondary }] }
+                        >사진은 휴대폰 안에만 보관됩니다.{'\n'}분석할 때만 잠시 보냈다가 곧바로 지웁니다.</Text>
                     </View>
                 </View>
             </View>
@@ -54,7 +71,7 @@ export default function RecordScreen() {
                         }}
                     />
                 </View>
-                <View style={{ alignItems: 'center', paddingTop: 8, paddingBottom: 12}}>
+                <View style={Styles.buttonContainer}>
                     <SkipButton
                         text="건너뛰기"
                         route={'/record/loading'}
