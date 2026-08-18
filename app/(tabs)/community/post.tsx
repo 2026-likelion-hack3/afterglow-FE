@@ -8,7 +8,7 @@ import { Image, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 
 import NightIcon from '@/assets/icons/night.svg';
 import PathIcon from '@/assets/icons/path.svg';
 import { router, useLocalSearchParams } from "expo-router";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { UserContext } from "@/src/contexts/UserContext";
 import HeaderNavigation from "@/src/components/HeaderNavigation";
 import ActionButton from "@/src/components/ActionButton";
@@ -63,6 +63,13 @@ export default function CommunityScreen() {
 
     const [content, setContent] = useState('');
     const [isChecked, setIsChecked] = useState(false);
+
+    useEffect(()=>{
+        postcontext?.setContent('');
+        postcontext?.setIsChecked(false);
+        postcontext?.setSituationTags(null);
+        postcontext?.setSymptomTags(null);
+    }, [])
 
     return (
         <View style={ Styles.container }>
