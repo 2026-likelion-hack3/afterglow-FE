@@ -9,7 +9,7 @@ import { Colors } from "@/src/constants/colors";
 import { Typography } from "@/src/constants/typography";
 import { RecordSymptomContext } from "@/src/contexts/RecordContext";
 import { UserContext } from "@/src/contexts/UserContext";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import Svg, { Circle, G, Path, Text as SvgText } from "react-native-svg";
 
@@ -186,6 +186,16 @@ export default function RecordScreen() {
     const [selected, setselected] = useState<string | null>(null);
     const [angle, setAngle] = useState<number | null>(null);
     const [extent, setExtent] = useState<string | null>(null);
+    useEffect(()=>{
+        record?.setAngle(0);
+        record?.setDuration('');
+        record?.setExtent('');
+        record?.setImgURI('');
+        record?.setIsCompleted(false);
+        record?.setPart('');
+        record?.setRecentProduct('');
+        record?.setState('');
+    }, [])
     return (
         <>
             <HeaderNavigation title="증상 기록" key={0} />
