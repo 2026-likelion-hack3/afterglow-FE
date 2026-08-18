@@ -171,7 +171,7 @@ export default function ScanScreen() {
                     onPress={()=>{
                         if (selectedIngredients.length > 0) scan?.setIngredients(selectedIngredients)
                     }}
-                    deactivated={selectedIngredients.length == 0}
+                    disabled={selectedIngredients.length == 0}
                 /> */}
                 {/* 2. 선택 후 버튼 보이기
                 selectedIngredients.length > 0 && <ActionButton
@@ -180,7 +180,7 @@ export default function ScanScreen() {
                     onPress={()=>{
                         if (selectedIngredients.length > 0) scan?.setIngredients(selectedIngredients)
                     }}
-                    deactivated={selectedIngredients.length == 0}
+                    disabled={selectedIngredients.length == 0}
                 /> */}
                 <SecondaryActionButton text="건너뛰기" onPress={()=>{router.push('/scan/info')}} />
                 <Text

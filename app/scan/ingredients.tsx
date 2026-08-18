@@ -88,7 +88,7 @@ export default function ScanScreen() {
                                 color={Colors.border.defaultLight} textColor={Colors.text.secondary}
                                 text={text}
                                 backgroundColor={Colors.background.card}
-                                big={true}
+                                isLarge={true}
                             />
                         ))}
                     </View>

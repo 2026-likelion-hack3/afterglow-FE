@@ -50,7 +50,7 @@ export default function Onboarding() {
                 </ScrollView>
                 <View style={{ paddingTop: 8 }}>
                     <View>
-                        <ActionButton text="다음으로" route={'/(tabs)'} onPress={() => {user?.data.setPeriod(period); userData?.setPeriod(period); completeOnboarding(); router.replace('/(tabs)')}} deactivated={!period} />
+                        <ActionButton text="다음으로" route={'/(tabs)'} onPress={() => {user?.data.setPeriod(period); userData?.setPeriod(period); completeOnboarding(); router.replace('/(tabs)')}} disabled={!period} />
                     </View>
                     <View style={{ alignItems: 'center', paddingTop: 8, paddingBottom: 12}}>
                         <SkipButton text="건너뛰기" route={'/(tabs)'} onPress={ completeOnboarding } />
