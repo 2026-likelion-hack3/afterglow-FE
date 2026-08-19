@@ -5,9 +5,7 @@ import { router } from "expo-router";
 import { useContext, useEffect } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import LoadingIcon from '@/assets/icons/loading.svg';
-// ↓↓↓ API 연동 추가 ↓↓↓
 import { submitFullRecord, symptomLabelToEnum, onsetPeriodLabelToEnum } from "@/src/api/episode";
-// ↑↑↑ API 연동 추가 ↑↑
 import { RecordSymptomContext } from "@/src/contexts/RecordContext";
 
 const Styles = StyleSheet.create({
@@ -70,53 +68,53 @@ export default function loadingScreen() {
     useEffect(() => {
         if (!record?.isCompleted || !user) return;
 
-        // ============================================
-        // API 연동: 서버에 증상 기록 저장
-        // ============================================
+        let isCancelled = false;
+
         const submitToServer = async () => {
             const symptom = symptomLabelToEnum[user.recordSymptom.state];
             const onsetPeriod = onsetPeriodLabelToEnum[user.recordSymptom.duration];
 
-            // state나 duration이 매핑 목록에 없는 값이면 여기서 멈춤
-            // (화면 쪽 옵션 문구가 매핑표랑 다를 때 여기 걸림 - 콘솔 확인)
+            // state/duration 값이 매핑표에 없으면 요청을 보내지 않음
             if (!symptom || !onsetPeriod) {
                 console.log('❌ 매핑 실패 - state:', user.recordSymptom.state, 'duration:', user.recordSymptom.duration);
                 return;
             }
 
             try {
+                // POST /api/episodes → POST /api/episodes/{episodeId}/intake 순서로 호출, episodeId 반환
                 const episodeId = await submitFullRecord({
-                    // ⚠️ TODO: 증상 극좌표 격자(원형 선택 UI) 완성되면 아래 3개 값을
-                    //          실제 좌표 기반 값으로 교체할 것
-                    angle: 0,              // TODO: 원형 격자 좌표값으로 교체
-                    radius: 0.5,           // TODO: 원형 격자 좌표값으로 교체
-                    severity: 'MODERATE',  // TODO: 원형 격자 좌표값(중심거리)으로 교체
+                    // TODO: 원형 격자 좌표값으로 교체
+                    angle: 0,
+                    radius: 0.5,
+                    severity: 'MODERATE',
 
                     primarySymptom: symptom,
                     onsetPeriod: onsetPeriod,
 
-                    // ⚠️ TODO: part.tsx 화면 옵션 완성되면 실제 선택값으로 교체
-                    //          (현재 part.tsx는 '디자인 없음' 임시 상태라 고정값 사용)
-                    bodyParts: ['WHOLE_FACE'],  // TODO: part.tsx 완성 후 매핑 함수로 교체
+                    // TODO: part.tsx 옵션 완성 후 매핑 함수로 교체
+                    bodyParts: ['WHOLE_FACE'],
 
                     recentNewProductName: user.recordSymptom.recentProduct || undefined,
                 });
-                console.log('✅ episode 저장 완료, episodeId:', episodeId);
+
+                // episodeId를 Context에 저장 (체크인 등 이후 화면에서 사용)
+                user.recordSymptom.setEpisodeId(episodeId);
+
+                // 서버 저장 성공 후에만 결과 화면으로 이동
+                if (!isCancelled) {
+                    router.replace("/result");
+                }
             } catch (error) {
                 console.log('❌ episode 저장 실패:', error);
+                // 실패 시 UX 처리(에러 화면/재시도)는 정책 확정 후 별도 작업
             }
         };
 
         submitToServer();
-        // ============================================
-        // API 연동 끝
-        // ============================================
 
-        const timer = setTimeout(() => {
-            router.replace("/result");
-        }, 5000);
-
-        return () => clearTimeout(timer);
+        return () => {
+            isCancelled = true;
+        };
     }, [record?.isCompleted, user]);
     
     return (
