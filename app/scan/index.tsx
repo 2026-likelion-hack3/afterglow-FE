@@ -12,8 +12,10 @@ import SecondaryActionButton from "@/src/components/SecondaryActionButton";
 import { Colors } from "@/src/constants/colors";
 import { Typography } from "@/src/constants/typography";
 import { ScanContext } from "@/src/contexts/ScanContext";
+import { extractOcrText, structureOcrText } from "@/src/api/vanity";
+import { router } from "expo-router";
 import { useContext, useEffect, useRef, useState } from "react";
-import { ScrollView, StyleSheet, Text } from "react-native";
+import { Alert, ScrollView, StyleSheet, Text } from "react-native";
 import { View } from "react-native";
 
 const Styles = StyleSheet.create({
@@ -51,11 +53,16 @@ export default function ScanScreen() {
         scan?.setSkincareFunction(null);
         scan?.setopenedDate('');
         scan?.setusingTime('');
+        scan?.setRegistrationResult(null);
     }, [])
     const scan = useContext(ScanContext);
     const cameraRef = useRef<CameraCaptureRef>(null);
 
   const [photoUri, setPhotoUri] = useState<string | null>(null);
+  // OCR + 구조화 API 호출 중인지 여부. ActionButton의 onPress는 await 되지 않고
+  // route prop이 곧바로 push 되는 구조라, 여기서는 route prop을 쓰지 않고
+  // API 성공 시에만 수동으로 router.push 한다.
+  const [isProcessing, setIsProcessing] = useState(false);
 
   const handleTakePhoto = async () => {
     const uri = await cameraRef.current?.takePhoto();
@@ -68,6 +75,39 @@ export default function ScanScreen() {
 
     setPhotoUri(uri);
     scan?.setFrontImageUri(uri);
+
+    setIsProcessing(true);
+    try {
+      const { rawText } = await extractOcrText(uri);
+      const structured = await structureOcrText(rawText);
+
+      // 구조화 API 응답을 기존 Context 필드에 매핑.
+      // (필드명 매핑 근거는 ScanContext.tsx 주석 참고)
+      scan?.setBrandName(structured.brand);
+      scan?.setProductName(structured.name);
+      scan?.setSkincareFunction(structured.type);
+      scan?.setIngredients(
+        structured.keyIngredients
+          ? structured.keyIngredients.split(',').map((item) => item.trim()).filter(Boolean)
+          : []
+      );
+      scan?.setFeatureTags(structured.interactionTags ?? []);
+
+      router.push('/scan/recognision');
+    } catch (error) {
+      console.error('OCR/구조화 실패:', error);
+      // TODO: 프로젝트 내에 OCR 실패 전용 화면(예: /scan/fallback)이 있다면
+      // 그쪽으로 안내하는 것이 더 나을 수 있음. 다만 ingredients.tsx에서 쓰이는
+      // '/scan/fallback' 라우트가 정확히 어떤 용도인지(에러 화면인지, 후속 스텝인지)
+      // 확인되지 않아, 우선은 사용자가 재촬영하거나 "직접 입력하기"를 선택할 수
+      // 있도록 현재 화면에 머무르게 처리함.
+      Alert.alert(
+        '인식에 실패했어요',
+        '다시 촬영하시거나 아래에서 직접 입력해주세요.'
+      );
+    } finally {
+      setIsProcessing(false);
+    }
   };
     return (
         <>
@@ -101,9 +141,9 @@ export default function ScanScreen() {
 
             <View style={Styles.buttonContainer}>
                 <ActionButton
-                    text="촬영"
-                    route={'/scan/recognision'}
+                    text={isProcessing ? "인식하는 중..." : "촬영"}
                     onPress={handleTakePhoto}
+                    disabled={isProcessing}
                 />
                 <SecondaryActionButton text="직접 입력하기" onPress={()=>{}} />
             </View>

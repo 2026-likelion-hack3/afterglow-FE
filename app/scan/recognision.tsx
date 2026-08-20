@@ -36,16 +36,23 @@ const Styles = StyleSheet.create({
 
 export default function ScanScreen() {
     const scan = useContext(ScanContext);
-    const name = ['토리든', '다이브인 세럼', '수분 세럼'];
-    const [brandName, setBrandName] = useState('토리든');
-    const [productName, setProductName] = useState('다이브인 세럼');
-    const [skincareFunction, setSkincareFunction] = useState('수분 세럼');
+
+    // index.tsx에서 OCR + 구조화 API 결과를 Context에 미리 저장해둔 값을
+    // 초기값으로 사용한다. Context가 비어 있는 경우(예: 화면을 직접 새로고침한
+    // 경우)에는 빈 문자열/빈 배열로 안전하게 fallback.
+    const [brandName, setBrandName] = useState(scan?.brandName ?? '');
+    const [productName, setProductName] = useState(scan?.productName ?? '');
+    const [skincareFunction, setSkincareFunction] = useState(scan?.skincareFunction ?? '');
     const detectedBrandName = useRef(brandName);
     const detectedProductName = useRef(productName);
     const detectedSkincareFunction = useRef(skincareFunction);
-    const ingredients = ['히알루론산', '판테놀'];
+
+    const ingredients = scan?.ingredients ?? [];
     const [ingredientsInput, setIngredientsInput] = useState(ingredients.join(', '))
-    const tags = ['저자극','보습'];
+
+    // NOTE: 이 tags는 구조화 API의 interactionTags(성분 상호작용 경고 태그)이다.
+    // 아래 "이 태그로 조합 주의를 알려드려요" 문구가 이 데이터를 가리킨다.
+    const tags = scan?.featureTags ?? [];
 
     return (
         <>
@@ -60,17 +67,6 @@ export default function ScanScreen() {
                 <View style={Styles.card}>
                     {/* 제품 이름 */}
                     <View>
-                        {/* 기존 코드 - 편집 불가
-                        <Text
-                            style={[Typography.secondary.default, {color:Colors.text.secondary}]}
-                        >{ name[0] }</Text>
-                        <Text
-                            style={[Typography.title.small]}
-                        >{ name[1] }</Text>
-                        <Text
-                            style={[Typography.secondary.default, {color:Colors.text.secondary}]}
-                        >{ name[2] }</Text>
-                         */}
                         <TextInput
                             placeholder={detectedBrandName.current}
                             placeholderTextColor={Colors.text.secondary}

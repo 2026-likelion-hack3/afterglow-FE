@@ -7,13 +7,15 @@ import BigOptionButton from "@/src/components/BigOptionButton";
 import HeaderNavigation from "@/src/components/HeaderNavigation";
 import IconTag from "@/src/components/IconTag";
 import { Typography } from "@/src/constants/typography";
-import { useState } from "react";
-import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
+import { useContext, useEffect, useState } from "react";
+import { ActivityIndicator, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SvgProps } from "react-native-svg";
 import PauseIcon from '@/assets/icons/pause.svg';
 import HandIcon from '@/assets/icons/hand.svg';
 import AlertIcon from '@/assets/icons/alert.svg';
 import { Colors } from "@/src/constants/colors";
+import { UserContext } from "@/src/contexts/UserContext";
+import { getEpisodeAnalysis, EpisodeAnalysisResponse } from "@/src/api/episodeAnalysis";
 
 const Styles = StyleSheet.create({
     container: {
@@ -94,6 +96,43 @@ const IconSets = {
 }
 
 export default function ResultScreen() {
+    const user = useContext(UserContext);
+    const episodeId = user?.recordSymptom?.episodeId;
+
+    const [analysis, setAnalysis] = useState<EpisodeAnalysisResponse | null>(null);
+    const [isLoading, setIsLoading] = useState(false);
+    const [hasError, setHasError] = useState(false);
+
+    useEffect(() => {
+        if (!episodeId) {
+            return;
+        }
+
+        let isMounted = true;
+        setIsLoading(true);
+        setHasError(false);
+
+        getEpisodeAnalysis(episodeId)
+            .then((data) => {
+                if (isMounted) setAnalysis(data);
+            })
+            .catch((error) => {
+                console.error("분석 결과 조회 중 오류 발생:", error);
+                if (isMounted) setHasError(true);
+            })
+            .finally(() => {
+                if (isMounted) setIsLoading(false);
+            });
+
+        return () => {
+            isMounted = false;
+        };
+    }, [episodeId]);
+
+    const continueUseCard = analysis?.cards?.find((card) => card.type === 'CONTINUE_USE');
+    const continueUseProductIds: number[] = continueUseCard?.continueUseProductIds ?? [];
+    const hasContinueUseProducts = continueUseProductIds.length > 0;
+
     const cards: Array<CardInfo> = [
         {
             icon: IconSets.pause,
@@ -102,7 +141,9 @@ export default function ResultScreen() {
         },
         {
             icon: IconSets.hand,
-            text: '최근에 새로 쓰기 시작한 제품이 있다면 며칠 사용을 멈춰보세요.',
+            text: hasContinueUseProducts
+                ? `계속 사용해도 괜찮은 제품이 ${continueUseProductIds.length}개 있어요.`
+                : '최근에 새로 쓰기 시작한 제품이 있다면 며칠 사용을 멈춰보세요.',
             bgColor: Colors.accent.default
         },
         {
@@ -122,15 +163,28 @@ export default function ResultScreen() {
                 <Text
                     style={ Typography.title.default }
                 >아직 판단하기 이릅니다.</Text>
-                
-                <View style={{ gap: 12 }}>
-                    {cards.map((obj, index) => (
-                        <Card
-                            key={index}
-                            props={obj}
-                        />
-                    ))}
-                </View>
+
+                {isLoading ? (
+                    <View style={{ paddingVertical: 40, alignItems: 'center' }}>
+                        <ActivityIndicator color={Colors.text.secondary} />
+                    </View>
+                ) : (
+                    <>
+                        {hasError && (
+                            <Text
+                                style={[Typography.secondary.default, { color: Colors.text.secondary, textAlign: 'center' }]}
+                            >분석 결과를 불러오지 못했어요. 아래 안내를 참고해주세요.</Text>
+                        )}
+                        <View style={{ gap: 12 }}>
+                            {cards.map((obj, index) => (
+                                <Card
+                                    key={index}
+                                    props={obj}
+                                />
+                            ))}
+                        </View>
+                    </>
+                )}
             </View>
             </ScrollView>
 
