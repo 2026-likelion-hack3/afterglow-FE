@@ -40,6 +40,14 @@ const Styles = StyleSheet.create({
 
 export default function ScanScreen() {
     const scan = useContext(ScanContext);
+
+    const registeredProductName = scan?.registrationResult?.product.name ?? scan?.productName ?? '';
+    // openedDate/usingTime은 info.tsx에서 저장한 한글 라벨(예: '저녁', '1~3개월')을 그대로 사용.
+    const subtitleParts = [registeredProductName, scan?.usingTime, scan?.openedDate ? `개봉 ${scan.openedDate}` : null]
+        .filter(Boolean);
+
+    const warnings = scan?.registrationResult?.warnings ?? [];
+
     return (
         <>
             <ScrollView>
@@ -50,29 +58,34 @@ export default function ScanScreen() {
                     >화장대에 넣었어요</Text>
                     <Text
                         style={[Typography.secondary.default, {color:Colors.text.secondary}]}
-                    >다이브인 세럼 · 저녁 · 개봉 1~3개월</Text>
+                    >{subtitleParts.join(' · ')}</Text>
                 </View>
-                <View style={Styles.alertCaption}>
-                    <View style={Styles.captionHeader}>
-                        <View style={{width: 20, height: 20, justifyContent: 'center', alignItems: 'center'}}>
-                            <AlertIcon width={16.68} height={15.01} />
+                {warnings.length > 0 && (
+                    <View style={Styles.alertCaption}>
+                        <View style={Styles.captionHeader}>
+                            <View style={{width: 20, height: 20, justifyContent: 'center', alignItems: 'center'}}>
+                                <AlertIcon width={16.68} height={15.01} />
+                            </View>
+                            <Text
+                                style={[Typography.text.accent, {color: Colors.alert.text}]}
+                            >같이 쓸 때 주의하세요</Text>
                         </View>
-                        <Text
-                            style={[Typography.text.accent, {color: Colors.alert.text}]}
-                        >같이 쓸 때 주의하세요</Text>
+                        <View style={{gap: 10}}>
+                            {warnings.map((message, index) => (
+                                <Text
+                                    key={index}
+                                    style={[Typography.text.small, {color: Colors.alert.text}]}
+                                >{message}</Text>
+                            ))}
+                            <Text
+                                style={[Typography.secondary.small, {color: Colors.alert.text}]}
+                            >금지가 아니라 주의입니다</Text>
+                        </View>
                     </View>
-                    <View style={{gap: 10}}>
-                        <Text
-                            style={[Typography.text.small, {color: Colors.alert.text}]}
-                        >저녁에 쓰시는 레티놀 세럼과 겹칩니다. 번갈아 쓰시는 걸 권해요.</Text>
-                        <Text
-                            style={[Typography.secondary.small, {color: Colors.alert.text}]}
-                        >금지가 아니라 주의입니다</Text>
-                    </View>
-                </View>
-                <Text
-                    style={[Typography.secondary.small, {color: Colors.text.secondary}]}
-                >지금 12개가 등록돼 있어요</Text>
+                )}
+                {/* TODO(백엔드 확인 필요): 등록된 제품 총 개수를 보여주는 API/필드가
+                    아직 없어 기존의 "지금 12개가 등록돼 있어요" 문구는 제거함.
+                    필요하다면 createProduct 응답이나 별도 카운트 API에 추가 필요. */}
             </View>
             </ScrollView>
 

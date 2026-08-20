@@ -9,8 +9,17 @@ import TagRadioButtonList from "@/src/components/TagRadioButtonList";
 import { Colors } from "@/src/constants/colors";
 import { Typography } from "@/src/constants/typography";
 import { ScanContext } from "@/src/contexts/ScanContext";
+import {
+    createProduct,
+    CreateProductRequest,
+    InteractionTag,
+    OpeningPeriod,
+    RegistrationSource,
+    UsageTiming,
+} from "@/src/api/vanity";
+import { router } from "expo-router";
 import { useContext, useState } from "react";
-import { Pressable, ScrollView, StyleSheet, Text } from "react-native";
+import { Alert, Pressable, ScrollView, StyleSheet, Text } from "react-native";
 import { View } from "react-native";
 
 const Styles = StyleSheet.create({
@@ -31,12 +40,78 @@ const Styles = StyleSheet.create({
     }
 })
 
+const OPENING_PERIOD_MAP: Record<string, OpeningPeriod> = {
+    '최근': 'RECENT',
+    '1~3개월': 'ONE_TO_THREE_MONTHS',
+    '6개월 이상': 'SIX_MONTHS_OR_MORE',
+};
+
+const USAGE_TIMING_MAP: Record<string, UsageTiming> = {
+    '아침': 'MORNING',
+    '저녁': 'EVENING',
+    '둘 다': 'BOTH',
+};
+
+const REGISTRATION_SOURCE_OCR: RegistrationSource = 'PHOTO'
+
+// TODO(제품/백엔드 확인 필요): CreateProductRequest.openedAt은 'YYYY-MM-DD' 형태의
+// 구체적인 날짜를 요구하지만, 현재 UI는 "최근/1~3개월/6개월 이상" 같은 카테고리만
+// 수집한다. 정확한 날짜를 알 방법이 없어 임시로 오늘 날짜를 넣는다.
+// 실제 날짜 입력 UI를 추가하거나, 백엔드가 카테고리(openingPeriod)만으로
+// openedAt 없이 처리 가능한지 확인이 필요하다.
+function getPlaceholderOpenedAt(): string {
+    return new Date().toISOString().slice(0, 10);
+}
+
 export default function ScanScreen() {
     const scan = useContext(ScanContext);
     const openedDateList = ['최근', '1~3개월', '6개월 이상'];
     const usingTimeList = ['아침', '저녁', '둘 다'];
     const [openedDate, setopenedDate] = useState('');
     const [usingTime, setusingTime] = useState('');
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
+    const handleSubmit = async () => {
+        if (!openedDate || !usingTime || isSubmitting) {
+            return;
+        }
+
+        setIsSubmitting(true);
+        try {
+            const payload: CreateProductRequest = {
+                name: scan?.productName || '',
+                brand: scan?.brandName || '',
+                type: scan?.skincareFunction || '',
+                keyIngredients: (scan?.ingredients ?? []).join(', '),
+                // TODO(백엔드 확인 필요): 구조화 API 응답에는 "기능 태그"(예: 저자극,
+                // 보습) 출처가 없어 임의로 채우지 않고 빈 배열로 둔다.
+                functionTags: [],
+                openedAt: getPlaceholderOpenedAt(),
+                openingPeriod: OPENING_PERIOD_MAP[openedDate] ?? openedDate,
+                usageTiming: USAGE_TIMING_MAP[usingTime] ?? usingTime,
+                interactionTags: (scan?.featureTags ?? []) as InteractionTag[],
+                registrationSource: REGISTRATION_SOURCE_OCR,
+                // barcode, photoKey: 현재 플로우에는 이미지 업로드/바코드 API가
+                // 제공되지 않아 생략함 (TODO: 사진을 photoKey로 남길 방법 확인 필요)
+            };
+
+            const result = await createProduct(payload);
+
+            scan?.setopenedDate(openedDate);
+            scan?.setusingTime(usingTime);
+            scan?.setRegistrationResult(result);
+
+            // 저장 성공 후에만 이동. ActionButton은 onPress를 기다리지 않고
+            // route를 바로 push하므로, 여기서는 route prop을 쓰지 않고
+            // 성공 시에만 수동으로 push한다.
+            router.push('/scan/complete');
+        } catch (error) {
+            console.error('제품 등록 실패:', error);
+            Alert.alert('등록 실패', '제품을 저장하지 못했어요. 잠시 후 다시 시도해주세요.');
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
 
     return (
         <>
@@ -84,13 +159,9 @@ export default function ScanScreen() {
 
             <View style={Styles.buttonContainer}>
                 <ActionButton
-                    text="화장대에 넣기"
-                    route={'/scan/complete'}
-                    onPress={()=>{
-                        scan?.setopenedDate(openedDate);
-                        scan?.setusingTime(usingTime);
-                    }}
-                    disabled={!openedDate||!usingTime}
+                    text={isSubmitting ? "저장하는 중..." : "화장대에 넣기"}
+                    onPress={handleSubmit}
+                    disabled={!openedDate || !usingTime || isSubmitting}
                 />
             </View>
         </>

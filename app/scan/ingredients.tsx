@@ -2,6 +2,7 @@
  * 성분표 촬영 화면
  */
 
+import { extractOcrText, structureOcrText } from "@/src/api/vanity";
 import ActionButton from "@/src/components/ActionButton";
 import CameraCapture, { CameraCaptureRef } from "@/src/components/CameraCapture";
 import HeaderNavigation from "@/src/components/HeaderNavigation";
@@ -48,16 +49,41 @@ export default function ScanScreen() {
     
       const handleTakePhoto = async () => {
         const uri = await cameraRef.current?.takePhoto();
-    
+
         if (!uri) {
-          return;
+            return;
         }
-    
-        console.log("촬영 완료:", uri);
-    
+
+        console.log("성분표 촬영 완료:", uri);
+
         setPhotoUri(uri);
         scan?.setBackImageUri(uri);
-      };
+
+        try {
+            const { rawText } = await extractOcrText(uri);
+            console.log("[BACK OCR] rawText:", rawText);
+
+            const structured = await structureOcrText(rawText);
+            console.log("[BACK OCR] structured:", structured);
+
+            const ingredients = structured.keyIngredients
+                ? structured.keyIngredients
+                    .split(',')
+                    .map(item => item.trim())
+                    .filter(Boolean)
+                : [];
+
+            scan?.setIngredients(ingredients);
+            scan?.setFeatureTags(structured.interactionTags ?? []);
+
+            router.push('/scan/info');
+        } catch (error) {
+            console.error("성분표 OCR 실패:", error);
+
+            // OCR 실패하면 기존 fallback 화면으로 이동
+            router.push('/scan/fallback');
+        }
+    };
     return (
         <>
             <View style={{paddingVertical: 18}}>
@@ -106,7 +132,6 @@ export default function ScanScreen() {
             <View style={Styles.buttonContainer}>
                 <ActionButton
                     text="촬영"
-                    route={'/scan/fallback'}
                     onPress={handleTakePhoto}
                 />
                 <SecondaryActionButton text="건너뛰기" onPress={()=>{router.push('/scan/info')}} />

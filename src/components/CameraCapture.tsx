@@ -2,11 +2,12 @@ import {
   CameraView,
   useCameraPermissions,
 } from "expo-camera";
-import { forwardRef, useImperativeHandle, useRef } from "react";
+import { forwardRef, useImperativeHandle, useRef, useState } from "react";
 import { StyleSheet, View } from "react-native";
 
 export type CameraCaptureRef = {
   takePhoto: () => Promise<string | null>;
+  isReady: () => boolean;
 };
 
 type CameraCaptureProps = {
@@ -17,11 +18,13 @@ type CameraCaptureProps = {
 const CameraCapture = forwardRef<CameraCaptureRef, CameraCaptureProps>(({ facing = "back", borderRadius = 20 }, ref) => {
   const cameraRef = useRef<CameraView>(null);
   const [permission, requestPermission] = useCameraPermissions();
+  const [isCameraReady, setIsCameraReady] = useState(false);
 
   // 부모가 호출할 수 있는 메서드 공개
   useImperativeHandle(ref, () => ({
     takePhoto: async () => {
-      if (!cameraRef.current) {
+      if (!cameraRef.current || !isCameraReady) {
+        console.warn("[CameraCapture] 카메라가 아직 준비되지 않았습니다.");
         return null;
       }
 
@@ -29,6 +32,7 @@ const CameraCapture = forwardRef<CameraCaptureRef, CameraCaptureProps>(({ facing
 
       return photo?.uri ?? null;
     },
+    isReady: () => !!cameraRef.current && isCameraReady,
   }));
 
   // 아직 권한 상태를 가져오는 중
@@ -54,6 +58,7 @@ const CameraCapture = forwardRef<CameraCaptureRef, CameraCaptureProps>(({ facing
           borderRadius,
         }}
         facing={facing}
+        onCameraReady={() => setIsCameraReady(true)}
       />
     </View>
   );
