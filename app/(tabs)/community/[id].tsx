@@ -5,7 +5,7 @@
 
 import { Colors } from "@/src/constants/colors";
 import { Typography } from "@/src/constants/typography";
-import { Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Image, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
 import { useContext, useState } from "react";
 import { UserContext } from "@/src/contexts/UserContext";
@@ -23,7 +23,7 @@ const Styles = StyleSheet.create({
     },
     content: {
         flex: 1,
-        gap: 16,
+        gap: 12,
         marginBottom: 24
     },
     postContent: {
@@ -38,7 +38,12 @@ const Styles = StyleSheet.create({
         paddingVertical: 12, paddingHorizontal: 18,
         borderWidth: 1, borderStyle: 'solid', borderColor: Colors.border.defaultLight, borderRadius: 200,
         backgroundColor: Colors.background.card
-    }
+    },
+    line: {
+        flex:1,
+        height: 1,
+        backgroundColor: Colors.border.defaultLight
+    },
 })
 
 type PostTypes = {
@@ -48,16 +53,16 @@ type PostTypes = {
     info: Array<string>
     like: number,
     content: string
-    reply?: Array<String>
 }
 
 type PostProp = {
     post: PostTypes,
     likes: number
     setLikes: (likes: number)=>void
+    reply?: comment[]
 }
 
-function Post({ post, likes, setLikes }: PostProp) : React.JSX.Element {
+function Post({ post, likes, setLikes, reply }: PostProp) : React.JSX.Element {
     const [isPressed, setIsPressed] = useState(false);
     function onPress() {
         if (isPressed) {
@@ -110,22 +115,65 @@ function Post({ post, likes, setLikes }: PostProp) : React.JSX.Element {
                         ]}
                     >저도 그래요 {likes}</Text>
                 </Pressable>
-                <View
-                    style={Styles.button}
-                >
-                    <Text
-                        style={[
-                            Typography.secondary.small,
-                            {color: Colors.text.muted}
-                        ]}
-                    >댓글 {post.reply ? post.reply.length : 0}</Text>
-                </View>
             </View>
+            <View style={Styles.line}></View>
+            <Text
+                style={[
+                    Typography.label.default,
+                    {color: Colors.text.secondary}
+                ]}
+            >댓글 {reply ? reply.length : 0}</Text>
+            {reply && <CommentView comments={reply} />}
         </>
     )
 }
 
+function CommentView({comments}: {comments: comment[]}) : React.JSX.Element {
+    return (
+        <>
+            {comments.map((comment, index)=>(
+                <>
+                <View key={index} style={{gap: 6}}>
+                    <View style={{flexDirection: 'row', gap: 8, alignItems: 'center'}}>
+                        {comment.name && <Text style={Typography.label.default}>{comment.name}</Text>}
+                        <Text style={[Typography.secondary.small, {color: Colors.text.muted}]}>{comment.time}</Text>
+                    </View>
+                    <View>
+                        <Text style={Typography.text.default}>{comment.reply}</Text>
+                    </View>
+                </View>
+                {comments.length - 1 != index && <View key={index+'l'} style={Styles.line}></View>}
+                </>
+            ))}
+        </>
+    )
+}
+
+type comment = {
+    name?: string,
+    time: string,
+    reply: string
+}
+
 export default function CommunityScreen() {
+    const [reply, setReply] = useState('');
+    const [comments, setComments] = useState<comment[]>([
+        {
+            name: '폐경 3년차',
+            time: '2일 전',
+            reply: '저도 잠을 설친 날 아침에 목이 제일 가려워요. 기록해두니 확실히 보이더라고요.'
+        },
+        {
+            name: '이행기',
+            time: '1일 전',
+            reply: '밤에 실내 온도를 좀 낮추면 나으신가요? 저는 그게 도움이 됐어요.'
+        },
+        {
+            name: '폐경 1년차',
+            time: '1일 전',
+            reply: '저는 가습기를 틀고부터 아침에 덜 당기더라고요.'
+        }
+    ])
     const user = useContext(UserContext);
     useFocusEffect(() => user?.setIsReading(true))
     const {id} = useLocalSearchParams<{id:string}>()
@@ -156,18 +204,57 @@ export default function CommunityScreen() {
         })
     const post = getexamplePost();
     const [likes, setLikes] = useState(post.like);
+    const addComment = () => {
+        const comment: comment = {
+            name: '나',
+            time: '방금 전',
+            reply
+        };
+        setReply('');
+    }
 
     return (
+        <>
+        <KeyboardAvoidingView
+    style={{ flex: 1 }}
+    behavior={Platform.OS === "ios" ? "padding" : "height"}
+  >
         <View style={ Styles.container }>
             <HeaderNavigation title="이야기" />
             <ScrollView>
             <View style={ Styles.content }>
-                <Post post={post} likes={likes} setLikes={setLikes} />
+                <Post post={post} likes={likes} setLikes={setLikes} reply={comments} />
             </View>
             </ScrollView>
+        </View>
+        <View style={{
+            paddingHorizontal: 16,
+            paddingTop: 12,
+            paddingBottom: 14,
+            gap: 10,
+            backgroundColor: Colors.background.card
+        }}>
             <Text
                 style={[Typography.secondary.small, {textAlign: 'center', color: Colors.text.muted}]}
             >개인 경험이며 의학적 조언이 아닙니다</Text>
+            <View style={{gap: 10, flexDirection: 'row'}}>
+                <TextInput
+                    placeholder={"댓글을 남겨보세요"}
+                    placeholderTextColor={Colors.text.muted}
+                    value={reply}
+                    onChangeText={setReply}
+                    textAlignVertical="top"
+                    style={[Typography.text.small,{flex: 1, borderWidth: 1, borderColor: Colors.border.defaultLight, backgroundColor: Colors.background.subtle, borderRadius:999 , paddingVertical: 13, paddingHorizontal: 18, includeFontPadding: false}]}
+                />
+                <Pressable
+                    style={{backgroundColor: Colors.action.default, borderRadius: 999, paddingVertical: 13, paddingHorizontal: 20, alignSelf: 'center'}}
+                    onPress={addComment}
+                >
+                    <Text style={[Typography.label.default, {color: Colors.text.inverted, textAlign: 'center'}]}>등록</Text>
+                </Pressable>
+            </View>
         </View>
+        </KeyboardAvoidingView>
+        </>
     )
 };
