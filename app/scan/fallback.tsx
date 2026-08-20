@@ -96,8 +96,14 @@ export default function ScanScreen() {
             <View style={Styles.buttonContainer}>
                 <ActionButton
                     text="등록하기"
-                    route={'/scan/info'}
-                    disabled={selectedType.length == 0}
+                    disabled={selectedType.length === 0}
+                    onPress={() => {
+                        scan?.setSkincareFunction(selectedType[0] ?? '');
+                        scan?.setIngredients(selectedIngredients);
+                        scan?.setProductName(input);
+
+                        router.push('/scan/info');
+                    }}
                 />
             </View>
         </>

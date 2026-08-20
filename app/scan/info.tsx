@@ -40,27 +40,19 @@ const Styles = StyleSheet.create({
     }
 })
 
-// TODO(백엔드 확인 필요): Swagger 예시에는 openingPeriod = 'RECENT' 하나만 나와 있어,
-// '1~3개월' / '6개월 이상'에 대응하는 실제 enum 값은 추측입니다.
 const OPENING_PERIOD_MAP: Record<string, OpeningPeriod> = {
     '최근': 'RECENT',
-    '1~3개월': 'ONE_TO_THREE_MONTHS', // TODO: 실제 enum 값 확인 필요 (추측값)
-    '6개월 이상': 'OVER_SIX_MONTHS', // TODO: 실제 enum 값 확인 필요 (추측값)
+    '1~3개월': 'ONE_TO_THREE_MONTHS',
+    '6개월 이상': 'SIX_MONTHS_OR_MORE',
 };
 
-// TODO(백엔드 확인 필요): Swagger 예시에는 usageTiming = 'MORNING' 하나만 나와 있어,
-// '저녁' / '둘 다'에 대응하는 실제 enum 값은 추측입니다.
 const USAGE_TIMING_MAP: Record<string, UsageTiming> = {
     '아침': 'MORNING',
-    '저녁': 'EVENING', // TODO: 실제 enum 값 확인 필요 (추측값)
-    '둘 다': 'BOTH', // TODO: 실제 enum 값 확인 필요 (추측값)
+    '저녁': 'EVENING',
+    '둘 다': 'BOTH',
 };
 
-// TODO(백엔드 확인 필요): Swagger 예시에는 registrationSource = 'BARCODE' 하나만
-// 나와 있고, 이는 바코드 스캔 플로우용으로 보인다. 이 화면은 카메라 촬영 + OCR
-// 플로우이므로 실제로는 다른 값(예: 'OCR', 'CAMERA' 등)일 가능성이 높으나
-// 확인되지 않아 'OCR'을 임시로 사용한다.
-const REGISTRATION_SOURCE_OCR: RegistrationSource = 'OCR';
+const REGISTRATION_SOURCE_OCR: RegistrationSource = 'PHOTO'
 
 // TODO(제품/백엔드 확인 필요): CreateProductRequest.openedAt은 'YYYY-MM-DD' 형태의
 // 구체적인 날짜를 요구하지만, 현재 UI는 "최근/1~3개월/6개월 이상" 같은 카테고리만

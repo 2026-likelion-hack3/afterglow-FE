@@ -10,25 +10,29 @@ export const extractOcrText = async (imageUri: string): Promise<OcrResponse> => 
   const ext = extMatch ? extMatch[1] : 'jpg';
 
   const formData = new FormData();
+
   formData.append('image', {
     uri: imageUri,
-    name: filename,
-    type: `image/${ext}`,
-  } as unknown as Blob);
+    name: 'product.jpg',
+    type: 'image/jpeg',
+  } as any);
 
-  // [DEBUG 3] FormData 생성 완료 로그
-  console.log('[DEBUG 3] FormData 생성 완료. 요청 보내는 중...');
+  console.log('FORM_DATA', (formData as any)._parts);
 
   try {
-    const response = await client.post<OcrResponse>('/api/vanity/products/ocr', formData);
-    console.log('[DEBUG SUCCESS] rawText 응답 성공:', response.data);
+    const response = await client.post<OcrResponse>(
+      '/api/vanity/products/ocr',
+      formData
+      // headers나 transformRequest를 완전히 비워두어야 
+      // Axios가 RN 네이티브 레벨로 FormData를 바르게 전달합니다.
+    );
+
+    console.log('[DEBUG SUCCESS]', response.data);
     return response.data;
   } catch (error: any) {
-    // [DEBUG ERROR] 상세 에러 로그
-    console.error('[DEBUG ERROR] message:', error?.message);
-    console.error('[DEBUG ERROR] code:', error?.code);
+    console.error('[DEBUG ERROR]', error?.message);
     console.error('[DEBUG ERROR] status:', error?.response?.status);
-    console.error('[DEBUG ERROR] response data:', error?.response?.data);
+    console.error('[DEBUG ERROR] data:', error?.response?.data);
     throw error;
   }
 };
