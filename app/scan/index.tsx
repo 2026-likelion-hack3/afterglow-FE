@@ -11,7 +11,7 @@ import { ScanContext } from "@/src/contexts/ScanContext";
 import { extractOcrText, structureOcrText } from "@/src/api/vanity";
 import { router } from "expo-router";
 import { useContext, useEffect, useRef, useState } from "react";
-import { Alert, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Alert, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 
 const Styles = StyleSheet.create({
   container: {
@@ -38,6 +38,7 @@ const Styles = StyleSheet.create({
 });
 
 export default function ScanScreen() {
+    const [input, setInput] = useState('');
   useEffect(()=>{
     scan?.setBackImageUri(null);
     scan?.setBrandName(null);
@@ -52,6 +53,10 @@ export default function ScanScreen() {
   }, []);
 
   const scan = useContext(ScanContext);
+  const handleSubmit = () => {
+    scan?.setProductName(input);
+    router.push('/scan/recognision');
+  };
   const cameraRef = useRef<CameraCaptureRef>(null);
 
   const [photoUri, setPhotoUri] = useState<string | null>(null);
@@ -106,6 +111,10 @@ export default function ScanScreen() {
 
   return (
     <>
+    <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+    >
       <View style={{paddingVertical: 20}}>
         <HeaderNavigation title="제품 등록" />
       </View>
@@ -140,8 +149,19 @@ export default function ScanScreen() {
           onPress={handleTakePhoto}
           disabled={isProcessing}
         />
-        <SecondaryActionButton text="직접 입력하기" onPress={()=>{}} />
+        <TextInput
+            placeholder={"직접 입력하기"}
+            placeholderTextColor={Colors.text.default}
+            value={input}
+            onChangeText={setInput}
+            textAlignVertical="top"
+            style={[Typography.button.big,{
+                textAlign: 'center' ,borderWidth: 1, borderColor: Colors.border.defaultLight, backgroundColor: Colors.background.card, borderRadius:16 , padding: 20, includeFontPadding: false
+            }]}
+            onSubmitEditing={handleSubmit}
+        />
       </View>
+    </KeyboardAvoidingView>
     </>
   );
 }
