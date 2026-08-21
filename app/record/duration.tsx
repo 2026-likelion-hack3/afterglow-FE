@@ -68,7 +68,7 @@ export default function RecordScreen() {
                     >다음 질문</Text>
                     <Text
                         style={[Typography.secondary.small, { color: Colors.text.secondary }]}
-                    >어느 부위인가요?{'\n'}최근 새로 쓴 제품이 있나요?</Text>
+                    >어느 부위인가요?{'\n'}최근 새로 쓴 제품이 있나요?{'\n'}그 밖에 알려주실게 있나요?</Text>
                 </View>
             </View>
             </ScrollView>
