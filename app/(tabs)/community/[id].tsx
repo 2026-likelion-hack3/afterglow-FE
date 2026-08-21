@@ -123,7 +123,7 @@ function Post({ post, likes, setLikes, reply }: PostProp) : React.JSX.Element {
                     {color: Colors.text.secondary}
                 ]}
             >댓글 {reply ? reply.length : 0}</Text>
-            {reply && <CommentView comments={reply} />}
+            {reply && <CommentView key={0} comments={reply} />}
         </>
     )
 }
@@ -210,15 +210,16 @@ export default function CommunityScreen() {
             time: '방금 전',
             reply
         };
+        setComments(prev => [...prev, comment])
         setReply('');
     }
 
     return (
         <>
         <KeyboardAvoidingView
-    style={{ flex: 1 }}
-    behavior={Platform.OS === "ios" ? "padding" : "height"}
-  >
+            style={{ flex: 1 }}
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+        >
         <View style={ Styles.container }>
             <HeaderNavigation title="이야기" />
             <ScrollView>
