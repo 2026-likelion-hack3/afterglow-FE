@@ -13,6 +13,8 @@ type RecordSymptomType = {
     setPart: (part: string) => void;
     recentProduct: string;
     setRecentProduct: (recentProduct: string) => void;
+    note: string
+    setNote: (note: string) => void;
     imgURI: string;
     setImgURI: (recentProduct: string) => void;
     isCompleted: boolean,
@@ -29,6 +31,7 @@ export function RecordSymptomProvider({ children }: { children: React.ReactNode 
     const [part, setPart] = useState("");
     const [imgURI, setImgURI] = useState("");
     const [recentProduct, setRecentProduct] = useState("");
+    const [note, setNote] = useState("");
     const [isCompleted, setIsCompleted] = useState(false);
 
     return (
@@ -40,6 +43,7 @@ export function RecordSymptomProvider({ children }: { children: React.ReactNode 
                 duration, setDuration,
                 part, setPart,
                 recentProduct, setRecentProduct,
+                note, setNote,
                 isCompleted, setIsCompleted,
                 imgURI, setImgURI
             }}

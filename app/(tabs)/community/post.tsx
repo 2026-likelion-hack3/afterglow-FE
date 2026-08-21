@@ -4,7 +4,7 @@
 
 import { Colors } from "@/src/constants/colors";
 import { Typography } from "@/src/constants/typography";
-import { Image, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+import { Image, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import NightIcon from '@/assets/icons/night.svg';
 import PathIcon from '@/assets/icons/path.svg';
 import { router, useLocalSearchParams } from "expo-router";
@@ -72,6 +72,10 @@ export default function CommunityScreen() {
     }, [])
 
     return (
+        <KeyboardAvoidingView
+            style={{ flex: 1 }}
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+        >
         <View style={ Styles.container }>
             <HeaderNavigation title="경험 남기기" />
             <ScrollView>
@@ -153,5 +157,6 @@ export default function CommunityScreen() {
                 }}
             />
         </View>
+        </KeyboardAvoidingView>
     )
 };

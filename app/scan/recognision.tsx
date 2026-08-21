@@ -11,7 +11,7 @@ import { Typography } from "@/src/constants/typography";
 import { ScanContext } from "@/src/contexts/ScanContext";
 import { router } from "expo-router";
 import { useContext, useRef, useState } from "react";
-import { ScrollView, StyleSheet, Text, TextInput } from "react-native";
+import { Pressable, ScrollView, StyleSheet, Text, TextInput } from "react-native";
 import { View } from "react-native";
 
 const Styles = StyleSheet.create({
@@ -31,6 +31,15 @@ const Styles = StyleSheet.create({
         marginBottom: 14,
         marginTop: 8,
         gap: 12
+    },
+    tagContainer: 
+    {
+        alignSelf: 'flex-start',
+        borderWidth: 1,
+        borderStyle: 'solid',
+        borderRadius: 999,
+        paddingVertical: 4,
+        paddingHorizontal: 8, borderColor: Colors.border.defaultLight, backgroundColor:Colors.background.card
     }
 })
 
@@ -52,7 +61,12 @@ export default function ScanScreen() {
 
     // NOTE: 이 tags는 구조화 API의 interactionTags(성분 상호작용 경고 태그)이다.
     // 아래 "이 태그로 조합 주의를 알려드려요" 문구가 이 데이터를 가리킨다.
-    const tags = scan?.featureTags ?? [];
+    const [tags, setTags] = useState(scan?.featureTags ?? []);
+    const [currentTagInput, setCurrentTagInput] = useState('');
+    const handleTagInput = () => {
+        setTags(prev => [...prev, currentTagInput])
+        setCurrentTagInput('');
+    }
 
     return (
         <>
@@ -100,9 +114,6 @@ export default function ScanScreen() {
                         <Text
                             style={[Typography.label.default, {color: Colors.text.secondary}]}
                         >주요 성분</Text>
-                        <Text
-                            style={Typography.text.small}
-                        >{ingredients.join(', ')}</Text>
                         <TextInput
                             placeholder={ingredients.join(', ')}
                             placeholderTextColor={Colors.text.secondary}
@@ -128,6 +139,14 @@ export default function ScanScreen() {
                                     isLarge={true}
                                 />
                             ))}
+                            <TextInput style={[Styles.tagContainer, {color: Colors.text.secondary}]}
+                            value={currentTagInput} onChangeText={setCurrentTagInput}
+                            textAlignVertical="top"
+                            onSubmitEditing={handleTagInput}
+                            placeholder="+" 
+                            >
+                                {/* <Text style={Typography.label.default}>+</Text> */}
+                            </TextInput>
                         </View>
                     </View>
                     <View>

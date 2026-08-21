@@ -31,7 +31,7 @@ const Styles = StyleSheet.create({
 
 export default function RecordScreen() {
     const options = [
-        '디자인 없음'
+        '이마', '눈가', '볼', '입가', '턱', '얼굴 전체'
     ]
     const [selected, setselected] = useState('');
     const user = useContext(UserContext);
@@ -68,7 +68,7 @@ export default function RecordScreen() {
                     >다음 질문</Text>
                     <Text
                         style={[Typography.secondary.small, { color: Colors.text.secondary }]}
-                    >최근 새로 쓴 제품이 있나요?</Text>
+                    >최근 새로 쓴 제품이 있나요?{'\n'}그 밖에 알려주실게 있나요?</Text>
                 </View>
             </View>
                 

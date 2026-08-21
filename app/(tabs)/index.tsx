@@ -35,7 +35,7 @@ const Styles = StyleSheet.create({
         alignItems: 'flex-start'
     },
     content: {
-        gap: 8,
+        gap: 12,
         marginBottom: 24
     },
     card: {
